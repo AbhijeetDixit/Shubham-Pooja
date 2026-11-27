@@ -1028,35 +1028,35 @@
       z-index: 18;
     }
 
-    /* SCENE 10: Live Countdown Overlay in Upper Open Cream Area (top: 12% to 36%) */
+    /* SCENE 10: Live Countdown Overlay in Upper Open Cream Area (top: 6.2% inside upper floral border) */
     .countdown-overlay {
       position: absolute;
       left: 8.5%;
       right: 8.5%;
-      top: 11.5%;
-      height: 26%;
+      top: 6.2%;
+      height: 22.5%;
       z-index: 18;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 4px 6px;
+      padding: 2px 6px;
     }
 
     .cd-tiles-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
+      gap: 5px;
       width: 100%;
-      max-width: 296px;
-      margin: 6px auto 6px;
+      max-width: 280px;
+      margin: 4px auto 4px;
     }
 
     .cd-tile {
       position: relative;
-      padding: 6px 2px 5px;
-      border-radius: 10px;
+      padding: 5px 2px 4px;
+      border-radius: 9px;
       background: linear-gradient(180deg, rgba(255, 252, 244, 0.9) 0%, rgba(248, 236, 210, 0.86) 100%);
       border: 1px solid rgba(168, 121, 34, 0.55);
       box-shadow: 0 4px 12px rgba(102, 64, 20, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
@@ -1083,7 +1083,7 @@
 
     .cd-num {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       line-height: 1;
       color: #7d2138;
@@ -1092,8 +1092,8 @@
     }
 
     .cd-label {
-      margin-top: 3px;
-      font-size: 8px;
+      margin-top: 2px;
+      font-size: 7.5px;
       font-weight: 600;
       letter-spacing: 0.13em;
       text-transform: uppercase;
@@ -1103,13 +1103,13 @@
     .cd-tap-cue {
       display: inline-flex;
       align-items: center;
-      margin-top: 4px;
-      padding: 3px 11px;
+      margin-top: 3px;
+      padding: 2.5px 10px;
       border-radius: 9999px;
       background: rgba(125, 33, 56, 0.1);
       border: 1px solid rgba(139, 105, 20, 0.36);
       color: #7d2138;
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 600;
       letter-spacing: 0.13em;
       text-transform: uppercase;
@@ -1690,18 +1690,18 @@
       <div class="fallback-card" data-fallback-for="10">
         <div class="h-44"></div>
         <div class="my-auto px-3 py-3 rounded-2xl border border-amber-700/25 bg-[#fffaf0]/80">
-          <p class="serif italic text-lg text-[#7d2138]">Save the Date</p>
-          <p class="text-[11px] tracking-[0.16em] uppercase text-[#8b6914] mt-0.5">Golden Dome Courtyard</p>
+          <p class="serif italic text-lg text-[#7d2138]">Countdown to 3rd January 2027</p>
+          <p class="text-[11px] tracking-[0.16em] uppercase text-[#8b6914] mt-0.5">3rd January 2027 · 1:00 PM IST</p>
         </div>
         <div class="h-4"></div>
       </div>
 
       <img data-filename="countdown.jpg" data-primary="10" src="./countdown.jpg" alt="Countdown to 3rd January 2027" class="scene-img" style="object-fit: 100% 100%;" onload="onImgLoad(this)" onerror="onImgError(this)" />
 
-      <!-- Live Countdown Typography & 4 Time Tiles in Upper Open Cream Sky Area (top: 11.5% to 37.5%) -->
-      <div class="countdown-overlay">
-        <p class="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8b6914]">Counting Down To The Celebrations</p>
-        <h2 class="serif italic text-[22px] font-bold text-[#7d2138] leading-tight">Shubham &amp; Pooja</h2>
+      <!-- Live Countdown Typography & 4 Time Tiles in Upper Open Cream Sky Area (top: 6.2%) -->
+      <div id="countdown-box" class="countdown-overlay">
+        <p class="text-[8.5px] font-semibold uppercase tracking-[0.2em] text-[#8b6914]">Counting Down To The Celebrations</p>
+        <h2 class="serif italic text-[18px] font-bold text-[#7d2138] leading-tight">Countdown to 3rd January 2027</h2>
 
         <div class="cd-tiles-grid" aria-live="polite">
           <div class="cd-tile">
@@ -1722,7 +1722,7 @@
           </div>
         </div>
 
-        <p id="cd-status" class="text-[9.5px] font-semibold tracking-[0.11em] uppercase text-[#6e4c12]">3rd January, 2027 • 1:00 PM IST</p>
+        <p id="cd-status" class="text-[9px] font-semibold tracking-[0.11em] uppercase text-[#6e4c12]">3rd January 2027 · 1:00 PM IST</p>
         <span class="cd-tap-cue">Tap anywhere to continue</span>
       </div>
     </section>
