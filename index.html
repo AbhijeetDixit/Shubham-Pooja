@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ead6b8">
-<title>Shubham & Pooja | Wedding Invitation</title>
+<title>Shubham &amp; Pooja | Wedding Invitation</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Inter:wght@400;500;600&display=swap');
 :root{--ink:#57382f;--wine:#783f45;--gold:#b48b50;--paper:#f8eddb;--cream:#fff5e5}
@@ -222,6 +222,79 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 .rsvp-note{text-align:center;font:10px/1.5 Inter,Arial;color:#8a6b50;margin:13px 0 4px}
 .text-link{display:block;margin:12px auto 0;border:0;background:none;color:#825b42;text-decoration:underline;font:10px Inter,Arial;cursor:pointer}
 
+
+/* V6 story choreography */
+#app{background:#201a19}
+.scene{background:#e9d4b5}
+#cover{cursor:pointer}
+#cover .cover-title{bottom:13%}
+#cover .cover-button{bottom:6%}
+#blessing .blessing-bg{filter:brightness(.78) saturate(.85)}
+.blessing-veil{background:linear-gradient(180deg,#21160d35,#f5e8d0a8 60%,#f7ead9ee)}
+.blessing-story{position:relative;z-index:3;width:100%;padding:36px 25px 100px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.blessing-art{width:min(92%,390px);height:auto;max-height:55svh;object-fit:contain;border:0;background:transparent;box-shadow:none;filter:drop-shadow(0 10px 18px #28170f55);transition:transform 1.2s,opacity .8s}
+.blessing-copy{background:#fff7e9e8;border:1px solid #c29a61;padding:14px 15px;width:100%;box-shadow:0 8px 28px #422a1c25}
+.blessing-copy .small{font-size:10px;color:#644a3a;margin-top:8px}
+.family-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.family-mini>div{display:flex;flex-direction:column;gap:5px}
+.family-mini small{font:600 8px Inter;letter-spacing:.1em;color:#9a754d}
+.family-mini strong{font:500 16px/1.15 "Cormorant Garamond";color:#70413b}
+.diya-row{display:flex;gap:30px;font-size:35px;filter:grayscale(.8) brightness(.6);transition:filter .5s,transform .5s}
+#blessing.lit .diya-row{filter:drop-shadow(0 0 16px #ffd56b);transform:scale(1.15)}
+#blessing.lit .diya-row span{animation:diyaPulse .7s alternate infinite}
+@keyframes diyaPulse{to{filter:drop-shadow(0 0 16px #ffcf5c);transform:translateY(-4px)}}
+.scene-hotspot{position:absolute;z-index:12;bottom:calc(26px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:13px 20px;border:1px solid #f0d39a;border-radius:40px;background:#6e3c42ed;color:#fff1d8;font:600 9px Inter;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;box-shadow:0 7px 25px #20130f55;cursor:pointer;animation:hotspotBreathe 2.5s ease-in-out infinite}
+.scene-hotspot:active{transform:translateX(-50%) scale(.96)}
+.hotspot-icon{font-size:19px;color:#f6d48b}
+@keyframes hotspotBreathe{50%{box-shadow:0 7px 30px #e5b65b66,0 0 0 7px #fff2d011}}
+.light-rays{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 75%,#ffe18b99,transparent 55%)}
+#blessing.lit .light-rays{animation:lightBloom 1.5s ease forwards}
+@keyframes lightBloom{to{opacity:1}}
+#couple{background:linear-gradient(180deg,#9fcbd7,#e6d4b8 70%,#b78056)}
+.couple-story{position:relative;z-index:3;width:100%;padding:calc(35px + env(safe-area-inset-top)) 25px 115px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.couple-story>.eyebrow{color:#79563d}
+.couple-frame{width:100%;max-width:420px;padding:7px}
+.couple-frame img{aspect-ratio:3/2;object-fit:contain}
+.couple-caption{margin:0;text-align:center}
+.couple-caption .names{font-size:clamp(38px,10vw,52px);color:#623b35}
+.couple-caption .names span{font:32px "Great Vibes";color:#a77b43}
+.map-link{display:inline-flex;align-items:center;justify-content:center;color:#70482f;background:#fff4e4e8;border:1px solid #b78d55;border-radius:30px;padding:10px 16px;font:600 9px Inter;letter-spacing:.1em;text-decoration:none}
+.car-hotspot{bottom:calc(23px + env(safe-area-inset-bottom))}
+#couple.car-go .couple-frame{animation:carDrive 1.15s ease-in forwards}
+@keyframes carDrive{to{transform:translateX(125%) rotate(4deg);opacity:0}}
+/* Full-bleed function scenes: image is the world, typography is a small elegant overlay. */
+.ritual-scene{background:#251c1a}
+.ritual-scene .event-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.02);transition:transform 6s ease}
+.ritual-scene.active .event-art{transform:scale(1.1)}
+.event-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#20140c33 0%,transparent 28%,transparent 53%,#20140ccc 100%)}
+.event-info{position:absolute;z-index:3;left:22px;right:22px;bottom:calc(100px + env(safe-area-inset-bottom));text-align:center;color:#fff2dc;text-shadow:0 2px 12px #1d100e}
+.event-date{font:600 9px Inter;letter-spacing:.16em}
+.event-info h2{font:500 clamp(34px,9vw,46px)/1.05 "Cormorant Garamond";margin:8px 0;color:#fff0d6}
+.event-info .dress{font:600 8px/1.5 Inter;letter-spacing:.12em;color:#ffe7bf}
+.event-diyas{position:absolute;z-index:4;left:0;right:0;bottom:27%;display:flex;justify-content:center;gap:26px;font-size:38px;filter:grayscale(1) brightness(.55);transition:filter .4s}
+#saath.activated .event-diyas{filter:drop-shadow(0 0 18px #ffd66a);animation:diyaPulse .65s alternate infinite}
+.flower-burst,.turmeric-burst,.baraat-petals,.marigold-shower{position:absolute;inset:0;z-index:7;pointer-events:none;opacity:0}
+.activated .flower-burst,.activated .turmeric-burst,.activated .baraat-petals,.activated .marigold-shower{opacity:1}
+.flower-burst:before,.baraat-petals:before,.marigold-shower:before{content:"";position:absolute;inset:-20%;background-image:radial-gradient(ellipse,#f4bd5f 0 3px,transparent 4px),radial-gradient(ellipse,#e58a87 0 4px,transparent 5px),radial-gradient(ellipse,#fff0c5 0 3px,transparent 4px);background-size:47px 59px,61px 71px,37px 53px;animation:petalStorm 1.8s ease-in forwards}
+@keyframes petalStorm{from{transform:translateY(-25%) rotate(0);opacity:0}20%{opacity:1}to{transform:translateY(35%) rotate(14deg);opacity:0}}
+.colour-bowls{position:absolute;z-index:4;bottom:30%;left:0;right:0;display:flex;justify-content:center;gap:35px;font-size:31px;filter:drop-shadow(0 3px 6px #24160f88)}
+.turmeric-burst:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 55%,#f5c842bb,transparent 58%);animation:turmericSplash 1.5s ease-out forwards}
+@keyframes turmericSplash{from{transform:scale(.1);opacity:0}35%{opacity:1}to{transform:scale(2.2);opacity:0}}
+.music-notes{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0}
+#sham.activated .music-notes{opacity:1}
+.music-notes span{position:absolute;bottom:25%;left:var(--x);font-size:35px;color:#ffe3a0;text-shadow:0 0 16px #f3c66e;animation:noteRise 2.4s ease-out infinite;animation-delay:var(--delay)}
+.music-notes span:nth-child(1){--x:12%;--delay:0s}.music-notes span:nth-child(2){--x:28%;--delay:.3s}.music-notes span:nth-child(3){--x:48%;--delay:.6s}.music-notes span:nth-child(4){--x:66%;--delay:.9s}.music-notes span:nth-child(5){--x:82%;--delay:1.2s}.music-notes span:nth-child(6){--x:92%;--delay:1.5s}
+@keyframes noteRise{0%{transform:translateY(30px) rotate(-15deg);opacity:0}25%{opacity:1}100%{transform:translateY(-65vh) rotate(20deg);opacity:0}}
+#baraat .horse-art{transform-origin:center;transition:transform 1.35s cubic-bezier(.5,0,.8,.3),opacity 1.1s}
+#baraat.activated .horse-art{transform:translateX(120%) scale(1.04);opacity:0}
+.baraat-petals:before{background-size:43px 55px,59px 68px,37px 49px}
+.marigold-shower:before{background-image:radial-gradient(ellipse,#e69b26 0 5px,transparent 6px),radial-gradient(ellipse,#ffcf5c 0 4px,transparent 5px);background-size:39px 47px,53px 61px}
+.bling-lights{position:absolute;inset:0;z-index:5;opacity:0;pointer-events:none;background-image:radial-gradient(circle,#fff4b8 0 2px,transparent 4px),radial-gradient(circle,#ffd06a 0 3px,transparent 5px),radial-gradient(circle,#fff 0 1px,transparent 3px);background-size:55px 61px,83px 77px,37px 43px;background-position:0 0,23px 13px,11px 32px;transition:opacity 1s}
+#sufi.activated .bling-lights{opacity:1;animation:blingPulse 1.1s ease-in-out infinite alternate}
+@keyframes blingPulse{to{filter:brightness(1.8);transform:scale(1.02)}}
+#rsvp{background:linear-gradient(145deg,#f8e8d2,#e4c9a6)}
+#rsvp .rsvp-card{background:#fffaf0f2}
+
 </style>
 </head>
 <body>
@@ -234,147 +307,93 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   <img class="door right" src="door-right.webp" alt="">
  </div>
  <div class="cover-title">Shubham <span style="font-size:22px">&amp;</span> Pooja</div>
- <div class="cover-button"><button class="continue" id="openDoor">Open the doors <span class="arrow">↗</span></button></div>
+ <div class="cover-button"><button class="continue" id="openDoor">Click to open the doors <span class="arrow">↗</span></button></div>
 </section>
 
 <section class="scene" id="blessing" data-transition="gold">
  <img class="blessing-bg" src="temple-open.webp" alt="">
  <div class="blessing-veil"></div>
- <div class="blessing-panel">
-  <div class="eyebrow">With the blessings of Lord Shiva</div>
-  <img class="blessing-art" src="blessing-art.webp" alt="Joined hands and Shiva lingam surrounded by flowers">
-  <div class="script">A sacred beginning</div>
-  <div class="rule"></div>
-  <p class="small">With grateful hearts and the blessings of the Almighty,</p>
-  <p class="small" style="margin-top:7px">we invite you to celebrate the wedding of</p>
-  <div class="names" style="margin-top:15px">Shubham</div>
-  <div class="script" style="font-size:31px;margin:0">&amp;</div>
-  <div class="names">Pooja</div>
-  <p class="small gold" style="margin-top:13px">3 — 4 JANUARY 2027</p>
+ <div class="blessing-story">
+  <img class="blessing-art" src="blessing-art.webp" alt="Joined hands beneath the Shiva lingam">
+  <div class="blessing-copy">
+   <div class="eyebrow">With the blessings of Lord Shiva</div>
+   <div class="family-mini">
+    <div><small>GROOM'S PARENTS</small><strong>Haresh &amp; Jiya Basantwani</strong></div>
+    <div><small>BRIDE'S PARENTS</small><strong>Omprakash &amp; Anita Mandhan</strong></div>
+   </div>
+   <p class="small">Invite you to bless the union of Shubham &amp; Pooja</p>
+  </div>
+  <div class="diya-row" aria-hidden="true"><span>🪔</span><span>🪔</span><span>🪔</span></div>
  </div>
- <div class="scene-footer"><button class="continue" data-next>Continue <span class="arrow">→</span></button><span class="hint">A new chapter begins</span></div>
+ <button class="scene-hotspot" id="lightBlessing" aria-label="Light the diyas"><span class="hotspot-icon">✧</span><b>Click to light the diyas</b></button>
+ <div class="light-rays" aria-hidden="true"></div>
 </section>
 
-<section class="scene" id="families" data-transition="petals">
- <img class="family-backdrop" src="palace-art.webp" alt="">
- <div class="family-panel">
-  <div class="eyebrow">Together with their families</div>
-  <div class="script" style="margin:12px 0 4px">With love &amp; blessings</div>
-  <p class="small">Two families, one beautiful celebration</p>
-  <div class="family-row">
-   <div class="family-unit"><div class="eyebrow">Groom's parents</div><div class="parents">Haresh<br>&amp; Jiya</div><div class="surname">Basantwani</div><div class="rule"></div><div class="eyebrow">Basantwani Family</div></div>
-   <div class="family-unit"><div class="eyebrow">Bride's parents</div><div class="parents">Omprakash<br>&amp; Anita</div><div class="surname">Mandhan</div><div class="rule"></div><div class="eyebrow">Mandhan Family</div></div>
-  </div>
-  <p class="small">request the pleasure of your company<br>as their children begin a new journey together</p>
-  <div class="names" style="font-size:37px;margin-top:14px">Shubham &amp; Pooja</div>
- </div>
- <div class="scene-footer"><button class="continue" data-next>Meet the couple <span class="arrow">→</span></button><span class="hint paper-hint">Swipe to continue</span></div>
-</section>
+
+
+
 
 <section class="scene" id="couple" data-transition="sunset">
  <div class="couple-sky"></div>
- <div class="content">
+ <div class="couple-story">
   <div class="eyebrow">The two hearts behind the celebration</div>
-  <div class="script" style="margin:12px 0 17px">A little about us</div>
-  <div class="couple-frame"><img src="shubham-pooja-caricature.webp" alt="Shubham and Pooja's caricature beside a white classic convertible by the sea"></div>
-  <div class="couple-caption"><div class="names" style="font-size:44px">Shubham</div><div class="script" style="font-size:32px">&amp;</div><div class="names" style="font-size:44px">Pooja</div><p class="small gold" style="margin-top:12px">3 — 4 JANUARY 2027</p></div>
+  <div class="couple-frame" id="coupleCar"><img src="shubham-pooja-caricature.webp" alt="Shubham and Pooja's original caricature beside a white convertible by the sea"></div>
+  <div class="couple-caption"><div class="names">Shubham <span>&amp;</span> Pooja</div><div class="small">3 — 4 JANUARY 2027</div></div>
+  <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Crescent+The+Fern+Budhni+Madhya+Pradesh" target="_blank" rel="noopener">Crescent The Fern · Open in Maps ↗</a>
  </div>
- <div class="scene-footer"><button class="continue" data-next>Discover the celebrations <span class="arrow">→</span></button><span class="hint paper-hint">Our wedding story</span></div>
+ <button class="scene-hotspot car-hotspot" id="tapCar"><span class="hotspot-icon">✧</span><b>Click the car to begin</b></button>
 </section>
 
-<section class="scene" id="chapter" data-transition="gold">
- <img class="chapter-art" src="palace-art.webp" alt="">
- <div class="chapter-shade"></div>
- <div class="chapter-panel">
-  <div class="eyebrow">Two days · Six celebrations</div>
-  <div class="script" style="font-size:52px;margin:10px 0">The celebrations</div>
-  <div class="rule"></div>
-  <p class="small">A gathering of family, traditions, music<br>and memories to last a lifetime.</p>
-  <div class="names" style="font-size:32px;margin-top:18px">3 &amp; 4 January 2027</div>
- </div>
- <div class="scene-footer"><button class="continue" data-next>Begin day one <span class="arrow">→</span></button><span class="hint">The festivities await</span></div>
+
+
+<section class="scene event ritual-scene" id="saath" data-transition="gold">
+ <img class="event-art" src="saath-art.webp" alt="Traditional Saath and Tel Mukhi pooja setting">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">3 JANUARY 2027 · 1:00 PM</span><h2>Saath &amp; Tel Mukhi</h2><p class="dress">DRESS CODE · GREEN / COLOURFUL ETHNIC</p></div>
+ <div class="event-diyas" aria-hidden="true"><span>🪔</span><span>🪔</span><span>🪔</span></div>
+ <button class="scene-hotspot" id="lightSaath"><span class="hotspot-icon">✧</span><b>Click to light diyas</b></button>
+ <div class="flower-burst" aria-hidden="true"></div>
 </section>
 
-<section class="scene event" id="saath" data-transition="gold">
- <img class="event-art" src="saath-art.webp" alt="Traditional Saath and Tel Mukhi ceremony setting">
- <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">An auspicious beginning</div><div class="event-title">Saath &amp; Tel Mukhi</div><div class="event-time">1:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Let the colours unfold <span class="arrow">→</span></button><span class="hint">Day one · 1 of 3</span></div>
+<section class="scene event ritual-scene" id="rang" data-transition="sunset">
+ <img class="event-art" src="haldi-art.webp" alt="Rang Utsav haldi celebration in a marigold courtyard">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">3 JANUARY 2027 · 4:00 PM</span><h2>Rang Utsav</h2><p class="dress">DRESS CODE · GROOM'S SIDE: BLUE · BRIDE'S SIDE: PINK</p></div>
+ <div class="colour-bowls" aria-hidden="true"><span>🔵</span><span>🌸</span><span>🟡</span></div>
+ <button class="scene-hotspot" id="applyRang"><span class="hotspot-icon">✧</span><b>Apply haldi!</b></button>
+ <div class="turmeric-burst" aria-hidden="true"></div>
 </section>
 
-<section class="scene event" id="haldi" data-transition="sunset">
- <img class="event-art" src="haldi-art.webp" alt="Haldi ceremony with brass turmeric bowls and marigolds">
- <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">A little sunshine &amp; turmeric</div><div class="event-title">Haldi</div><div class="event-time">4:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Bring on the music <span class="arrow">→</span></button><span class="hint">Day one · 2 of 3</span></div>
+<section class="scene event ritual-scene" id="sham" data-transition="night">
+ <img class="event-art" src="sangeet-art.webp" alt="Sham-e-sangeet palace courtyard at night">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">3 JANUARY 2027 · 8:00 PM</span><h2>Sham-e-sangeet</h2><p class="dress">DRESS CODE · GLAMOROUS INDIAN / INDO-WESTERN</p></div>
+ <button class="scene-hotspot" id="playMusic"><span class="hotspot-icon">♫</span><b>Click to play music</b></button>
+ <div class="music-notes" aria-hidden="true"><span>♪</span><span>♫</span><span>♬</span><span>♪</span><span>♫</span><span>♬</span></div>
 </section>
 
-<section class="scene event" id="sangeet" data-transition="night">
- <img class="event-art" src="sangeet-art.webp" alt="Sangeet night with dhol, palace lights and cushions">
- <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">Music, dance &amp; celebration</div><div class="event-title">Sangeet</div><div class="event-time">8:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>The wedding day awaits <span class="arrow">→</span></button><span class="hint">Day one · 3 of 3</span></div>
+<section class="scene event ritual-scene" id="baraat" data-transition="petals">
+ <img class="event-art horse-art" src="baraat-art.webp" alt="Groom's baraat with decorated horse and flower shower">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">4 JANUARY 2027 · 12:00 PM</span><h2>Baraat</h2><p class="dress">DRESS CODE · TRADITIONAL INDIAN / WEDDING GLAM</p></div>
+ <button class="scene-hotspot horse-hotspot" id="tapHorse"><span class="hotspot-icon">✧</span><b>Click the horse to ride on</b></button>
+ <div class="baraat-petals" aria-hidden="true"></div>
 </section>
 
-<section class="scene event" id="baraat" data-transition="petals">
- <img class="event-art" src="baraat-art.webp" alt="Decorated white horse and baraat procession">
- <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">The grand arrival</div><div class="event-title">Baraat</div><div class="event-time">12:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>On to the sacred vows <span class="arrow">→</span></button><span class="hint">Day two · 1 of 3</span></div>
+<section class="scene event ritual-scene" id="saat-vachan" data-transition="fire">
+ <img class="event-art" src="phere-art.webp" alt="Bride and groom's saat vachan around the sacred fire">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">4 JANUARY 2027 · 3:00 PM</span><h2>Saat Vachan</h2><p class="dress">DRESS CODE · TRADITIONAL INDIAN / WEDDING GLAM</p></div>
+ <button class="scene-hotspot" id="showerBlessings"><span class="hotspot-icon">✧</span><b>Click &amp; shower your blessings</b></button>
+ <div class="marigold-shower" aria-hidden="true"></div>
 </section>
 
-<section class="scene event" id="phere" data-transition="fire">
- <img class="event-art" src="phere-art.webp" alt="Floral wedding mandap with sacred fire at sunset">
- <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">Seven vows · One lifetime</div><div class="event-title">Phere</div><div class="event-time">3:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>As the evening begins <span class="arrow">→</span></button><span class="hint">Day two · 2 of 3</span></div>
-</section>
-
-<section class="scene event" id="sufi" data-transition="lantern">
- <img class="event-art" src="sufi-art.webp" alt="Sufi night courtyard with lanterns and traditional instruments">
- <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">An evening of soulful music</div><div class="event-title">Sufi Night</div><div class="event-time">9:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>A little more magic <span class="arrow">→</span></button><span class="hint">Day two · 3 of 3</span></div>
-</section>
-
-<section class="scene" id="countdown" data-transition="gold">
- <img class="count-bg" src="countdown-art.webp" alt="">
- <div class="count-shade"></div>
- <div class="content">
-  <div class="eyebrow">The celebration begins in</div>
-  <div class="script" style="margin:16px 0 5px">Counting the moments</div>
-  <div class="count-grid" id="countGrid"><div><strong>--</strong><span>DAYS</span></div><div><strong>--</strong><span>HOURS</span></div><div><strong>--</strong><span>MINUTES</span></div><div><strong>--</strong><span>SECONDS</span></div></div>
-  <div class="diya" id="diya">🪔</div>
-  <p class="small" style="margin-top:15px">May the light of love shine on this new beginning.</p>
-  <p class="small" style="margin-top:12px">3 — 4 JANUARY 2027</p>
- </div>
- <div class="scene-footer"><button class="continue" data-next>Find the venue <span class="arrow">→</span></button><span class="hint">Tap the diya for a blessing</span></div>
-</section>
-
-<section class="scene" id="venue" data-transition="petals">
- <img class="venue-bg" src="palace-art.webp" alt="">
- <div class="venue-veil"></div>
- <div class="venue-panel">
-  <div class="eyebrow">We would be delighted by your presence</div>
-  <div class="script" style="font-size:47px;margin:13px 0">The venue</div>
-  <div class="rule"></div>
-  <h2 class="serif" style="font-size:32px;color:#70423a">Crescent The Fern</h2>
-  <p class="small gold" style="margin-top:8px">BUDHNI</p>
-  <p class="small" style="margin-top:3px">Series by Marriott</p>
-  <div class="rule"></div>
-  <p class="small">3 — 4 JANUARY 2027</p>
-  <a class="continue map-link" href="https://www.google.com/maps/search/?api=1&query=Crescent+The+Fern+Budhni+Madhya+Pradesh" target="_blank" rel="noopener">Open in Google Maps ↗</a>
- </div>
- <div class="scene-footer"><button class="continue" data-next>With love <span class="arrow">→</span></button><span class="hint">We hope to see you there</span></div>
-</section>
-
-<section class="scene" id="finale">
- <img class="finale-bg" src="palace-art.webp" alt="">
- <div class="content">
-  <div class="eyebrow">With love from our families</div>
-  <div class="monogram">S <span style="font:31px 'Great Vibes';color:#b48a4c">&amp;</span> P</div>
-  <div class="script" style="font-size:48px">We look forward to celebrating with you</div>
-  <div class="rule"></div>
-  <p class="small">HARESH &amp; JIYA BASANTWANI</p>
-  <p class="small">OMPRAKASH &amp; ANITA MANDHAN</p>
-  <div class="names" style="font-size:38px;margin-top:17px">Shubham &amp; Pooja</div>
-  <p class="small gold" style="margin-top:12px">3 — 4 JANUARY 2027</p>
-  <button class="continue" style="margin-top:22px" data-next>Kindly respond <span class="arrow">→</span></button>
- </div>
+<section class="scene event ritual-scene" id="sufi" data-transition="lantern">
+ <img class="event-art" src="sufi-art.webp" alt="Sufi night with lanterns and sparkling lights">
+ <div class="event-shade"></div>
+ <div class="event-info"><span class="event-date">4 JANUARY 2027 · 9:00 PM</span><h2>Sufi Night</h2><p class="dress">DRESS CODE · DARK / CLASSY EVENING WEAR</p></div>
+ <div class="bling-lights" aria-hidden="true"></div>
+ <button class="scene-hotspot" id="bringBling"><span class="hotspot-icon">✧</span><b>Click to bring the bling</b></button>
 </section>
 
 <section class="scene" id="rsvp" data-transition="petals">
@@ -400,54 +419,34 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 </section>
 
 <div id="transition"></div>
-<div class="progress" id="progress"></div>
+
 </main>
 <script>
 (()=>{
- const scenes=[...document.querySelectorAll('.scene')], app=document.getElementById('app');
- const progress=document.getElementById('progress'), overlay=document.getElementById('transition');
- let current=0,busy=false,startX=0,startY=0;
- scenes.forEach((s,i)=>{const d=document.createElement('i');if(i===0)d.className='on';progress.appendChild(d)});
- function update(){[...progress.children].forEach((d,i)=>d.classList.toggle('on',i===current));}
- function petals(){
-  for(let i=0;i<20;i++){const p=document.createElement('span');p.className='transition-petal';p.style.left=Math.random()*100+'%';p.style.animationDelay=Math.random()*.35+'s';p.style.setProperty('--dx',(Math.random()*150-75)+'px');overlay.appendChild(p);setTimeout(()=>p.remove(),1900)}
+ const $=id=>document.getElementById(id);
+ const order=['cover','blessing','couple','saath','rang','sham','baraat','saat-vachan','sufi','rsvp'];
+ let index=0,busy=false;
+ function show(id,effect='gold'){
+  if(busy)return;const next=$(id),old=$(order[index]);if(!next||next===old)return;
+  busy=true;const veil=$('transition');veil.className='';veil.classList.add(effect,'play');
+  setTimeout(()=>{old.classList.remove('active');next.classList.add('active','enter');index=order.indexOf(id);},390);
+  setTimeout(()=>{next.classList.remove('enter');veil.className='';veil.innerHTML='';busy=false;},1250);
  }
- function go(n,first=false){
-  if(busy)return;n=Math.max(0,Math.min(scenes.length-1,n));if(n===current)return;
-  busy=true;
-  const old=scenes[current],next=scenes[n],effect=next.dataset.transition||'gold';
-  overlay.className='';overlay.classList.add(effect,'play');
-  if(effect==='petals'||effect==='gold')petals();
-  // Keep the outgoing scene visible until the transition curtain has covered it.
-  setTimeout(()=>{old.classList.remove('active');current=n;next.classList.add('active','enter');update();},365);
-  setTimeout(()=>{next.classList.remove('enter');overlay.className='';overlay.innerHTML='';busy=false;},1140);
- }
- function next(){go(current+1)}function prev(){go(current-1)}
- window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});
- document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',next));
- document.getElementById('openDoor').addEventListener('click',()=>{
-  if(current!==0||busy)return;busy=true;document.getElementById('cover').classList.add('open');
-  document.getElementById('openDoor').disabled=true;
-  setTimeout(()=>{busy=false;go(1)},1780);
- });
- document.getElementById('replay').addEventListener('click',()=>{document.getElementById('cover').classList.remove('open');document.getElementById('openDoor').disabled=false;go(0)});
- const rsvpForm=document.getElementById('rsvpForm');
- if(rsvpForm)rsvpForm.addEventListener('submit',e=>{
-  e.preventDefault();
-  const note=document.getElementById('rsvpNote');
-  note.textContent='Thank you! This is a preview only; your response has not been sent or stored.';
-  const btn=rsvpForm.querySelector('button[type="submit"]');
-  btn.textContent='Thank you ♡';btn.disabled=true;
- });
- app.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY},{passive:true});
- app.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
-  if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.15){if(dx<0)next();else prev()}
- },{passive:true});
- const target=new Date('2027-01-03T00:00:00+05:30').getTime();
- function tick(){let ms=Math.max(0,target-Date.now());const v=[Math.floor(ms/86400000),Math.floor(ms/3600000)%24,Math.floor(ms/60000)%60,Math.floor(ms/1000)%60];document.querySelectorAll('#countGrid strong').forEach((e,i)=>e.textContent=String(v[i]).padStart(2,'0'))}
- tick();setInterval(tick,1000);
- const diya=document.getElementById('diya');if(diya)diya.addEventListener('click',()=>{diya.animate([{transform:'scale(1)'},{transform:'scale(1.35)',filter:'drop-shadow(0 0 38px #ffd67d)'},{transform:'scale(1)'}],{duration:850,easing:'ease-out'})});
+ function advance(from,to,effect){const el=$(from);if(el.classList.contains('activated')||busy)return;el.classList.add('activated');setTimeout(()=>show(to,effect),1500)}
+ $('openDoor').addEventListener('click',()=>{if(busy)return;busy=true;$('cover').classList.add('open');$('openDoor').disabled=true;setTimeout(()=>{busy=false;show('blessing','gold')},1800)});
+ $('cover').addEventListener('click',e=>{if(e.target.id!=='openDoor')$('openDoor').click()});
+ $('lightBlessing').addEventListener('click',()=>{if(busy)return;$('blessing').classList.add('lit');$('lightBlessing').disabled=true;setTimeout(()=>show('couple','gold'),1600)});
+ $('tapCar').addEventListener('click',()=>{if(busy)return;$('couple').classList.add('car-go');$('tapCar').disabled=true;setTimeout(()=>show('saath','sunset'),1150)});
+ $('lightSaath').addEventListener('click',()=>advance('saath','rang','petals'));
+ $('applyRang').addEventListener('click',()=>advance('rang','sham','night'));
+ $('playMusic').addEventListener('click',()=>advance('sham','baraat','petals'));
+ $('tapHorse').addEventListener('click',()=>advance('baraat','saat-vachan','fire'));
+ $('showerBlessings').addEventListener('click',()=>advance('saat-vachan','sufi','lantern'));
+ $('bringBling').addEventListener('click',()=>advance('sufi','rsvp','gold'));
+ const form=$('rsvpForm');
+ if(form)form.addEventListener('submit',e=>{e.preventDefault();$('rsvpNote').textContent='Thank you! This is a preview only; your response has not been sent or stored.';form.querySelector('button[type=submit]').textContent='Thank you ♡'});
+ $('replay').addEventListener('click',()=>{location.reload()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&index>0){}});
 })();
 </script>
 </body>
