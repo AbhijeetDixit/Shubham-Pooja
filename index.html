@@ -57,8 +57,8 @@
        2. STRICT CLICK & POINTER ARCHITECTURE
        ========================================================================== */
     .scene {
-      display: none;
-      pointer-events: none;
+      display: none !important;
+      pointer-events: none !important;
       position: absolute;
       inset: 0;
       width: 100%;
@@ -69,8 +69,8 @@
     }
 
     .scene.active {
-      display: block;
-      pointer-events: auto;
+      display: block !important;
+      pointer-events: auto !important;
       z-index: 10;
       opacity: 1;
       cursor: pointer;
@@ -78,16 +78,16 @@
     }
 
     .scene.leaving {
-      display: block;
-      pointer-events: none;
+      display: block !important;
+      pointer-events: none !important;
       z-index: 12;
       opacity: 0;
     }
 
     /* Scene 2 mounted directly behind Scene 1's parting doors */
     .scene.under-reveal {
-      display: block;
-      pointer-events: none;
+      display: block !important;
+      pointer-events: none !important;
       z-index: 5;
       opacity: 1;
       filter: blur(10px) brightness(0.9);
@@ -255,12 +255,12 @@
       border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
       padding: 2px 5px;
-      pointer-events: auto;
+      pointer-events: auto !important;
       z-index: 100;
     }
 
     #top-hud button {
-      pointer-events: auto;
+      pointer-events: auto !important;
       z-index: 100;
       cursor: pointer;
       touch-action: manipulation;
@@ -304,7 +304,7 @@
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
-      pointer-events: auto;
+      pointer-events: auto !important;
       z-index: 100;
     }
 
@@ -385,7 +385,7 @@
       );
     }
 
-    /* Hanging Brass Bell Overlay (left: 43.8%; top: 15.6%; width: 11%; height: 9.2%) */
+    /* Subtle Hanging Brass Bell Overlay (left: 43.8%; top: 15.6%; width: 11%; height: 9.2%) */
     .temple-bell-swing {
       position: absolute;
       left: 43.8%;
@@ -443,7 +443,7 @@
       100% { transform: scale(1.22); opacity: 0; }
     }
 
-    /* 3D Parting Wooden Doors (Zero yellow/gold fill) */
+    /* 3D Parting Wooden Doors (Zero yellow/gold background fill) */
     .doors-3d-stage {
       position: absolute;
       left: 30.5%;
@@ -658,6 +658,7 @@
 
     /* ==========================================================================
        7. SCENE 3: GANGA GLOW & DELICATE WATER RIPPLES (./ganga.png)
+       (No subtle rectangular shimmer band when staying on this page)
        ========================================================================== */
     .river-diya-glow {
       position: absolute;
@@ -676,7 +677,6 @@
       transform: translate(-50%, -50%) scale(1.2);
     }
 
-    /* Small, delicate foreshortened ripples confined strictly to open river water (64%..78%) */
     .water-ripple {
       position: absolute;
       border-radius: 50%;
@@ -1103,7 +1103,7 @@
       width: 72%;
       height: 23%;
       z-index: 40;
-      pointer-events: auto;
+      pointer-events: auto !important;
       background: transparent;
       border: none;
       border-radius: 18px;
@@ -1156,7 +1156,7 @@
       right: 12px;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
       z-index: 60;
-      pointer-events: auto;
+      pointer-events: auto !important;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -1189,7 +1189,7 @@
 
     #map-sheet-backdrop.open {
       opacity: 1;
-      pointer-events: auto;
+      pointer-events: auto !important;
       cursor: pointer;
     }
 
@@ -1214,7 +1214,7 @@
 
     #map-sheet.open {
       transform: translateY(0);
-      pointer-events: auto;
+      pointer-events: auto !important;
     }
 
     .sheet-handle {
@@ -1270,6 +1270,7 @@
       justify-content: center;
       flex-shrink: 0;
       cursor: pointer;
+      pointer-events: auto !important;
       padding: 0;
     }
 
@@ -1334,6 +1335,7 @@
       gap: 4px;
       text-decoration: none;
       cursor: pointer;
+      pointer-events: auto !important;
     }
 
     #copy-addr-btn {
@@ -1386,6 +1388,13 @@
   </style>
 </head>
 <body>
+
+  <!-- Background Song on Continuous Loop (Root Folder ./song.mp3) -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="./song.mp3" type="audio/mpeg" />
+    <source src="./song.m4a" type="audio/mp4" />
+    <source src="./song.wav" type="audio/wav" />
+  </audio>
 
   <main id="stage" aria-label="Shubham and Pooja Interactive Wedding Invitation">
     <!-- TOP HUD NAVIGATION BAR -->
@@ -2071,6 +2080,9 @@
     var WEDDING_TARGET_MS = new Date('2027-01-03T13:00:00+05:30').getTime();
     var VENUE_FULL_ADDRESS = 'Crescent The Fern, Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445';
 
+    var BG_MUSIC_BASE_VOL = 0.42;
+    var BG_MUSIC_DUCK_VOL = 0.13;
+
     var currentScene = 1;
     var isAnimating = false;
     var soundEnabled = true;
@@ -2079,6 +2091,8 @@
     var fountainRaf = null;
     var toastTimer = null;
     var riverAmbientCtrl = null;
+    var bgDuckTimer = null;
+    var bgFadeRaf = null;
 
     function stopEvent(e) {
       if (e && typeof e.stopPropagation === 'function') {
@@ -2095,6 +2109,70 @@
       toastTimer = setTimeout(function () {
         toast.classList.remove('show');
       }, durationMs || 2400);
+    }
+
+    /* ==========================================================================
+       BACKGROUND LOOPING MUSIC (./song.mp3) WITH SMART VOLUME DUCKING
+       ========================================================================== */
+    function animateBgMusicVolume(targetVol, durationMs) {
+      var bg = document.getElementById('bg-music');
+      if (!bg) return;
+      if (bgFadeRaf) {
+        cancelAnimationFrame(bgFadeRaf);
+        bgFadeRaf = null;
+      }
+      var startVol = bg.volume;
+      var clampedTarget = Math.max(0, Math.min(1, targetVol));
+      if (Math.abs(clampedTarget - startVol) < 0.005 || !durationMs) {
+        bg.volume = clampedTarget;
+        return;
+      }
+      var startTime = performance.now();
+      function step(now) {
+        var t = Math.min(1, (now - startTime) / durationMs);
+        bg.volume = startVol + (clampedTarget - startVol) * t;
+        if (t < 1) {
+          bgFadeRaf = requestAnimationFrame(step);
+        } else {
+          bgFadeRaf = null;
+        }
+      }
+      bgFadeRaf = requestAnimationFrame(step);
+    }
+
+    function ensureBgMusicPlaying() {
+      var bg = document.getElementById('bg-music');
+      if (!bg) return;
+      if (!soundEnabled) {
+        bg.pause();
+        return;
+      }
+      if (bg.paused) {
+        bg.volume = BG_MUSIC_BASE_VOL;
+        var playPromise = bg.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(function () {});
+        }
+      }
+    }
+
+    function duckBgMusic(holdMs) {
+      var bg = document.getElementById('bg-music');
+      if (!bg || !soundEnabled) return;
+      ensureBgMusicPlaying();
+      clearTimeout(bgDuckTimer);
+      animateBgMusicVolume(BG_MUSIC_DUCK_VOL, 220);
+      if (typeof holdMs === 'number' && holdMs > 0) {
+        bgDuckTimer = setTimeout(function () {
+          restoreBgMusic();
+        }, holdMs);
+      }
+    }
+
+    function restoreBgMusic() {
+      clearTimeout(bgDuckTimer);
+      if (!soundEnabled) return;
+      animateBgMusicVolume(BG_MUSIC_BASE_VOL, 550);
     }
 
     function copyVenueAddress(e) {
@@ -2118,6 +2196,7 @@
 
     function openMapSheet(e) {
       stopEvent(e);
+      ensureBgMusicPlaying();
       var backdrop = document.getElementById('map-sheet-backdrop');
       var sheet = document.getElementById('map-sheet');
       if (backdrop) backdrop.classList.add('open');
@@ -2137,6 +2216,7 @@
        ========================================================================== */
     function ensureAudio() {
       if (!soundEnabled) return null;
+      ensureBgMusicPlaying();
       try {
         if (!audioCtx) {
           var Ctx = window.AudioContext || window.webkitAudioContext;
@@ -2154,6 +2234,7 @@
     function playTempleBell() {
       var ctx = ensureAudio();
       if (!ctx) return;
+      duckBgMusic(1650);
       var now = ctx.currentTime;
       [
         { freq: 880, gain: 0.14, decay: 1.9 },
@@ -2253,6 +2334,7 @@
       if (!riverAmbientCtrl) return;
       var ctrl = riverAmbientCtrl;
       riverAmbientCtrl = null;
+      restoreBgMusic();
       try {
         var ctx = ctrl.ctx;
         var now = ctx.currentTime;
@@ -2332,6 +2414,7 @@
       }
 
       if (isSwell && riverAmbientCtrl) {
+        duckBgMusic(2450);
         var ctrl = riverAmbientCtrl;
         var now = ctrl.ctx.currentTime;
         ctrl.masterGain.gain.cancelScheduledValues(now);
@@ -2368,6 +2451,7 @@
       if (!soundEnabled) return;
       var ctx = ensureAudio();
       if (!ctx) return;
+      duckBgMusic(2400);
       var now = ctx.currentTime;
       var dur = 2.45;
 
@@ -2479,6 +2563,7 @@
     function playHarmoniumSufi() {
       var ctx = ensureAudio();
       if (!ctx) return;
+      duckBgMusic(2150);
       var now = ctx.currentTime;
 
       var masterFilter = ctx.createBiquadFilter();
@@ -2830,11 +2915,15 @@
       var offIcon = document.getElementById('icon-sound-off');
       if (onIcon) onIcon.style.display = soundEnabled ? 'block' : 'none';
       if (offIcon) offIcon.style.display = soundEnabled ? 'none' : 'block';
+      var bg = document.getElementById('bg-music');
       if (soundEnabled) {
         ensureAudio();
+        restoreBgMusic();
         if (currentScene === 3) startRiverFlow(false);
         showToast('Sound enabled');
       } else {
+        clearTimeout(bgDuckTimer);
+        if (bg) bg.pause();
         stopRiverFlow(true);
         showToast('Sound muted');
       }
@@ -3085,6 +3174,16 @@
         if (ev.key === 'ArrowRight') goToScene(currentScene + 1, true, false);
         else if (ev.key === 'ArrowLeft') goToScene(currentScene - 1, true, false);
         else if (ev.key === 'Escape') closeMapSheet();
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        var bg = document.getElementById('bg-music');
+        if (!bg) return;
+        if (document.hidden) {
+          bg.pause();
+        } else if (soundEnabled) {
+          ensureBgMusicPlaying();
+        }
       });
 
       updateCountdownDisplay();
