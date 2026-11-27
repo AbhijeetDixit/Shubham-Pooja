@@ -337,6 +337,39 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 #rang.activated .turmeric-burst:after{opacity:1;animation:turmericRain 2.2s ease-in forwards!important}
 @keyframes turmericRain{0%{transform:translateY(-18%) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(30%) rotate(16deg);opacity:0}}
 
+
+/* V9: remove legacy poster/gradient layers; one full-bleed event composition */
+.ritual-scene.event:after{content:none!important;display:none!important}
+.ritual-scene{background:#241b19!important}
+.ritual-scene .event-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;transform:none!important;filter:none!important;z-index:0!important;transition:transform 1.6s ease,opacity 1.4s ease!important}
+.ritual-scene.active .event-art{transform:scale(1.025)!important}
+.ritual-scene .event-shade{position:absolute!important;inset:0!important;z-index:1!important;background:linear-gradient(180deg,rgba(25,15,10,.18) 0%,transparent 26%,transparent 72%,rgba(25,15,10,.22) 100%)!important;pointer-events:none}
+.ritual-scene .event-info{top:calc(12px + env(safe-area-inset-top))!important;bottom:auto!important;left:16px!important;right:16px!important;z-index:5!important;padding:10px 12px 9px!important;border:1px solid #d8b77f!important;border-radius:15px!important;background:rgba(255,246,230,.94)!important;color:#633c35!important;text-shadow:none!important;box-shadow:0 5px 18px rgba(20,10,5,.22)!important;backdrop-filter:blur(4px)!important}
+.ritual-scene .event-info h2{font-size:clamp(29px,7.8vw,38px)!important;line-height:1!important;margin:3px 0 4px!important;color:#743e43!important}
+.ritual-scene .event-info .event-date{font-size:8px!important;color:#815c3b!important}
+.ritual-scene .event-info .dress{font-size:7px!important;line-height:1.35!important;color:#76543c!important;margin:0!important}
+.ritual-scene .scene-hotspot{z-index:15!important;bottom:calc(18px + env(safe-area-inset-bottom))!important}
+.ritual-scene .event-diyas,.ritual-scene .colour-bowls{z-index:8!important}
+.ritual-scene .flower-burst,.ritual-scene .turmeric-burst,.ritual-scene .baraat-petals,.ritual-scene .marigold-shower,.ritual-scene .music-notes,.ritual-scene .bling-lights{z-index:10!important;pointer-events:none!important}
+#saath.activated .event-diyas{filter:drop-shadow(0 0 18px #ffd66a)!important;animation:diyaPulse .55s alternate infinite!important}
+#rang.activated .colour-bowls{animation:bowlBounce .55s ease-in-out 3!important}
+#baraat.activated .horse-art{transform:translateX(-115%) scale(1.02)!important;opacity:0!important;transition:transform 1.65s cubic-bezier(.4,0,.8,.35),opacity 1.35s!important}
+#couple.car-go .couple-frame{animation:carDriveLeft 1.25s cubic-bezier(.45,0,.8,.4) forwards!important}
+@keyframes carDriveLeft{to{transform:translateX(-135%) rotate(-4deg);opacity:0}}
+/* Powder and petals are real positioned particles, not a low-contrast gradient wash. */
+.effect-particle{position:absolute;top:-8%;left:var(--x);width:var(--size);height:var(--size);border-radius:50%;opacity:0;pointer-events:none;z-index:11;animation:particleFall var(--dur) linear var(--delay) forwards;box-shadow:0 0 5px rgba(255,255,255,.25)}
+.effect-particle.turmeric{background:var(--particle);border-radius:35% 65% 55% 45%}
+.effect-particle.petal{background:var(--particle);border-radius:65% 20% 65% 20%;transform:rotate(var(--rot))}
+@keyframes particleFall{0%{transform:translate3d(0,-4vh,0) rotate(0deg) scale(.55);opacity:0}12%{opacity:1}85%{opacity:.95}100%{transform:translate3d(var(--drift),112vh,0) rotate(520deg) scale(1.1);opacity:0}}
+#rang .turmeric-burst{opacity:1!important}
+#rang .turmeric-burst:before,#rang .turmeric-burst:after{display:none!important}
+#rang.activated .turmeric-burst{background:radial-gradient(ellipse at 50% 48%,rgba(255,203,42,.22),transparent 55%)!important}
+#sham.activated .music-notes{opacity:1!important}
+#saat-vachan .marigold-shower,#saath .flower-burst,#baraat .baraat-petals{opacity:0}
+#saat-vachan.activated .marigold-shower,#saath.activated .flower-burst,#baraat.activated .baraat-petals{opacity:1}
+#sufi.activated .bling-lights{opacity:1!important;animation:blingPulse .65s ease-in-out infinite alternate!important}
+@media(max-height:720px){.ritual-scene .event-info{top:calc(8px + env(safe-area-inset-top))!important;padding:8px 10px!important}.ritual-scene .event-info h2{font-size:29px!important}}
+
 </style>
 </head>
 <body>
@@ -469,26 +502,35 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  const order=['cover','blessing','couple','saath','rang','sham','baraat','saat-vachan','sufi','rsvp'];
  let index=0,busy=false;
  function show(id,effect='gold'){
-  if(busy)return;const next=$(id),old=$(order[index]);if(!next||next===old)return;
+  if(busy)return;const next=$(id),old=$(order[index]);if(!next||!old||next===old)return;
   busy=true;const veil=$('transition');veil.className='';veil.classList.add(effect,'play');
   setTimeout(()=>{old.classList.remove('active');next.classList.add('active','enter');index=order.indexOf(id);},390);
   setTimeout(()=>{next.classList.remove('enter');veil.className='';veil.innerHTML='';busy=false;},1250);
  }
- function advance(from,to,effect,duration=2300){const el=$(from);if(el.classList.contains('activated')||busy)return;el.classList.add('activated');setTimeout(()=>show(to,effect),duration)}
+ function particles(sceneId,kind,count){
+  const scene=$(sceneId);const layer=scene.querySelector(kind==='turmeric'?'.turmeric-burst':sceneId==='baraat'?'.baraat-petals':sceneId==='saath'?'.flower-burst':'.marigold-shower');
+  if(!layer)return;layer.querySelectorAll('.effect-particle').forEach(p=>p.remove());
+  const colors=kind==='turmeric'?['#f4c52e','#ffd84a','#e5a91c','#fff0a6']:['#f6b7c5','#f5d06a','#fff0cf','#e58b83','#e9a52d'];
+  for(let i=0;i<count;i++){const p=document.createElement('i');p.className='effect-particle '+(kind==='turmeric'?'turmeric':'petal');p.style.setProperty('--x',(Math.random()*100)+'%');p.style.setProperty('--size',(kind==='turmeric'?5+Math.random()*8:7+Math.random()*10)+'px');p.style.setProperty('--dur',(2.0+Math.random()*1.1)+'s');p.style.setProperty('--delay',(Math.random()*.75)+'s');p.style.setProperty('--drift',(-45+Math.random()*90)+'px');p.style.setProperty('--rot',(Math.random()*180)+'deg');p.style.setProperty('--particle',colors[i%colors.length]);layer.appendChild(p)}
+ }
+ function run(sceneId,target,effect,duration,kind){
+  const scene=$(sceneId);if(busy||scene.classList.contains('activated'))return;
+  scene.classList.add('activated');const button=scene.querySelector('.scene-hotspot');if(button)button.disabled=true;
+  if(kind)particles(sceneId,kind,kind==='turmeric'?90:65);
+  setTimeout(()=>show(target,effect),duration);
+ }
  $('openDoor').addEventListener('click',()=>{if(busy)return;busy=true;$('cover').classList.add('open');$('openDoor').disabled=true;setTimeout(()=>{busy=false;show('blessing','gold')},1800)});
  $('cover').addEventListener('click',e=>{if(e.target.id!=='openDoor')$('openDoor').click()});
  $('lightBlessing').addEventListener('click',()=>{if(busy)return;$('blessing').classList.add('lit');$('lightBlessing').disabled=true;setTimeout(()=>show('couple','gold'),1600)});
- $('tapCar').addEventListener('click',()=>{if(busy)return;$('couple').classList.add('car-go');$('tapCar').disabled=true;setTimeout(()=>show('saath','sunset'),1150)});
- $('lightSaath').addEventListener('click',()=>advance('saath','rang','petals',2300));
- $('applyRang').addEventListener('click',()=>advance('rang','sham','night',2600));
- $('playMusic').addEventListener('click',()=>advance('sham','baraat','petals',2800));
- $('tapHorse').addEventListener('click',()=>advance('baraat','saat-vachan','fire',1900));
- $('showerBlessings').addEventListener('click',()=>advance('saat-vachan','sufi','lantern',2600));
- $('bringBling').addEventListener('click',()=>advance('sufi','rsvp','gold',2500));
- const form=$('rsvpForm');
- if(form)form.addEventListener('submit',e=>{e.preventDefault();$('rsvpNote').textContent='Thank you! This is a preview only; your response has not been sent or stored.';form.querySelector('button[type=submit]').textContent='Thank you ♡'});
- $('replay').addEventListener('click',()=>{location.reload()});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&index>0){}});
+ $('tapCar').addEventListener('click',()=>{if(busy)return;$('couple').classList.add('car-go');$('tapCar').disabled=true;setTimeout(()=>show('saath','sunset'),1250)});
+ $('lightSaath').addEventListener('click',()=>run('saath','rang','petals',3900,'flower'));
+ $('applyRang').addEventListener('click',()=>run('rang','sham','night',4200,'turmeric'));
+ $('playMusic').addEventListener('click',()=>run('sham','baraat','petals',3200,null));
+ $('tapHorse').addEventListener('click',()=>run('baraat','saat-vachan','fire',2600,'petal'));
+ $('showerBlessings').addEventListener('click',()=>run('saat-vachan','sufi','lantern',3900,'petal'));
+ $('bringBling').addEventListener('click',()=>run('sufi','rsvp','gold',3000,null));
+ const form=$('rsvpForm');if(form)form.addEventListener('submit',e=>{e.preventDefault();$('rsvpNote').textContent='Thank you! This is a preview only; your response has not been sent or stored.';form.querySelector('button[type=submit]').textContent='Thank you ♡'});
+ $('replay').addEventListener('click',()=>location.reload());
 })();
 </script>
 </body>
