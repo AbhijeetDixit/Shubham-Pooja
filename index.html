@@ -1151,6 +1151,25 @@
       100% { transform: translate(calc(-50% + var(--px, 34px)), calc(-50% + var(--py, -16px))) scale(2.1); opacity: 0; }
     }
 
+    .drive-cue {
+      position:absolute; left:50%; bottom:calc(env(safe-area-inset-bottom, 0px) + 13%);
+      transform:translateX(-50%); z-index:35; padding:8px 17px; border-radius:999px;
+      border:1px solid rgba(245,210,122,.62); background:rgba(34,18,14,.82);
+      color:#fff6df; font-size:11px; font-weight:600; letter-spacing:.08em;
+      white-space:nowrap; box-shadow:0 6px 18px rgba(0,0,0,.3); pointer-events:none;
+      animation:driveCuePulse 1.8s ease-in-out infinite;
+    }
+    .drive-cue span { color:#f5d27a; margin-left:5px; }
+    @keyframes driveCuePulse {
+      0%,100% { opacity:.78; transform:translateX(-50%) translateY(0); }
+      50% { opacity:1; transform:translateX(-50%) translateY(-3px); }
+    }
+    #scene-11.driving-out { animation:venueDriveOut 1.05s cubic-bezier(.62,0,.82,.35) forwards; }
+    @keyframes venueDriveOut {
+      0% { transform:translateX(0); opacity:1; }
+      100% { transform:translateX(-110%); opacity:.92; }
+    }
+
     #replay-btn {
       position: absolute;
       right: 12px;
@@ -2034,6 +2053,8 @@
       <!-- Direct Interactive Venue Card / OPEN IN MAPS Trigger -->
       <button id="venue-card-btn" type="button" onclick="openMapSheet(event)" aria-label="Open Crescent The Fern Budhni Map Preview"></button>
 
+      <div class="drive-cue" aria-hidden="true">Tap the car to drive <span>✦</span></div>
+
       <!-- Vintage Convertible Headlight Glints & Exhaust Puffs during Engine Rev -->
       <div class="fx-layer">
         <div class="car-headlight-glint" style="left: 17.5%; top: 76.2%;"></div>
@@ -2042,13 +2063,6 @@
         <div id="car-exhaust-host" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
 
-      <button id="replay-btn" type="button" onclick="replayInvitation(event)" aria-label="Replay invitation">
-        <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
-          <polyline points="1 4 1 10 7 10"></polyline>
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-        </svg>
-        <span style="pointer-events:none;">Replay</span>
-      </button>
     </section>
 
 
@@ -2136,6 +2150,13 @@
           </div>
         </div>
       </div>
+      <button id="replay-btn" type="button" onclick="replayInvitation(event)" aria-label="Replay invitation">
+        <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        <span style="pointer-events:none;">Replay</span>
+      </button>
     </section>
 
     <!-- Slide-Up Glassmorphism Map Preview Sheet -->
@@ -2904,7 +2925,7 @@
     function resetScene(sceneNum) {
       var el = document.getElementById('scene-' + sceneNum);
       if (!el) return;
-      el.classList.remove('opening', 'bell-ringing', 'under-reveal', 'focus-in', 'ignited', 'rippling', 'tilak-on', 'zooming', 'haldi-on', 'playing', 'revving');
+      el.classList.remove('opening', 'bell-ringing', 'under-reveal', 'focus-in', 'ignited', 'rippling', 'tilak-on', 'zooming', 'haldi-on', 'playing', 'revving', 'driving-out');
 
       if (sceneNum === 2) el.querySelectorAll('.diya-node').forEach(function (d) { d.classList.remove('lit'); });
       if (sceneNum === 3) {
@@ -3077,10 +3098,16 @@
       if (sceneNum !== currentScene) return;
       if (isAnimating) return;
 
-      /* Scene 11: Lower vintage car area revs engine; #venue-card-btn opens Map Preview */
+      /* Scene 11: Tap the car to rev the engine, drive off left, and reveal RSVP. */
       if (sceneNum === 11) {
+        isAnimating = true;
         ensureAudio();
         triggerCarRevEffect();
+        var venueScene = document.getElementById('scene-11');
+        if (venueScene) venueScene.classList.add('driving-out');
+        later(function () {
+          goToScene(12, false, false);
+        }, 1050);
         return;
       }
 
