@@ -402,6 +402,26 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 @keyframes carDriveLeft{to{transform:translateX(-135%) rotate(-4deg);opacity:0}}
 @media(max-height:720px){.ritual-scene .event-art{top:17%!important;height:65%!important}.ritual-scene .event-info{top:calc(7px + env(safe-area-inset-top))!important;padding:7px 9px!important}.ritual-scene .event-info h2{font-size:27px!important}.ritual-scene .scene-hotspot{bottom:calc(8px + env(safe-area-inset-bottom))!important;padding:10px 14px!important}}
 
+
+/* V11 interaction corrections */
+#saath .diya-glow{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0;background:
+ radial-gradient(ellipse at 13% 88%,rgba(255,196,76,.58),transparent 18%),
+ radial-gradient(ellipse at 31% 88%,rgba(255,196,76,.52),transparent 17%),
+ radial-gradient(ellipse at 50% 88%,rgba(255,196,76,.62),transparent 18%),
+ radial-gradient(ellipse at 69% 88%,rgba(255,196,76,.52),transparent 17%),
+ radial-gradient(ellipse at 87% 88%,rgba(255,196,76,.58),transparent 18%);
+ transition:opacity .45s ease}
+#saath.diyas-lit .diya-glow{opacity:1;animation:diyaGlowPulse 1.25s ease-in-out infinite alternate}
+@keyframes diyaGlowPulse{to{filter:brightness(1.35);opacity:.82}}
+#saath .flower-burst{display:none!important}
+#baraat .baraat-petals{display:none!important}
+#baraat .event-art{transition:transform 1.55s cubic-bezier(.45,0,.8,.35),opacity 1.3s ease!important}
+#baraat.activated .event-art{transform:translate3d(125vw,0,0)!important;opacity:0!important}
+#saat-vachan .effect-particle.petal{border-radius:78% 12% 72% 18%!important;box-shadow:0 1px 3px rgba(94,45,45,.12)!important;opacity:.82}
+#saat-vachan .marigold-shower:before{display:none!important}
+#saat-vachan .marigold-shower{background:none!important}
+#saat-vachan .music-notes{display:none!important}
+#sham .music-notes span{animation:noteRise 2.65s ease-out infinite!important}
 </style>
 </head>
 <body>
@@ -457,8 +477,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  <img class="event-art" src="saath-art.webp" alt="Traditional Saath and Tel Mukhi pooja setting">
  <div class="event-shade"></div>
  <div class="event-info"><span class="event-date">3 JANUARY 2027 · 1:00 PM</span><h2>Saath &amp; Tel Mukhi</h2><p class="dress">DRESS CODE · GREEN / COLOURFUL ETHNIC</p></div>
- <button class="scene-hotspot" id="lightSaath"><span class="hotspot-icon">✧</span><b>Click to light diyas</b></button>
- <div class="flower-burst" aria-hidden="true"></div>
+ <button class="scene-hotspot" id="lightSaath"><span class="hotspot-icon">✧</span><b>Tap to light the diyas</b></button>
+ <div class="diya-glow" aria-hidden="true"></div>
 </section>
 
 <section class="scene event ritual-scene" id="rang" data-transition="sunset">
@@ -482,7 +502,6 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  <div class="event-shade"></div>
  <div class="event-info"><span class="event-date">4 JANUARY 2027 · 12:00 PM</span><h2>Baraat</h2><p class="dress">DRESS CODE · TRADITIONAL INDIAN / WEDDING GLAM</p></div>
  <button class="scene-hotspot horse-hotspot" id="tapHorse"><span class="hotspot-icon">✧</span><b>Click the horse to ride on</b></button>
- <div class="baraat-petals" aria-hidden="true"></div>
 </section>
 
 <section class="scene event ritual-scene" id="saat-vachan" data-transition="fire">
@@ -490,7 +509,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  <div class="event-shade"></div>
  <div class="event-info"><span class="event-date">4 JANUARY 2027 · 3:00 PM</span><h2>Saat Vachan</h2><p class="dress">DRESS CODE · TRADITIONAL INDIAN / WEDDING GLAM</p></div>
  <button class="scene-hotspot" id="showerBlessings"><span class="hotspot-icon">✧</span><b>Click &amp; shower your blessings</b></button>
- <div class="marigold-shower" aria-hidden="true"></div>
+ <div class="marigold-shower petal-shower" aria-hidden="true"></div>
 </section>
 
 <section class="scene event ritual-scene" id="sufi" data-transition="lantern">
@@ -544,14 +563,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   const layer=scene.querySelector(type==='turmeric'?'.turmeric-burst':type==='petal'?(sceneId==='baraat'?'.baraat-petals':sceneId==='saath'?'.flower-burst':'.marigold-shower'):'.flower-burst');
   if(!layer)return;
   layer.replaceChildren(); layer.classList.add('show-effect');
-  const palette=type==='turmeric'?['#f8cf32','#ffd94f','#e8a91c','#fff0a6','#d58d12']:['#f7c3cc','#f0b94d','#fff0d0','#e98e83','#d98b32'];
+  const palette=type==='turmeric'?['#f8cf32','#ffd94f','#e8a91c','#fff0a6','#d58d12']:sceneId==='saat-vachan'?['#f6c7cf','#f8e6df','#e9a9b4','#fff0e6']:['#f7c3cc','#f0b94d','#fff0d0','#e98e83','#d98b32'];
   for(let i=0;i<count;i++){
    const p=document.createElement('i'); p.className='effect-particle '+(type==='turmeric'?'turmeric':'petal');
    p.style.setProperty('--x',Math.random()*100+'%');
-   p.style.setProperty('--size',(type==='turmeric'?5+Math.random()*13:8+Math.random()*12)+'px');
-   p.style.setProperty('--dur',(2.2+Math.random()*1.2)+'s');
-   p.style.setProperty('--delay',Math.random()*.45+'s');
-   p.style.setProperty('--drift',(-55+Math.random()*110)+'px');
+   p.style.setProperty('--size',(type==='turmeric'?5+Math.random()*13:sceneId==='saat-vachan'?7+Math.random()*5:8+Math.random()*12)+'px');
+   p.style.setProperty('--dur',(sceneId==='saat-vachan'?3.8+Math.random()*1.5:2.2+Math.random()*1.2)+'s');
+   p.style.setProperty('--delay',(sceneId==='saat-vachan'?Math.random()*1.1:Math.random()*.45)+'s');
+   p.style.setProperty('--drift',(sceneId==='saat-vachan'?-28+Math.random()*56:-55+Math.random()*110)+'px');
    p.style.setProperty('--rot',Math.random()*220+'deg');
    p.style.setProperty('--particle',palette[i%palette.length]); layer.appendChild(p);
   }
@@ -560,21 +579,34 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   if(transitioning)return; const scene=$(sceneId); if(!scene||scene.dataset.played==='1')return;
   scene.dataset.played='1'; scene.classList.add('activated');
   const button=scene.querySelector('.scene-hotspot'); if(button)button.disabled=true;
-  if(type)shower(sceneId,type,type==='turmeric'?115:85);
+  if(type)shower(sceneId,type,type==='turmeric'?115:(sceneId==='saat-vachan'?34:85));
   if(sceneId==='saath')scene.classList.add('diyas-lit');
   if(sceneId==='sham')scene.classList.add('notes-on');
   if(sceneId==='sufi')scene.classList.add('bling-on');
-  if(sceneId==='baraat')scene.classList.add('horse-leaves');
+
   await wait(duration); await go(target,style);
+ }
+ // Add a fuller stream of musical notes to the Sangeet scene.
+ const noteLayer=$('sham')?.querySelector('.music-notes');
+ if(noteLayer){
+  const glyphs=['♪','♫','♬','♩'];
+  for(let i=0;i<18;i++){
+   const note=document.createElement('span');
+   note.textContent=glyphs[i%glyphs.length];
+   note.style.setProperty('--x',(5+((i*37)%90))+'%');
+   note.style.setProperty('--delay',((i%9)*.22)+'s');
+   note.style.fontSize=(27+(i%4)*8)+'px';
+   noteLayer.appendChild(note);
+  }
  }
  $('openDoor')?.addEventListener('click',async()=>{if(transitioning)return;$('cover').classList.add('open');$('openDoor').disabled=true;await wait(1800);await go('blessing','gold')});
  $('cover')?.addEventListener('click',e=>{if(e.target.id!=='openDoor')$('openDoor')?.click()});
  $('lightBlessing')?.addEventListener('click',async()=>{if(transitioning)return;$('blessing').classList.add('lit');$('lightBlessing').disabled=true;await wait(1500);await go('couple','gold')});
  $('tapCar')?.addEventListener('click',async()=>{if(transitioning)return;$('couple').classList.add('car-go');$('tapCar').disabled=true;await wait(1250);await go('saath','sunset')});
- $('lightSaath')?.addEventListener('click',()=>activate('saath','rang','petals',3600,'petal'));
+ $('lightSaath')?.addEventListener('click',()=>activate('saath','rang','gold',2600,null));
  $('applyRang')?.addEventListener('click',()=>activate('rang','sham','night',4300,'turmeric'));
  $('playMusic')?.addEventListener('click',()=>activate('sham','baraat','petals',3300,null));
- $('tapHorse')?.addEventListener('click',()=>activate('baraat','saat-vachan','fire',2500,'petal'));
+ $('tapHorse')?.addEventListener('click',()=>activate('baraat','saat-vachan','fire',1900,null));
  $('showerBlessings')?.addEventListener('click',()=>activate('saat-vachan','sufi','lantern',3600,'petal'));
  $('bringBling')?.addEventListener('click',()=>activate('sufi','rsvp','gold',2800,null));
  const form=$('rsvpForm'); form?.addEventListener('submit',e=>{e.preventDefault();$('rsvpNote').textContent='Thank you! This is a preview only; your response has not been sent or stored.';const b=form.querySelector('button[type="submit"]');if(b)b.textContent='Thank you ♡'});
