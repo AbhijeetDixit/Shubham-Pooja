@@ -17,10 +17,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body, #stage, button, a {
-      touch-action: manipulation;
-    }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -32,10 +28,11 @@
       justify-content: center;
       overflow: hidden;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
     }
 
-    /* Centered 9:16 Portrait Mobile Stage */
-    .stage {
+    /* Centered 9:16 Mobile Portrait Stage */
+    #stage {
       position: relative;
       width: 100%;
       max-width: 430px;
@@ -44,18 +41,18 @@
       aspect-ratio: 9 / 16;
       overflow: hidden;
       background-color: #f7e8cc;
-      box-shadow: 0 22px 64px rgba(0, 0, 0, 0.82);
+      box-shadow: 0 22px 64px rgba(0, 0, 0, 0.85);
       user-select: none;
       -webkit-user-select: none;
-      cursor: pointer;
+      touch-action: manipulation;
     }
 
     @media (min-width: 520px) {
-      .stage {
+      #stage {
         height: min(100dvh, 880px);
         width: auto;
         border-radius: 24px;
-        border: 1px solid rgba(245, 210, 122, 0.3);
+        border: 1px solid rgba(245, 210, 122, 0.32);
       }
     }
 
@@ -63,44 +60,43 @@
       font-family: 'Cormorant Garamond', Georgia, serif;
     }
 
-    /* Strict Pointer Isolation: all decorative, image, fallback & FX layers pass clicks through */
-    .scene,
-    .scene * {
-      pointer-events: none;
-    }
-
+    /* CRITICAL POINTER ISOLATION:
+       Inactive scenes are completely hidden and non-interactive.
+       Active scene receives clicks directly; all decorative/image/FX children pass pointers through. */
     .scene {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: none;
+      display: none !important;
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
+      pointer-events: none !important;
+      z-index: -1;
       overflow: hidden;
-      z-index: 1;
+      transition: opacity 0.55s ease;
     }
 
     .scene.active {
-      display: block;
+      display: block !important;
       opacity: 1;
-      pointer-events: auto;
+      pointer-events: auto !important;
       z-index: 10;
+      cursor: pointer;
+      touch-action: manipulation;
     }
 
     .scene.leaving {
-      display: block;
+      display: block !important;
       opacity: 0;
-      pointer-events: none;
-      z-index: 11;
+      pointer-events: none !important;
+      z-index: 12;
     }
 
-    /* Scene 2 mounted directly behind Scene 1's parting temple doors */
+    /* Scene 2 mounted directly behind Scene 1's parting doors */
     .scene.under-reveal {
-      display: block;
+      display: block !important;
       opacity: 1;
-      pointer-events: none;
+      pointer-events: none !important;
       z-index: 5;
       filter: blur(10px) brightness(0.88);
       transform: scale(1.06);
@@ -113,7 +109,23 @@
       transform: scale(1);
     }
 
-    #scene-0 {
+    /* All non-button visuals inside a scene never block clicks */
+    .scene-img,
+    .fallback-card,
+    .fx-layer,
+    .fx-layer *,
+    .scene1-camera,
+    .scene1-camera *,
+    .scene4-zoom,
+    .scene4-zoom *,
+    .scene6-zoom,
+    .scene6-zoom *,
+    .countdown-overlay,
+    .countdown-overlay * {
+      pointer-events: none !important;
+    }
+
+    #scene-1 {
       background-color: transparent;
     }
 
@@ -125,32 +137,30 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      pointer-events: none;
       -webkit-user-drag: none;
       z-index: 3;
       opacity: 0;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.35s ease;
     }
 
     .scene-img.is-loaded {
       opacity: 1;
     }
 
-    /* Warm Royal Ivory / Parchment / Gold Fallback Cards (shown immediately until local images load) */
+    /* Warm Royal Ivory / Parchment / Gold Fallback Preview Cards */
     .fallback-card {
       position: absolute;
       inset: 0;
       z-index: 1;
-      pointer-events: none;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 78px 22px 30px;
+      padding: 76px 22px 30px;
       text-align: center;
       color: #4a1c17;
       background: radial-gradient(circle at 50% 18%, rgba(255, 250, 238, 0.98) 0%, rgba(247, 232, 204, 0.95) 56%, rgba(231, 203, 158, 0.98) 100%);
-      transition: opacity 0.35s ease, visibility 0.35s ease;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     .fallback-card.hidden-by-img {
@@ -203,8 +213,8 @@
       box-shadow: 0 6px 18px rgba(58, 22, 14, 0.25);
     }
 
-    /* Minimal Unobtrusive Floating Top Bar (z-index: 100) */
-    #top-bar {
+    /* TOP HUD NAVIGATION BAR */
+    #top-hud {
       position: absolute;
       top: 0;
       left: 0;
@@ -222,13 +232,21 @@
       display: inline-flex;
       align-items: center;
       gap: 2px;
-      background: rgba(34, 18, 14, 0.76);
+      background: rgba(34, 18, 14, 0.78);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(245, 210, 122, 0.38);
+      border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
       padding: 2px 5px;
-      pointer-events: auto;
+      pointer-events: auto !important;
+      z-index: 100;
+    }
+
+    #top-hud button {
+      pointer-events: auto !important;
+      z-index: 100;
+      cursor: pointer;
+      touch-action: manipulation;
     }
 
     .nav-icon-btn {
@@ -241,7 +259,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
     }
 
     .nav-icon-btn:disabled {
@@ -256,26 +273,27 @@
       padding: 0 4px;
       letter-spacing: 0.04em;
       white-space: nowrap;
+      pointer-events: none;
     }
 
     .dots-track {
       display: flex;
       align-items: center;
-      gap: 2px;
-      padding: 3px 7px;
-      background: rgba(34, 18, 14, 0.76);
+      gap: 1.5px;
+      padding: 3px 6px;
+      background: rgba(34, 18, 14, 0.78);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(245, 210, 122, 0.38);
+      border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
-      pointer-events: auto;
+      pointer-events: auto !important;
+      z-index: 100;
     }
 
-    .dot-btn {
+    .dot {
       padding: 6px 1.5px;
       border: none;
       background: transparent;
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -288,15 +306,16 @@
       border-radius: 9999px;
       background: rgba(255, 240, 204, 0.45);
       transition: all 0.25s ease;
+      pointer-events: none;
     }
 
-    .dot-btn.active .dot-pip {
-      width: 12px;
+    .dot.active .dot-pip {
+      width: 11px;
       background: #f5d27a;
       box-shadow: 0 0 8px rgba(245, 210, 122, 0.85);
     }
 
-    /* SCENE 1: Temple Doors + Subtle Swinging Bell + 3D Door Opening */
+    /* SCENE 1: Temple Doors + Subtle Bell Swing + 3D Door Opening */
     .scene1-camera {
       position: absolute;
       inset: 0;
@@ -311,16 +330,18 @@
       opacity: 1;
     }
 
-    #scene-0.opening .scene1-camera {
+    #scene-1.opening .scene1-camera {
       transform: scale(1.08);
     }
 
+    /* Cleanly cropped to hide phone browser bar & Android navigation bar */
     .temple-crop-img {
       position: absolute;
       left: 0;
-      top: -12.74%;
+      top: -8.5%;
       width: 100%;
-      height: 120.192%;
+      height: 117%;
+      object-fit: cover;
       max-width: none;
       display: block;
       -webkit-user-drag: none;
@@ -343,11 +364,11 @@
       );
     }
 
-    /* Hanging Brass Temple Bell Overlay (left: 43.9%, top: 15.35%, width: 11%, height: 8.5%) */
+    /* Hanging Brass Temple Bell Overlay (left: 43.9%, top: 17.5%, width: 11%, height: 8.5%) */
     .temple-bell-swing {
       position: absolute;
       left: 43.9%;
-      top: 15.35%;
+      top: 17.5%;
       width: 11%;
       height: 8.5%;
       z-index: 6;
@@ -360,9 +381,10 @@
     .bell-crop-img {
       position: absolute;
       width: 909.09%;
-      height: 1414.02%;
+      height: 1376.47%;
       left: -399.09%;
-      top: -330.47%;
+      top: -305.88%;
+      object-fit: cover;
       max-width: none;
       display: block;
       -webkit-user-drag: none;
@@ -377,11 +399,11 @@
       opacity: 0;
     }
 
-    #scene-0.bell-ringing .temple-bell-swing {
+    #scene-1.bell-ringing .temple-bell-swing {
       animation: bellPendulum 2.2s cubic-bezier(0.25, 0.08, 0.32, 1) forwards;
     }
 
-    #scene-0.bell-ringing .bell-shimmer-wave {
+    #scene-1.bell-ringing .bell-shimmer-wave {
       animation: bellGlowWave 1.8s ease-out forwards;
     }
 
@@ -449,13 +471,13 @@
       top: -53.924%;
     }
 
-    #scene-0.opening .door-left {
-      transform: rotateY(-84deg);
+    #scene-1.opening .door-left {
+      transform: rotateY(-102deg);
       filter: brightness(0.75);
     }
 
-    #scene-0.opening .door-right {
-      transform: rotateY(84deg);
+    #scene-1.opening .door-right {
+      transform: rotateY(102deg);
       filter: brightness(0.75);
     }
 
@@ -500,12 +522,12 @@
       border-left: 1.5px solid #f5d27a;
     }
 
-    #scene-0.opening .fb-door-leaf.left {
-      transform: rotateY(-84deg);
+    #scene-1.opening .fb-door-leaf.left {
+      transform: rotateY(-102deg);
     }
 
-    #scene-0.opening .fb-door-leaf.right {
-      transform: rotateY(84deg);
+    #scene-1.opening .fb-door-leaf.right {
+      transform: rotateY(102deg);
     }
 
     .center-light-beam {
@@ -522,7 +544,7 @@
       transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.65s ease;
     }
 
-    #scene-0.opening .center-light-beam {
+    #scene-1.opening .center-light-beam {
       width: 14%;
       opacity: 0;
     }
@@ -548,7 +570,7 @@
       transition: opacity 0.75s ease, transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    #scene-1.ignited .shivling-aura {
+    #scene-2.ignited .shivling-aura {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1.24);
     }
@@ -653,7 +675,7 @@
       transition: opacity 0.6s ease, transform 0.65s ease;
     }
 
-    #scene-2.rippling .river-diya-glow {
+    #scene-3.rippling .river-diya-glow {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1.35);
     }
@@ -684,7 +706,7 @@
       will-change: transform;
     }
 
-    #scene-3.zooming .scene4-zoom {
+    #scene-4.zooming .scene4-zoom {
       transform: scale(2.4);
     }
 
@@ -704,7 +726,7 @@
       transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
     }
 
-    #scene-3.tilak-on .tilak-mark {
+    #scene-4.tilak-on .tilak-mark {
       opacity: 1;
       transform: translate(-50%, -50%) scaleY(1);
     }
@@ -723,7 +745,7 @@
       transition: transform 0.3s ease 0.32s, opacity 0.25s ease 0.32s;
     }
 
-    #scene-3.tilak-on .tilak-akshata {
+    #scene-4.tilak-on .tilak-akshata {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
@@ -760,7 +782,7 @@
       filter: drop-shadow(0 0 5px rgba(244, 180, 0, 0.85));
     }
 
-    #scene-4.haldi-on .haldi-path {
+    #scene-5.haldi-on .haldi-path {
       opacity: 0.95;
       animation: brushHaldi 0.56s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
@@ -782,7 +804,7 @@
       transition: opacity 0.45s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    #scene-4.haldi-on .haldi-aura {
+    #scene-5.haldi-on .haldi-aura {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1.25);
     }
@@ -809,7 +831,7 @@
       will-change: transform;
     }
 
-    #scene-5.zooming .scene6-zoom {
+    #scene-6.zooming .scene6-zoom {
       transform: scale(2.7);
     }
 
@@ -832,7 +854,7 @@
       animation: mirrorSweep 4.2s ease-in-out infinite;
     }
 
-    #scene-5.glittering .mirror-glint {
+    #scene-6.glittering .mirror-glint {
       background: linear-gradient(125deg, transparent 22%, rgba(255, 250, 228, 0.88) 50%, transparent 78%);
       animation: mirrorSweepBurst 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
@@ -856,7 +878,7 @@
       transition: opacity 0.45s ease;
     }
 
-    #scene-5.glittering .mirror-shimmer-wash {
+    #scene-6.glittering .mirror-shimmer-wash {
       opacity: 1;
     }
 
@@ -873,7 +895,7 @@
       transition: all 0.5s ease;
     }
 
-    #scene-5.glittering .mirror-frame-halo {
+    #scene-6.glittering .mirror-frame-halo {
       border-color: rgba(255, 242, 195, 0.92);
       box-shadow: 0 0 28px 8px rgba(255, 232, 160, 0.75), inset 0 0 20px rgba(255, 246, 210, 0.55);
     }
@@ -977,7 +999,7 @@
       transition: opacity 0.35s ease, transform 0.55s ease;
     }
 
-    #scene-7.playing .harmonium-aura {
+    #scene-8.playing .harmonium-aura {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1.25);
     }
@@ -1006,7 +1028,109 @@
       z-index: 18;
     }
 
-    /* SCENE 10: Vintage Convertible Rev FX & Replay Button */
+    /* SCENE 10: Live Countdown Overlay in Upper Open Cream Area (top: 12% to 36%) */
+    .countdown-overlay {
+      position: absolute;
+      left: 8.5%;
+      right: 8.5%;
+      top: 11.5%;
+      height: 26%;
+      z-index: 18;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4px 6px;
+    }
+
+    .cd-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 296px;
+      margin: 6px auto 6px;
+    }
+
+    .cd-tile {
+      position: relative;
+      padding: 6px 2px 5px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255, 252, 244, 0.9) 0%, rgba(248, 236, 210, 0.86) 100%);
+      border: 1px solid rgba(168, 121, 34, 0.55);
+      box-shadow: 0 4px 12px rgba(102, 64, 20, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      overflow: hidden;
+    }
+
+    .cd-tile::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 246, 206, 0.65) 50%, transparent 70%);
+      transform: translateX(-120%);
+      animation: cdTileShimmer 4.5s ease-in-out infinite;
+    }
+
+    .cd-tile:nth-child(2)::after { animation-delay: 0.35s; }
+    .cd-tile:nth-child(3)::after { animation-delay: 0.7s; }
+    .cd-tile:nth-child(4)::after { animation-delay: 1.05s; }
+
+    @keyframes cdTileShimmer {
+      0%, 62% { transform: translateX(-120%); }
+      92%, 100% { transform: translateX(120%); }
+    }
+
+    .cd-num {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1;
+      color: #7d2138;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cd-label {
+      margin-top: 3px;
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: #8b6914;
+    }
+
+    .cd-tap-cue {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 4px;
+      padding: 3px 11px;
+      border-radius: 9999px;
+      background: rgba(125, 33, 56, 0.1);
+      border: 1px solid rgba(139, 105, 20, 0.36);
+      color: #7d2138;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    /* SCENE 11: Venue Card Button, Vintage Convertible Rev FX & Replay Button */
+    #venue-card-btn {
+      position: absolute;
+      left: 14%;
+      top: 20%;
+      width: 72%;
+      height: 23%;
+      z-index: 40;
+      pointer-events: auto !important;
+      background: transparent;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
     .car-headlight-glint {
       position: absolute;
       width: 34px;
@@ -1019,7 +1143,7 @@
       z-index: 16;
     }
 
-    #scene-9.revving .car-headlight-glint {
+    #scene-11.revving .car-headlight-glint {
       animation: headlightRevFlash 2.2s ease-in-out forwards;
     }
 
@@ -1052,13 +1176,13 @@
       right: 12px;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
       z-index: 60;
-      pointer-events: auto;
+      pointer-events: auto !important;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 7px 14px;
       border-radius: 9999px;
-      background: rgba(34, 18, 14, 0.82);
+      background: rgba(34, 18, 14, 0.84);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(245, 210, 122, 0.45);
@@ -1066,6 +1190,7 @@
       font-size: 11.5px;
       font-weight: 500;
       cursor: pointer;
+      touch-action: manipulation;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
     }
 
@@ -1084,7 +1209,8 @@
 
     #map-sheet-backdrop.open {
       opacity: 1;
-      pointer-events: auto;
+      pointer-events: auto !important;
+      cursor: pointer;
     }
 
     #map-sheet {
@@ -1108,7 +1234,7 @@
 
     #map-sheet.open {
       transform: translateY(0);
-      pointer-events: auto;
+      pointer-events: auto !important;
     }
 
     .toast {
@@ -1139,44 +1265,50 @@
     .toast.show {
       opacity: 1;
       transform: translate(-50%, 0);
-      pointer-events: auto;
     }
   </style>
 </head>
 <body>
 
-  <div
-    id="stage"
-    class="stage"
-    role="application"
-    aria-label="Shubham and Pooja Interactive Wedding Invitation"
-  >
-    <!-- Minimal Floating Top Bar (z-index: 100) -->
-    <header id="top-bar">
+  <main id="stage" aria-label="Shubham and Pooja Interactive Wedding Invitation">
+    <!-- TOP HUD NAVIGATION BAR -->
+    <header id="top-hud">
       <div class="nav-pill">
-        <button id="btn-prev" class="nav-icon-btn" type="button" aria-label="Previous scene">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <button id="prev-btn" class="nav-icon-btn" type="button" onclick="navPrev(event)" aria-label="Previous scene">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
-        <span id="scene-counter" class="scene-counter">1 / 10</span>
-        <button id="btn-next" class="nav-icon-btn" type="button" aria-label="Next scene">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <span id="scene-counter" class="scene-counter">1 / 11</span>
+        <button id="next-btn" class="nav-icon-btn" type="button" onclick="navNext(event)" aria-label="Next scene">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
       </div>
 
-      <nav id="dots-track" class="dots-track" aria-label="Invitation scenes"></nav>
+      <nav id="dots-track" class="dots-track" aria-label="Invitation scenes">
+        <button type="button" class="dot active" data-dot="1" onclick="goToScene(1, true, false, event)" aria-label="Scene 1"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="2" onclick="goToScene(2, true, false, event)" aria-label="Scene 2"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="3" onclick="goToScene(3, true, false, event)" aria-label="Scene 3"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="4" onclick="goToScene(4, true, false, event)" aria-label="Scene 4"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="5" onclick="goToScene(5, true, false, event)" aria-label="Scene 5"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="6" onclick="goToScene(6, true, false, event)" aria-label="Scene 6"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="7" onclick="goToScene(7, true, false, event)" aria-label="Scene 7"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="8" onclick="goToScene(8, true, false, event)" aria-label="Scene 8"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="9" onclick="goToScene(9, true, false, event)" aria-label="Scene 9"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="10" onclick="goToScene(10, true, false, event)" aria-label="Scene 10"><span class="dot-pip"></span></button>
+        <button type="button" class="dot" data-dot="11" onclick="goToScene(11, true, false, event)" aria-label="Scene 11"><span class="dot-pip"></span></button>
+      </nav>
 
       <div class="nav-pill">
-        <button id="btn-sound" class="nav-icon-btn" type="button" aria-label="Toggle sound">
-          <svg id="icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+        <button id="sound-btn" class="nav-icon-btn" type="button" onclick="toggleSound(event)" aria-label="Toggle sound">
+          <svg id="icon-sound-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
           </svg>
-          <svg id="icon-sound-off" class="hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="icon-sound-off" class="hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <line x1="23" y1="9" x2="17" y2="15"></line>
             <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -1186,8 +1318,8 @@
     </header>
 
     <!-- SCENE 1: TEMPLE DOORS (./temple.jpg) -->
-    <section id="scene-0" class="scene active" data-scene="0" aria-label="Scene 1: Temple Doors">
-      <div class="fallback-card" data-fallback-for="0">
+    <section id="scene-1" class="scene active" onclick="handleSceneTap(1, event)" aria-label="Scene 1: Temple Doors">
+      <div class="fallback-card" data-fallback-for="1">
         <div>
           <p class="text-[10px] uppercase tracking-[0.26em] text-[#8a5522] mb-1">॥ श्री गणेशाय नमः ॥</p>
           <h1 class="serif text-2xl font-semibold text-[#5a1e16]">Shubham &amp; Pooja</h1>
@@ -1209,26 +1341,26 @@
         </div>
       </div>
 
-      <div class="scene1-camera" data-cam-for="0">
+      <div class="scene1-camera" data-cam-for="1">
         <div class="temple-archway">
-          <img data-filename="temple.jpg" data-primary="0" src="./temple.jpg" alt="Carved Temple Archway" class="temple-crop-img" />
+          <img data-filename="temple.jpg" data-primary="1" src="./temple.jpg" alt="Carved Temple Archway" class="temple-crop-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
         </div>
 
         <!-- Subtle Swinging Hanging Brass Bell Overlay -->
         <div class="temple-bell-swing">
-          <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="bell-crop-img" />
+          <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="bell-crop-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
           <div class="bell-shimmer-wave"></div>
         </div>
 
         <div class="doors-3d-stage">
           <div class="door-panel door-left">
             <div class="door-map-left">
-              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-crop-img" />
+              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-crop-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
             </div>
           </div>
           <div class="door-panel door-right">
             <div class="door-map-right">
-              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-crop-img" />
+              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-crop-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
             </div>
           </div>
         </div>
@@ -1238,8 +1370,8 @@
     </section>
 
     <!-- SCENE 2: SHIVA & PARVATI HANDS OVER SHIVLING (./diyas.png) -->
-    <section id="scene-1" class="scene" data-scene="1" aria-label="Scene 2: Light the Diyas">
-      <div class="fallback-card" data-fallback-for="1">
+    <section id="scene-2" class="scene" onclick="handleSceneTap(2, event)" aria-label="Scene 2: Light the Diyas">
+      <div class="fallback-card" data-fallback-for="2">
         <div>
           <p class="text-[11px] font-semibold tracking-[0.18em] text-[#7c1932] mb-1">ॐ श्री गणेशाय नमः</p>
           <p class="text-xs italic text-[#6d4225] mb-3">With the divine blessings of Lord Shiva &amp; Goddess Parvati</p>
@@ -1264,39 +1396,41 @@
         </div>
       </div>
 
-      <img data-filename="diyas.png" data-primary="1" src="./diyas.png" alt="Shiva and Parvati hands blessing the Shivling" class="scene-img" />
-      <div class="shivling-aura"></div>
+      <img data-filename="diyas.png" data-primary="2" src="./diyas.png" alt="Shiva and Parvati hands blessing the Shivling" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <div class="fx-layer">
+        <div class="shivling-aura"></div>
 
-      <div class="diya-node" style="left: 23%; top: 84%;">
-        <div class="diya-halo"></div>
-        <div class="diya-flame"></div>
-        <span class="diya-ember" style="--dx:-7px; animation-delay:0.1s;"></span>
-      </div>
-      <div class="diya-node" style="left: 31%; top: 88%;">
-        <div class="diya-halo"></div>
-        <div class="diya-flame" style="animation-delay:0.12s;"></div>
-        <span class="diya-ember" style="--dx:8px; animation-delay:0.25s;"></span>
-      </div>
-      <div class="diya-node" style="left: 37%; top: 91%;">
-        <div class="diya-halo"></div>
-        <div class="diya-flame" style="animation-delay:0.22s;"></div>
-        <span class="diya-ember" style="--dx:-5px; animation-delay:0.4s;"></span>
-      </div>
-      <div class="diya-node" style="left: 67%; top: 91%;">
-        <div class="diya-halo"></div>
-        <div class="diya-flame" style="animation-delay:0.08s;"></div>
-        <span class="diya-ember" style="--dx:7px; animation-delay:0.3s;"></span>
-      </div>
-      <div class="diya-node" style="left: 74%; top: 85%;">
-        <div class="diya-halo"></div>
-        <div class="diya-flame" style="animation-delay:0.18s;"></div>
-        <span class="diya-ember" style="--dx:-8px; animation-delay:0.55s;"></span>
+        <div class="diya-node" style="left: 23%; top: 84%;">
+          <div class="diya-halo"></div>
+          <div class="diya-flame"></div>
+          <span class="diya-ember" style="--dx:-7px; animation-delay:0.1s;"></span>
+        </div>
+        <div class="diya-node" style="left: 31%; top: 88%;">
+          <div class="diya-halo"></div>
+          <div class="diya-flame" style="animation-delay:0.12s;"></div>
+          <span class="diya-ember" style="--dx:8px; animation-delay:0.25s;"></span>
+        </div>
+        <div class="diya-node" style="left: 37%; top: 91%;">
+          <div class="diya-halo"></div>
+          <div class="diya-flame" style="animation-delay:0.22s;"></div>
+          <span class="diya-ember" style="--dx:-5px; animation-delay:0.4s;"></span>
+        </div>
+        <div class="diya-node" style="left: 67%; top: 91%;">
+          <div class="diya-halo"></div>
+          <div class="diya-flame" style="animation-delay:0.08s;"></div>
+          <span class="diya-ember" style="--dx:7px; animation-delay:0.3s;"></span>
+        </div>
+        <div class="diya-node" style="left: 74%; top: 85%;">
+          <div class="diya-halo"></div>
+          <div class="diya-flame" style="animation-delay:0.18s;"></div>
+          <span class="diya-ember" style="--dx:-8px; animation-delay:0.55s;"></span>
+        </div>
       </div>
     </section>
 
     <!-- SCENE 3: SHIVA & PARVATI LOOKING OVER GANGA (./ganga.png) -->
-    <section id="scene-2" class="scene" data-scene="2" aria-label="Scene 3: Tap the Ganga">
-      <div class="fallback-card" data-fallback-for="2">
+    <section id="scene-3" class="scene" onclick="handleSceneTap(3, event)" aria-label="Scene 3: Tap the Ganga">
+      <div class="fallback-card" data-fallback-for="3">
         <div class="px-2">
           <p class="text-[10px] tracking-[0.18em] uppercase text-[#7c3f1d] mb-2">॥ श्री गणेशाय नमः ॥ भोलेनाथ की असीम अनुकम्पा से</p>
           <p class="serif italic text-sm text-[#5c2c16] mb-2">We request the honour of your presence to celebrate the wedding of</p>
@@ -1319,21 +1453,23 @@
         </div>
       </div>
 
-      <img data-filename="ganga.png" data-primary="2" src="./ganga.png" alt="Shiva and Parvati overlooking the sacred Ganga" class="scene-img" />
-      <div class="ganga-shimmer"></div>
+      <img data-filename="ganga.png" data-primary="3" src="./ganga.png" alt="Shiva and Parvati overlooking the sacred Ganga" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <div class="fx-layer">
+        <div class="ganga-shimmer"></div>
 
-      <div class="river-diya-glow" style="left: 17.8%; top: 69.8%;"></div>
-      <div class="river-diya-glow" style="left: 34.8%; top: 72.5%;"></div>
-      <div class="river-diya-glow" style="left: 77.5%; top: 72.6%;"></div>
-      <div class="river-diya-glow" style="left: 94.2%; top: 72.8%;"></div>
+        <div class="river-diya-glow" style="left: 17.8%; top: 69.8%;"></div>
+        <div class="river-diya-glow" style="left: 34.8%; top: 72.5%;"></div>
+        <div class="river-diya-glow" style="left: 77.5%; top: 72.6%;"></div>
+        <div class="river-diya-glow" style="left: 94.2%; top: 72.8%;"></div>
 
-      <div id="ganga-ripples" class="absolute inset-0 z-20"></div>
+        <div id="ganga-ripples" class="absolute inset-0 z-20"></div>
+      </div>
     </section>
 
     <!-- SCENE 4: SAATH & TELBUKHI (./saath.png) -->
-    <section id="scene-3" class="scene" data-scene="3" aria-label="Scene 4: Saath and Telbukhi">
+    <section id="scene-4" class="scene" onclick="handleSceneTap(4, event)" aria-label="Scene 4: Saath and Telbukhi">
       <div class="scene4-zoom">
-        <div class="fallback-card" data-fallback-for="3">
+        <div class="fallback-card" data-fallback-for="4">
           <div>
             <p class="serif text-2xl font-bold text-[#4a1c17]">3<sup>rd</sup> January, 2027</p>
             <h2 class="serif italic text-3xl font-semibold text-[#7c1932] mt-1">Saath &amp; Telbukhi</h2>
@@ -1353,19 +1489,19 @@
           </div>
         </div>
 
-        <img data-filename="saath.png" data-primary="3" src="./saath.png" alt="Saath and Telbukhi Ceremony" class="scene-img" />
+        <img data-filename="saath.png" data-primary="4" src="./saath.png" alt="Saath and Telbukhi Ceremony" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
 
-        <!-- Small vertical vermilion tilak on purple-kurta groom's forehead -->
-        <div class="tilak-mark"></div>
-        <div class="tilak-akshata"></div>
-
-        <div id="tilak-sparkles" class="absolute inset-0 z-20"></div>
+        <div class="fx-layer">
+          <div class="tilak-mark"></div>
+          <div class="tilak-akshata"></div>
+          <div id="tilak-sparkles" class="absolute inset-0 z-20"></div>
+        </div>
       </div>
     </section>
 
     <!-- SCENE 5: HALDI / KESARI RANG (./haldi.png) -->
-    <section id="scene-4" class="scene" data-scene="4" aria-label="Scene 5: Kesari Rang Haldi">
-      <div class="fallback-card theme-haldi" data-fallback-for="4">
+    <section id="scene-5" class="scene" onclick="handleSceneTap(5, event)" aria-label="Scene 5: Kesari Rang Haldi">
+      <div class="fallback-card theme-haldi" data-fallback-for="5">
         <div>
           <p class="serif text-2xl font-bold text-[#2b4325]">3<sup>rd</sup> January, 2027</p>
           <h2 class="serif italic text-3xl font-semibold text-[#c04838] mt-1">Kesari Rang Haldi</h2>
@@ -1388,43 +1524,45 @@
         </div>
       </div>
 
-      <img data-filename="haldi.png" data-primary="4" src="./haldi.png" alt="Kesari Rang Haldi Ceremony" class="scene-img" />
+      <img data-filename="haldi.png" data-primary="5" src="./haldi.png" alt="Kesari Rang Haldi Ceremony" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
 
-      <div class="haldi-aura" style="left: 44.3%; top: 83.2%;"></div>
-      <div class="haldi-aura" style="left: 76.8%; top: 83.2%;"></div>
+      <div class="fx-layer">
+        <div class="haldi-aura" style="left: 44.3%; top: 83.2%;"></div>
+        <div class="haldi-aura" style="left: 76.8%; top: 83.2%;"></div>
 
-      <div class="haldi-smear" style="left: 44.3%; top: 83.2%; width: 4.8%; height: 2.8%;">
-        <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
-          <defs>
-            <filter id="haldiSoft" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="1.3" />
-            </filter>
-          </defs>
-          <g filter="url(#haldiSoft)">
-            <path class="haldi-path" d="M10 18 Q18 11, 25 18" stroke="#f4b400" stroke-width="6.8" stroke-linecap="round" fill="none" />
-            <path class="haldi-path" style="animation-delay:0.14s;" d="M35 19 Q42 12, 50 18" stroke="#ffca28" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <path class="haldi-path" style="animation-delay:0.24s;" d="M22 26 Q30 23, 38 26" stroke="#f59e0b" stroke-width="4.2" stroke-linecap="round" fill="none" />
-          </g>
-        </svg>
+        <div class="haldi-smear" style="left: 44.3%; top: 83.2%; width: 4.8%; height: 2.8%;">
+          <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
+            <defs>
+              <filter id="haldiSoft" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="1.3" />
+              </filter>
+            </defs>
+            <g filter="url(#haldiSoft)">
+              <path class="haldi-path" d="M10 18 Q18 11, 25 18" stroke="#f4b400" stroke-width="6.8" stroke-linecap="round" fill="none" />
+              <path class="haldi-path" style="animation-delay:0.14s;" d="M35 19 Q42 12, 50 18" stroke="#ffca28" stroke-width="6.5" stroke-linecap="round" fill="none" />
+              <path class="haldi-path" style="animation-delay:0.24s;" d="M22 26 Q30 23, 38 26" stroke="#f59e0b" stroke-width="4.2" stroke-linecap="round" fill="none" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="haldi-smear" style="left: 76.8%; top: 83.2%; width: 4.8%; height: 2.8%;">
+          <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
+            <g filter="url(#haldiSoft)">
+              <path class="haldi-path" style="animation-delay:0.1s;" d="M9 18 Q17 12, 24 19" stroke="#f4b400" stroke-width="6.8" stroke-linecap="round" fill="none" />
+              <path class="haldi-path" style="animation-delay:0.22s;" d="M36 18 Q44 12, 51 19" stroke="#ffca28" stroke-width="6.5" stroke-linecap="round" fill="none" />
+              <path class="haldi-path" style="animation-delay:0.3s;" d="M23 26 Q30 24, 37 26" stroke="#f59e0b" stroke-width="4.2" stroke-linecap="round" fill="none" />
+            </g>
+          </svg>
+        </div>
+
+        <div id="haldi-particles" class="absolute inset-0 z-20"></div>
       </div>
-
-      <div class="haldi-smear" style="left: 76.8%; top: 83.2%; width: 4.8%; height: 2.8%;">
-        <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
-          <g filter="url(#haldiSoft)">
-            <path class="haldi-path" style="animation-delay:0.1s;" d="M9 18 Q17 12, 24 19" stroke="#f4b400" stroke-width="6.8" stroke-linecap="round" fill="none" />
-            <path class="haldi-path" style="animation-delay:0.22s;" d="M36 18 Q44 12, 51 19" stroke="#ffca28" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <path class="haldi-path" style="animation-delay:0.3s;" d="M23 26 Q30 24, 37 26" stroke="#f59e0b" stroke-width="4.2" stroke-linecap="round" fill="none" />
-          </g>
-        </svg>
-      </div>
-
-      <div id="haldi-particles" class="absolute inset-0 z-20"></div>
     </section>
 
     <!-- SCENE 6: SANGEET / SHAAM & SHINE (./sangeet.png) -->
-    <section id="scene-5" class="scene" data-scene="5" aria-label="Scene 6: Shaam and Shine Sangeet">
+    <section id="scene-6" class="scene" onclick="handleSceneTap(6, event)" aria-label="Scene 6: Shaam and Shine Sangeet">
       <div class="scene6-zoom">
-        <div class="fallback-card theme-night" data-fallback-for="5">
+        <div class="fallback-card theme-night" data-fallback-for="6">
           <div>
             <p class="serif text-2xl font-bold text-amber-200">3<sup>rd</sup> January, 2027</p>
             <h2 class="serif italic text-3xl font-semibold text-amber-300 mt-1">Shaam &amp; Shine</h2>
@@ -1441,22 +1579,24 @@
           </div>
         </div>
 
-        <img data-filename="sangeet.png" data-primary="5" src="./sangeet.png" alt="Shaam and Shine Sangeet" class="scene-img" />
+        <img data-filename="sangeet.png" data-primary="6" src="./sangeet.png" alt="Shaam and Shine Sangeet" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
 
-        <div class="mirror-glitter-region">
-          <div class="mirror-shimmer-wash"></div>
-          <div class="mirror-glint"></div>
-          <div id="mirror-glitter" class="absolute inset-0"></div>
+        <div class="fx-layer">
+          <div class="mirror-glitter-region">
+            <div class="mirror-shimmer-wash"></div>
+            <div class="mirror-glint"></div>
+            <div id="mirror-glitter" class="absolute inset-0"></div>
+          </div>
+
+          <div class="mirror-frame-halo"></div>
+          <div id="mirror-stardust" class="absolute inset-0 z-20"></div>
         </div>
-
-        <div class="mirror-frame-halo"></div>
-        <div id="mirror-stardust" class="absolute inset-0 z-20"></div>
       </div>
     </section>
 
     <!-- SCENE 7: PHERE / SAATH VACHAN (./phere.png) -->
-    <section id="scene-6" class="scene" data-scene="6" aria-label="Scene 7: Mukut Bandhan, Baraat and Saath Vachan">
-      <div class="fallback-card" data-fallback-for="6">
+    <section id="scene-7" class="scene" onclick="handleSceneTap(7, event)" aria-label="Scene 7: Mukut Bandhan, Baraat and Saath Vachan">
+      <div class="fallback-card" data-fallback-for="7">
         <div class="space-y-2">
           <p class="serif text-2xl font-bold text-[#6e5218]">4<sup>th</sup> January, 2027</p>
 
@@ -1483,13 +1623,13 @@
         </div>
       </div>
 
-      <img data-filename="phere.png" data-primary="6" src="./phere.png" alt="Mukut Bandhan, Baraat and Saath Vachan" class="scene-img" />
-      <div id="petals-host" class="petals-host"></div>
+      <img data-filename="phere.png" data-primary="7" src="./phere.png" alt="Mukut Bandhan, Baraat and Saath Vachan" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <div id="petals-host" class="petals-host fx-layer"></div>
     </section>
 
     <!-- SCENE 8: SUFI NIGHT (./sufi.png) -->
-    <section id="scene-7" class="scene" data-scene="7" aria-label="Scene 8: Sufi Night">
-      <div class="fallback-card theme-sufi" data-fallback-for="7">
+    <section id="scene-8" class="scene" onclick="handleSceneTap(8, event)" aria-label="Scene 8: Sufi Night">
+      <div class="fallback-card theme-sufi" data-fallback-for="8">
         <div>
           <p class="serif text-2xl font-bold text-[#6e1812]">4<sup>th</sup> January, 2027</p>
           <h2 class="serif italic text-4xl font-semibold text-[#7a1612] mt-1">Sufi Night</h2>
@@ -1506,20 +1646,22 @@
         </div>
       </div>
 
-      <img data-filename="sufi.png" data-primary="7" src="./sufi.png" alt="Sufi Night" class="scene-img" />
+      <img data-filename="sufi.png" data-primary="8" src="./sufi.png" alt="Sufi Night" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
 
-      <div class="lantern-glow" style="left: 8.2%; top: 12.2%; width: 11%; aspect-ratio: 1;"></div>
-      <div class="lantern-glow" style="left: 18.4%; top: 12.8%; width: 10%; aspect-ratio: 1; animation-delay: 0.55s;"></div>
-      <div class="lantern-glow" style="left: 84.2%; top: 10.0%; width: 11%; aspect-ratio: 1; animation-delay: 1.05s;"></div>
-      <div class="lantern-glow" style="left: 10.8%; top: 59.0%; width: 14%; aspect-ratio: 1; animation-delay: 0.3s;"></div>
+      <div class="fx-layer">
+        <div class="lantern-glow" style="left: 8.2%; top: 12.2%; width: 11%; aspect-ratio: 1;"></div>
+        <div class="lantern-glow" style="left: 18.4%; top: 12.8%; width: 10%; aspect-ratio: 1; animation-delay: 0.55s;"></div>
+        <div class="lantern-glow" style="left: 84.2%; top: 10.0%; width: 11%; aspect-ratio: 1; animation-delay: 1.05s;"></div>
+        <div class="lantern-glow" style="left: 10.8%; top: 59.0%; width: 14%; aspect-ratio: 1; animation-delay: 0.3s;"></div>
 
-      <div class="harmonium-aura"></div>
-      <div id="sufi-notes" class="absolute inset-0 z-20"></div>
+        <div class="harmonium-aura"></div>
+        <div id="sufi-notes" class="absolute inset-0 z-20"></div>
+      </div>
     </section>
 
     <!-- SCENE 9: AWAITING YOUR PRESENCE / RSVP (./rsvp.png) -->
-    <section id="scene-8" class="scene" data-scene="8" aria-label="Scene 9: Awaiting Your Presence">
-      <div class="fallback-card" data-fallback-for="8">
+    <section id="scene-9" class="scene" onclick="handleSceneTap(9, event)" aria-label="Scene 9: Awaiting Your Presence">
+      <div class="fallback-card" data-fallback-for="9">
         <div>
           <p class="serif text-xl text-[#4e5928]">Awaiting Your Presence</p>
           <p class="text-[11px] tracking-[0.22em] uppercase text-[#5c682e] mt-1 mb-3">RSVP</p>
@@ -1539,13 +1681,55 @@
         </div>
       </div>
 
-      <img data-filename="rsvp.png" data-primary="8" src="./rsvp.png" alt="Awaiting Your Presence — Basantwani Family and Mandhan Family" class="scene-img" />
-      <canvas id="fountain-canvas" class="fountain-canvas"></canvas>
+      <img data-filename="rsvp.png" data-primary="9" src="./rsvp.png" alt="Awaiting Your Presence — Basantwani Family and Mandhan Family" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <canvas id="fountain-canvas" class="fountain-canvas fx-layer"></canvas>
     </section>
 
-    <!-- SCENE 10: THE VENUE (./venue.png) -->
-    <section id="scene-9" class="scene" data-scene="9" aria-label="Scene 10: The Venue">
-      <div class="fallback-card" data-fallback-for="9">
+    <!-- SCENE 10: COUNTDOWN TO 3RD JANUARY 2027 (./countdown.jpg) -->
+    <section id="scene-10" class="scene" onclick="handleSceneTap(10, event)" aria-label="Scene 10: Countdown to 3rd January 2027">
+      <div class="fallback-card" data-fallback-for="10">
+        <div class="h-44"></div>
+        <div class="my-auto px-3 py-3 rounded-2xl border border-amber-700/25 bg-[#fffaf0]/80">
+          <p class="serif italic text-lg text-[#7d2138]">Save the Date</p>
+          <p class="text-[11px] tracking-[0.16em] uppercase text-[#8b6914] mt-0.5">Golden Dome Courtyard</p>
+        </div>
+        <div class="h-4"></div>
+      </div>
+
+      <img data-filename="countdown.jpg" data-primary="10" src="./countdown.jpg" alt="Countdown to 3rd January 2027" class="scene-img" style="object-fit: 100% 100%;" onload="onImgLoad(this)" onerror="onImgError(this)" />
+
+      <!-- Live Countdown Typography & 4 Time Tiles in Upper Open Cream Sky Area (top: 11.5% to 37.5%) -->
+      <div class="countdown-overlay">
+        <p class="text-[9px] font-semibold uppercase tracking-[0.2em] text-[#8b6914]">Counting Down To The Celebrations</p>
+        <h2 class="serif italic text-[22px] font-bold text-[#7d2138] leading-tight">Shubham &amp; Pooja</h2>
+
+        <div class="cd-tiles-grid" aria-live="polite">
+          <div class="cd-tile">
+            <div id="cd-days" class="cd-num">00</div>
+            <div class="cd-label">Days</div>
+          </div>
+          <div class="cd-tile">
+            <div id="cd-hours" class="cd-num">00</div>
+            <div class="cd-label">Hours</div>
+          </div>
+          <div class="cd-tile">
+            <div id="cd-mins" class="cd-num">00</div>
+            <div class="cd-label">Mins</div>
+          </div>
+          <div class="cd-tile">
+            <div id="cd-secs" class="cd-num">00</div>
+            <div class="cd-label">Secs</div>
+          </div>
+        </div>
+
+        <p id="cd-status" class="text-[9.5px] font-semibold tracking-[0.11em] uppercase text-[#6e4c12]">3rd January, 2027 • 1:00 PM IST</p>
+        <span class="cd-tap-cue">Tap anywhere to continue</span>
+      </div>
+    </section>
+
+    <!-- SCENE 11: THE VENUE (./venue.png) -->
+    <section id="scene-11" class="scene" onclick="handleSceneTap(11, event)" aria-label="Scene 11: The Venue">
+      <div class="fallback-card" data-fallback-for="11">
         <div>
           <h2 class="serif italic text-3xl font-semibold text-[#9e1946]">The Venue</h2>
           <p class="text-[10px] tracking-[0.2em] uppercase text-[#4a3918] mt-1">Find Your Way to the Celebrations</p>
@@ -1563,26 +1747,31 @@
         <div class="h-8"></div>
       </div>
 
-      <img data-filename="venue.png" data-primary="9" src="./venue.png" alt="The Venue — Crescent The Fern, Budhni" class="scene-img" />
+      <img data-filename="venue.png" data-primary="11" src="./venue.png" alt="The Venue — Crescent The Fern, Budhni" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+
+      <!-- Direct Interactive Venue Card / OPEN IN MAPS Trigger -->
+      <button id="venue-card-btn" type="button" onclick="openMapSheet(event)" aria-label="Open Crescent The Fern Budhni Map Preview"></button>
 
       <!-- Vintage Convertible Headlight Glints & Exhaust Puffs during Engine Rev -->
-      <div class="car-headlight-glint" style="left: 17.5%; top: 76.2%;"></div>
-      <div class="car-headlight-glint" style="left: 69.2%; top: 76.8%; animation-delay: 0.08s;"></div>
-      <div class="car-headlight-glint" style="left: 74.8%; top: 77.2%; animation-delay: 0.14s;"></div>
-      <div id="car-exhaust-host" class="absolute inset-0 z-20"></div>
+      <div class="fx-layer">
+        <div class="car-headlight-glint" style="left: 17.5%; top: 76.2%;"></div>
+        <div class="car-headlight-glint" style="left: 69.2%; top: 76.8%; animation-delay: 0.08s;"></div>
+        <div class="car-headlight-glint" style="left: 74.8%; top: 77.2%; animation-delay: 0.14s;"></div>
+        <div id="car-exhaust-host" class="absolute inset-0 z-20"></div>
+      </div>
 
-      <button id="replay-btn" type="button" aria-label="Replay invitation">
-        <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <button id="replay-btn" type="button" onclick="replayInvitation(event)" aria-label="Replay invitation">
+        <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
           <polyline points="1 4 1 10 7 10"></polyline>
           <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
         </svg>
-        <span>Replay</span>
+        <span style="pointer-events:none;">Replay</span>
       </button>
     </section>
 
     <!-- Slide-Up Glassmorphism Map Preview Sheet -->
-    <div id="map-sheet-backdrop"></div>
-    <aside id="map-sheet" role="dialog" aria-modal="true" aria-labelledby="map-sheet-title">
+    <div id="map-sheet-backdrop" onclick="closeMapSheet(event)"></div>
+    <aside id="map-sheet" role="dialog" aria-modal="true" aria-labelledby="map-sheet-title" onclick="event.stopPropagation()">
       <div class="w-10 h-1 rounded-full bg-amber-200/35 mx-auto mb-3"></div>
       <div class="flex items-start justify-between gap-2 mb-2.5">
         <div>
@@ -1591,12 +1780,13 @@
           <p class="text-[11px] text-amber-100/80 mt-0.5">Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445</p>
         </div>
         <button
-          id="btn-close-map"
+          id="close-map-btn"
           type="button"
+          onclick="closeMapSheet(event)"
           class="w-7 h-7 rounded-full bg-white/10 border border-amber-200/25 text-amber-100 flex items-center justify-center shrink-0 cursor-pointer"
           aria-label="Close map preview"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -1613,7 +1803,7 @@
             </svg>
           </div>
           <p class="serif text-base font-semibold text-amber-100">Crescent The Fern, Budhni</p>
-          <p class="text-[10.5px] text-amber-200/75">NH-69 Bhopal–Hoshangabad Highway, Sehore Dist., MP</p>
+          <p class="text-[10.5px] text-amber-200/75">Bhopal–Hoshangabad Highway, Budhni, Sehore Dist., MP</p>
         </div>
 
         <iframe
@@ -1628,77 +1818,73 @@
 
       <div class="grid grid-cols-3 gap-1.5">
         <button
-          id="btn-copy-address"
+          id="copy-addr-btn"
           type="button"
+          onclick="copyVenueAddress(event)"
           class="py-2.5 px-2 rounded-xl bg-white/10 hover:bg-white/15 border border-amber-200/35 text-amber-100 text-[11px] font-medium flex items-center justify-center gap-1 cursor-pointer"
         >
-          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
           </svg>
-          <span>Copy Address</span>
+          <span style="pointer-events:none;">Copy Address</span>
         </button>
 
         <a
-          id="btn-get-directions"
+          id="directions-link"
           href="https://www.google.com/maps/dir/?api=1&destination=Crescent+The+Fern+Budhni+Madhya+Pradesh"
           target="_blank"
           rel="noopener noreferrer"
           class="py-2.5 px-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/45 text-amber-100 text-[11px] font-semibold flex items-center justify-center gap-1 no-underline"
         >
-          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
           </svg>
-          <span>Get Directions</span>
+          <span style="pointer-events:none;">Get Directions</span>
         </a>
 
         <a
-          id="btn-open-gmaps-app"
+          id="open-gmaps-link"
           href="https://www.google.com/maps/search/?api=1&query=Crescent+The+Fern+Budhni+Madhya+Pradesh"
           target="_blank"
           rel="noopener noreferrer"
           class="py-2.5 px-2 rounded-xl bg-[#9e1946] hover:bg-[#b21d50] border border-amber-200/40 text-white text-[11px] font-semibold flex items-center justify-center gap-1 no-underline"
         >
-          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
-          <span>Open in Maps</span>
+          <span style="pointer-events:none;">Open in Maps</span>
         </a>
       </div>
     </aside>
 
     <!-- Discreet Toast -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  </div>
+  </main>
 
   <script>
-    const TOTAL_SCENES = 10;
-    const EXPECTED_FILES = [
-      'temple.jpg',
-      'diyas.png',
-      'ganga.png',
-      'saath.png',
-      'haldi.png',
-      'sangeet.png',
-      'phere.png',
-      'sufi.png',
-      'rsvp.png',
-      'venue.png'
-    ];
-    const VENUE_FULL_ADDRESS = 'Crescent The Fern, Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445';
+    var TOTAL_SCENES = 11;
+    var WEDDING_TARGET_MS = new Date('2027-01-03T13:00:00+05:30').getTime();
+    var VENUE_FULL_ADDRESS = 'Crescent The Fern, Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445';
 
-    let currentScene = 0;
-    let isAnimating = false;
-    let soundEnabled = true;
-    let audioCtx = null;
-    let pendingTimers = [];
-    let fountainRaf = null;
-    let toastTimer = null;
-    let riverAmbientCtrl = null;
+    var currentScene = 1;
+    var isAnimating = false;
+    var soundEnabled = true;
+    var audioCtx = null;
+    var pendingTimers = [];
+    var fountainRaf = null;
+    var toastTimer = null;
+    var riverAmbientCtrl = null;
+
+    function stopEvent(e) {
+      if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
+    }
 
     function showToast(msg, durationMs) {
-      const toast = document.getElementById('toast');
+      var toast = document.getElementById('toast');
       if (!toast) return;
       clearTimeout(toastTimer);
       toast.textContent = msg;
@@ -1708,55 +1894,58 @@
       }, durationMs || 2400);
     }
 
-    function copyTextSafe(text, successMsg) {
+    function copyVenueAddress(e) {
+      stopEvent(e);
       try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
+        var ta = document.createElement('textarea');
+        ta.value = VENUE_FULL_ADDRESS;
         ta.setAttribute('readonly', '');
         ta.style.position = 'fixed';
         ta.style.left = '-9999px';
         document.body.appendChild(ta);
         ta.select();
         ta.setSelectionRange(0, ta.value.length);
-        const ok = document.execCommand('copy');
+        var ok = document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast(ok ? successMsg : 'Crescent The Fern, Budhni');
+        showToast(ok ? 'Venue address copied!' : 'Crescent The Fern, Budhni');
       } catch (err) {
         showToast('Crescent The Fern, Budhni');
       }
     }
 
-    function openMapSheet() {
-      const backdrop = document.getElementById('map-sheet-backdrop');
-      const sheet = document.getElementById('map-sheet');
+    function openMapSheet(e) {
+      stopEvent(e);
+      var backdrop = document.getElementById('map-sheet-backdrop');
+      var sheet = document.getElementById('map-sheet');
       if (backdrop) backdrop.classList.add('open');
       if (sheet) sheet.classList.add('open');
     }
 
-    function closeMapSheet() {
-      const backdrop = document.getElementById('map-sheet-backdrop');
-      const sheet = document.getElementById('map-sheet');
+    function closeMapSheet(e) {
+      stopEvent(e);
+      var backdrop = document.getElementById('map-sheet-backdrop');
+      var sheet = document.getElementById('map-sheet');
       if (backdrop) backdrop.classList.remove('open');
       if (sheet) sheet.classList.remove('open');
     }
 
-    /* Hide fallback card automatically once local illustration loads */
-    function markFileLoaded(filename) {
-      if (!EXPECTED_FILES.includes(filename)) return;
-
-      document.querySelectorAll('img[data-filename="' + filename + '"]').forEach(function (img) {
-        img.classList.add('is-loaded');
-
-        if (img.hasAttribute('data-primary')) {
-          const idx = Number(img.getAttribute('data-primary'));
-          const fb = document.querySelector('[data-fallback-for="' + idx + '"]');
-          if (fb) fb.classList.add('hidden-by-img');
-          if (idx === 0) {
-            const cam = document.querySelector('[data-cam-for="0"]');
-            if (cam) cam.classList.add('has-image');
-          }
+    function onImgLoad(img) {
+      if (!img) return;
+      img.classList.add('is-loaded');
+      if (img.hasAttribute('data-primary')) {
+        var sceneNum = img.getAttribute('data-primary');
+        var fb = document.querySelector('[data-fallback-for="' + sceneNum + '"]');
+        if (fb) fb.classList.add('hidden-by-img');
+        if (sceneNum === '1') {
+          var cam = document.querySelector('[data-cam-for="1"]');
+          if (cam) cam.classList.add('has-image');
         }
-      });
+      }
+    }
+
+    function onImgError(img) {
+      if (!img) return;
+      img.classList.remove('is-loaded');
     }
 
     /* Procedural Web Audio API Synthesis */
@@ -1764,7 +1953,7 @@
       if (!soundEnabled) return null;
       try {
         if (!audioCtx) {
-          const Ctx = window.AudioContext || window.webkitAudioContext;
+          var Ctx = window.AudioContext || window.webkitAudioContext;
           if (Ctx) audioCtx = new Ctx();
         }
         if (audioCtx && audioCtx.state === 'suspended') {
@@ -1777,17 +1966,17 @@
     }
 
     function playTempleBell() {
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
-      const now = ctx.currentTime;
+      var now = ctx.currentTime;
       [
         { freq: 880, gain: 0.14, decay: 1.9 },
         { freq: 1320, gain: 0.085, decay: 1.45 },
         { freq: 1760, gain: 0.05, decay: 1.05 },
         { freq: 2420, gain: 0.03, decay: 0.72 }
       ].forEach(function (p) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(p.freq, now);
         gain.gain.setValueAtTime(0.0001, now);
@@ -1801,13 +1990,13 @@
     }
 
     function playChime(freqs, step, volume) {
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
-      const now = ctx.currentTime;
+      var now = ctx.currentTime;
       freqs.forEach(function (f, idx) {
-        const t = now + idx * step;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        var t = now + idx * step;
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(f, t);
         gain.gain.setValueAtTime(0.0001, t);
@@ -1821,26 +2010,26 @@
     }
 
     function playWaterShimmer() {
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
-      const now = ctx.currentTime;
-      const duration = 1.25;
-      const sampleCount = Math.floor(ctx.sampleRate * duration);
-      const buffer = ctx.createBuffer(1, sampleCount, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < sampleCount; i++) {
+      var now = ctx.currentTime;
+      var duration = 1.25;
+      var sampleCount = Math.floor(ctx.sampleRate * duration);
+      var buffer = ctx.createBuffer(1, sampleCount, ctx.sampleRate);
+      var data = buffer.getChannelData(0);
+      for (var i = 0; i < sampleCount; i++) {
         data[i] = Math.random() * 2 - 1;
       }
-      const noise = ctx.createBufferSource();
+      var noise = ctx.createBufferSource();
       noise.buffer = buffer;
 
-      const filter = ctx.createBiquadFilter();
+      var filter = ctx.createBiquadFilter();
       filter.type = 'bandpass';
       filter.frequency.setValueAtTime(750, now);
       filter.frequency.exponentialRampToValueAtTime(1450, now + duration);
       filter.Q.value = 2.6;
 
-      const gain = ctx.createGain();
+      var gain = ctx.createGain();
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(0.085, now + 0.14);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
@@ -1853,20 +2042,20 @@
     }
 
     function createPinkBrownNoiseBuffer(ctx, seconds) {
-      const length = Math.floor(ctx.sampleRate * seconds);
-      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-      const out = buffer.getChannelData(0);
-      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-      let brown = 0;
-      for (let i = 0; i < length; i++) {
-        const white = Math.random() * 2 - 1;
+      var length = Math.floor(ctx.sampleRate * seconds);
+      var buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      var out = buffer.getChannelData(0);
+      var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      var brown = 0;
+      for (var i = 0; i < length; i++) {
+        var white = Math.random() * 2 - 1;
         b0 = 0.99886 * b0 + white * 0.0555179;
         b1 = 0.99332 * b1 + white * 0.0750759;
         b2 = 0.96900 * b2 + white * 0.1538520;
         b3 = 0.86650 * b3 + white * 0.3104856;
         b4 = 0.55000 * b4 + white * 0.5329522;
         b5 = -0.7616 * b5 - white * 0.0168980;
-        const pink = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.045;
+        var pink = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.045;
         b6 = white * 0.115926;
         brown = (brown + 0.02 * white) / 1.02;
         out[i] = pink * 0.65 + brown * 1.45;
@@ -1876,12 +2065,12 @@
 
     function stopRiverFlow(immediate) {
       if (!riverAmbientCtrl) return;
-      const ctrl = riverAmbientCtrl;
+      var ctrl = riverAmbientCtrl;
       riverAmbientCtrl = null;
       try {
-        const ctx = ctrl.ctx;
-        const now = ctx.currentTime;
-        const fade = immediate ? 0.08 : 0.45;
+        var ctx = ctrl.ctx;
+        var now = ctx.currentTime;
+        var fade = immediate ? 0.08 : 0.45;
         ctrl.masterGain.gain.cancelScheduledValues(now);
         ctrl.masterGain.gain.setValueAtTime(Math.max(0.0001, ctrl.masterGain.gain.value), now);
         ctrl.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + fade);
@@ -1895,49 +2084,49 @@
 
     function startRiverFlow(isSwell) {
       if (!soundEnabled) return;
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
 
       if (!riverAmbientCtrl) {
-        const now = ctx.currentTime;
-        const buffer = createPinkBrownNoiseBuffer(ctx, 4.0);
-        const src = ctx.createBufferSource();
+        var now = ctx.currentTime;
+        var buffer = createPinkBrownNoiseBuffer(ctx, 4.0);
+        var src = ctx.createBufferSource();
         src.buffer = buffer;
         src.loop = true;
 
-        const lpFilter = ctx.createBiquadFilter();
+        var lpFilter = ctx.createBiquadFilter();
         lpFilter.type = 'lowpass';
         lpFilter.frequency.setValueAtTime(420, now);
         lpFilter.Q.value = 1.4;
 
-        const bpFilter = ctx.createBiquadFilter();
+        var bpFilter = ctx.createBiquadFilter();
         bpFilter.type = 'bandpass';
         bpFilter.frequency.setValueAtTime(920, now);
         bpFilter.Q.value = 2.2;
 
-        const lpGain = ctx.createGain();
+        var lpGain = ctx.createGain();
         lpGain.gain.value = 0.72;
 
-        const bpGain = ctx.createGain();
+        var bpGain = ctx.createGain();
         bpGain.gain.value = 0.34;
 
-        const lfo = ctx.createOscillator();
+        var lfo = ctx.createOscillator();
         lfo.type = 'sine';
         lfo.frequency.value = 0.32;
-        const lfoDepth = ctx.createGain();
+        var lfoDepth = ctx.createGain();
         lfoDepth.gain.value = 190;
         lfo.connect(lfoDepth);
         lfoDepth.connect(lpFilter.frequency);
 
-        const lfo2 = ctx.createOscillator();
+        var lfo2 = ctx.createOscillator();
         lfo2.type = 'sine';
         lfo2.frequency.value = 0.58;
-        const lfo2Depth = ctx.createGain();
+        var lfo2Depth = ctx.createGain();
         lfo2Depth.gain.value = 340;
         lfo2.connect(lfo2Depth);
         lfo2Depth.connect(bpFilter.frequency);
 
-        const masterGain = ctx.createGain();
+        var masterGain = ctx.createGain();
         masterGain.gain.setValueAtTime(0.0001, now);
         masterGain.gain.exponentialRampToValueAtTime(isSwell ? 0.24 : 0.11, now + 0.35);
 
@@ -1957,8 +2146,8 @@
       }
 
       if (isSwell && riverAmbientCtrl) {
-        const ctrl = riverAmbientCtrl;
-        const now = ctrl.ctx.currentTime;
+        var ctrl = riverAmbientCtrl;
+        var now = ctrl.ctx.currentTime;
         ctrl.masterGain.gain.cancelScheduledValues(now);
         ctrl.masterGain.gain.setValueAtTime(Math.max(0.05, ctrl.masterGain.gain.value), now);
         ctrl.masterGain.gain.exponentialRampToValueAtTime(0.28, now + 0.45);
@@ -1971,11 +2160,11 @@
         ctrl.lpFilter.frequency.exponentialRampToValueAtTime(380, now + 2.5);
 
         [0.12, 0.48, 0.92, 1.38].forEach(function (offset, idx) {
-          const t0 = now + offset;
-          const osc = ctrl.ctx.createOscillator();
-          const g = ctrl.ctx.createGain();
+          var t0 = now + offset;
+          var osc = ctrl.ctx.createOscillator();
+          var g = ctrl.ctx.createGain();
           osc.type = 'sine';
-          const baseF = 1120 + idx * 145;
+          var baseF = 1120 + idx * 145;
           osc.frequency.setValueAtTime(baseF, t0);
           osc.frequency.exponentialRampToValueAtTime(baseF * 1.38, t0 + 0.22);
           g.gain.setValueAtTime(0.0001, t0);
@@ -1991,10 +2180,10 @@
 
     function playVintageCarRev() {
       if (!soundEnabled) return;
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
-      const now = ctx.currentTime;
-      const dur = 2.45;
+      var now = ctx.currentTime;
+      var dur = 2.45;
 
       function applyRpmCurve(param, idleVal, blip1Val, dipVal, blip2Val, endVal) {
         param.setValueAtTime(idleVal, now);
@@ -2004,13 +2193,13 @@
         param.exponentialRampToValueAtTime(endVal, now + dur);
       }
 
-      const masterGain = ctx.createGain();
+      var masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.0001, now);
       masterGain.gain.exponentialRampToValueAtTime(0.24, now + 0.08);
       masterGain.gain.setValueAtTime(0.26, now + 1.45);
       masterGain.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.05);
 
-      const exhaustFilter = ctx.createBiquadFilter();
+      var exhaustFilter = ctx.createBiquadFilter();
       exhaustFilter.type = 'lowpass';
       exhaustFilter.Q.value = 3.4;
       applyRpmCurve(exhaustFilter.frequency, 165, 440, 210, 620, 145);
@@ -2018,38 +2207,38 @@
       exhaustFilter.connect(masterGain);
       masterGain.connect(ctx.destination);
 
-      const oscMain = ctx.createOscillator();
+      var oscMain = ctx.createOscillator();
       oscMain.type = 'sawtooth';
       applyRpmCurve(oscMain.frequency, 36, 94, 48, 128, 34);
-      const gainMain = ctx.createGain();
+      var gainMain = ctx.createGain();
       gainMain.gain.value = 0.55;
       oscMain.connect(gainMain);
       gainMain.connect(exhaustFilter);
 
-      const oscHarm = ctx.createOscillator();
+      var oscHarm = ctx.createOscillator();
       oscHarm.type = 'sawtooth';
       applyRpmCurve(oscHarm.frequency, 54.5, 141, 72, 192, 51);
-      const gainHarm = ctx.createGain();
+      var gainHarm = ctx.createGain();
       gainHarm.gain.value = 0.34;
       oscHarm.connect(gainHarm);
       gainHarm.connect(exhaustFilter);
 
-      const oscSub = ctx.createOscillator();
+      var oscSub = ctx.createOscillator();
       oscSub.type = 'triangle';
       applyRpmCurve(oscSub.frequency, 28, 62, 34, 82, 26);
-      const gainSub = ctx.createGain();
+      var gainSub = ctx.createGain();
       gainSub.gain.value = 0.65;
       oscSub.connect(gainSub);
       gainSub.connect(exhaustFilter);
 
-      const noiseBuf = createPinkBrownNoiseBuffer(ctx, dur + 0.1);
-      const noiseSrc = ctx.createBufferSource();
+      var noiseBuf = createPinkBrownNoiseBuffer(ctx, dur + 0.1);
+      var noiseSrc = ctx.createBufferSource();
       noiseSrc.buffer = noiseBuf;
-      const intakeFilter = ctx.createBiquadFilter();
+      var intakeFilter = ctx.createBiquadFilter();
       intakeFilter.type = 'bandpass';
       intakeFilter.Q.value = 1.8;
       applyRpmCurve(intakeFilter.frequency, 280, 950, 380, 1320, 240);
-      const intakeGain = ctx.createGain();
+      var intakeGain = ctx.createGain();
       intakeGain.gain.setValueAtTime(0.06, now);
       intakeGain.gain.linearRampToValueAtTime(0.22, now + 0.42);
       intakeGain.gain.linearRampToValueAtTime(0.09, now + 0.78);
@@ -2072,8 +2261,8 @@
     }
 
     function triggerCarRevEffect() {
-      const el = document.getElementById('scene-9');
-      const host = document.getElementById('car-exhaust-host');
+      var el = document.getElementById('scene-11');
+      var host = document.getElementById('car-exhaust-host');
       if (el) {
         el.classList.remove('revving');
         void el.offsetWidth;
@@ -2086,9 +2275,9 @@
         [120, 320, 960, 1180, 1420].forEach(function (delayMs, idx) {
           later(function () {
             if (!host) return;
-            const puff = document.createElement('div');
+            var puff = document.createElement('div');
             puff.className = 'exhaust-puff';
-            const size = 18 + (idx % 3) * 8;
+            var size = 18 + (idx % 3) * 8;
             puff.style.left = '93%';
             puff.style.top = '88.5%';
             puff.style.width = size + 'px';
@@ -2102,23 +2291,23 @@
     }
 
     function playHarmoniumSufi() {
-      const ctx = ensureAudio();
+      var ctx = ensureAudio();
       if (!ctx) return;
-      const now = ctx.currentTime;
+      var now = ctx.currentTime;
 
-      const masterFilter = ctx.createBiquadFilter();
+      var masterFilter = ctx.createBiquadFilter();
       masterFilter.type = 'lowpass';
       masterFilter.frequency.setValueAtTime(1750, now);
 
-      const masterGain = ctx.createGain();
+      var masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.85, now);
       masterFilter.connect(masterGain);
       masterGain.connect(ctx.destination);
 
       // Gentle Sa-Pa drone
       [146.83, 220.0].forEach(function (droneFreq) {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(droneFreq, now);
         g.gain.setValueAtTime(0.0001, now);
@@ -2131,7 +2320,7 @@
         osc.stop(now + 2.05);
       });
 
-      const notes = [
+      var notes = [
         { freq: 293.66, start: 0.0, dur: 0.34 },
         { freq: 329.63, start: 0.32, dur: 0.32 },
         { freq: 369.99, start: 0.62, dur: 0.36 },
@@ -2141,16 +2330,16 @@
       ];
 
       notes.forEach(function (n) {
-        const t0 = now + n.start;
-        const t1 = t0 + n.dur;
+        var t0 = now + n.start;
+        var t1 = t0 + n.dur;
         [-3.2, 0, 3.2].forEach(function (detuneCents, idx) {
-          const osc = ctx.createOscillator();
-          const g = ctx.createGain();
+          var osc = ctx.createOscillator();
+          var g = ctx.createGain();
           osc.type = idx === 1 ? 'sawtooth' : 'triangle';
           osc.frequency.setValueAtTime(n.freq, t0);
           osc.detune.setValueAtTime(detuneCents, t0);
 
-          const peak = idx === 1 ? 0.052 : 0.036;
+          var peak = idx === 1 ? 0.052 : 0.036;
           g.gain.setValueAtTime(0.0001, t0);
           g.gain.exponentialRampToValueAtTime(peak, t0 + 0.045);
           g.gain.setValueAtTime(peak * 0.88, Math.max(t0 + 0.05, t1 - 0.06));
@@ -2164,14 +2353,14 @@
       });
     }
 
-    /* Timers & Scene Transitions */
+    /* Timers & Scene Resets */
     function clearTimers() {
       pendingTimers.forEach(function (id) { clearTimeout(id); });
       pendingTimers = [];
     }
 
     function later(fn, ms) {
-      const id = setTimeout(fn, ms);
+      var id = setTimeout(fn, ms);
       pendingTimers.push(id);
       return id;
     }
@@ -2181,39 +2370,39 @@
         cancelAnimationFrame(fountainRaf);
         fountainRaf = null;
       }
-      const canvas = document.getElementById('fountain-canvas');
+      var canvas = document.getElementById('fountain-canvas');
       if (canvas) {
-        const ctx = canvas.getContext('2d');
+        var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
     function startFountainCanvas() {
       clearFountainCanvas();
-      const canvas = document.getElementById('fountain-canvas');
+      var canvas = document.getElementById('fountain-canvas');
       if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var rect = canvas.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.max(1, Math.floor(rect.width * dpr));
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
 
-      const ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext('2d');
       ctx.scale(dpr, dpr);
-      const W = rect.width;
-      const H = rect.height;
+      var W = rect.width;
+      var H = rect.height;
 
-      const nozzleX = W * 0.312;
-      const nozzleY = H * 0.855;
-      const basinY = H * 0.892;
+      var nozzleX = W * 0.312;
+      var nozzleY = H * 0.855;
+      var basinY = H * 0.892;
 
-      const drops = [];
-      const ripples = [];
-      const startTime = performance.now();
+      var drops = [];
+      var ripples = [];
+      var startTime = performance.now();
 
       function spawnBurst(count) {
-        for (let i = 0; i < count; i++) {
-          const spread = (Math.random() - 0.5) * 2.1;
-          const isCenterPlume = Math.abs(spread) < 0.35;
+        for (var i = 0; i < count; i++) {
+          var spread = (Math.random() - 0.5) * 2.1;
+          var isCenterPlume = Math.abs(spread) < 0.35;
           drops.push({
             x: nozzleX + (Math.random() - 0.5) * 5,
             y: nozzleY,
@@ -2227,14 +2416,14 @@
       }
 
       function tick(now) {
-        const elapsed = now - startTime;
+        var elapsed = now - startTime;
         ctx.clearRect(0, 0, W, H);
 
         if (elapsed < 1850) {
           spawnBurst(6);
         }
 
-        const gGlow = ctx.createRadialGradient(nozzleX, nozzleY - 12, 2, nozzleX, nozzleY - 12, W * 0.14);
+        var gGlow = ctx.createRadialGradient(nozzleX, nozzleY - 12, 2, nozzleX, nozzleY - 12, W * 0.14);
         gGlow.addColorStop(0, 'rgba(255, 252, 240, 0.55)');
         gGlow.addColorStop(0.55, 'rgba(186, 230, 253, 0.28)');
         gGlow.addColorStop(1, 'rgba(186, 230, 253, 0)');
@@ -2243,9 +2432,9 @@
         ctx.arc(nozzleX, nozzleY - 12, W * 0.14, 0, Math.PI * 2);
         ctx.fill();
 
-        const gravity = H * 0.00024;
-        for (let i = drops.length - 1; i >= 0; i--) {
-          const p = drops[i];
+        var gravity = H * 0.00024;
+        for (var i = drops.length - 1; i >= 0; i--) {
+          var p = drops[i];
           p.x += p.vx;
           p.y += p.vy;
           p.vy += gravity;
@@ -2268,8 +2457,8 @@
           }
         }
 
-        for (let i = ripples.length - 1; i >= 0; i--) {
-          const rp = ripples[i];
+        for (var j = ripples.length - 1; j >= 0; j--) {
+          var rp = ripples[j];
           rp.rx += 0.65;
           rp.ry += 0.24;
           rp.alpha *= 0.94;
@@ -2281,7 +2470,7 @@
           ctx.stroke();
 
           if (rp.alpha < 0.04) {
-            ripples.splice(i, 1);
+            ripples.splice(j, 1);
           }
         }
 
@@ -2295,82 +2484,113 @@
       fountainRaf = requestAnimationFrame(tick);
     }
 
-    function resetScene(idx) {
-      const el = document.getElementById('scene-' + idx);
+    function resetScene(sceneNum) {
+      var el = document.getElementById('scene-' + sceneNum);
       if (!el) return;
-      el.classList.remove('opening', 'bell-ringing', 'under-reveal', 'focus-in', 'ignited', 'rippling', 'tilak-on', 'zooming', 'haldi-on', 'glittering', 'playing');
+      el.classList.remove('opening', 'bell-ringing', 'under-reveal', 'focus-in', 'ignited', 'rippling', 'tilak-on', 'zooming', 'haldi-on', 'glittering', 'playing', 'revving');
 
-      if (idx === 1) el.querySelectorAll('.diya-node').forEach(function (d) { d.classList.remove('lit'); });
-      if (idx === 2) {
-        const g = document.getElementById('ganga-ripples');
+      if (sceneNum === 2) el.querySelectorAll('.diya-node').forEach(function (d) { d.classList.remove('lit'); });
+      if (sceneNum === 3) {
+        var g = document.getElementById('ganga-ripples');
         if (g) g.innerHTML = '';
       }
-      if (idx === 3) {
-        const ts = document.getElementById('tilak-sparkles');
+      if (sceneNum === 4) {
+        var ts = document.getElementById('tilak-sparkles');
         if (ts) ts.innerHTML = '';
       }
-      if (idx === 4) {
-        const hp = document.getElementById('haldi-particles');
+      if (sceneNum === 5) {
+        var hp = document.getElementById('haldi-particles');
         if (hp) hp.innerHTML = '';
       }
-      if (idx === 5) {
-        const mg = document.getElementById('mirror-glitter');
-        const ms = document.getElementById('mirror-stardust');
+      if (sceneNum === 6) {
+        var mg = document.getElementById('mirror-glitter');
+        var ms = document.getElementById('mirror-stardust');
         if (mg) mg.innerHTML = '';
         if (ms) ms.innerHTML = '';
       }
-      if (idx === 6) {
-        const ph = document.getElementById('petals-host');
+      if (sceneNum === 7) {
+        var ph = document.getElementById('petals-host');
         if (ph) ph.innerHTML = '';
       }
-      if (idx === 7) {
-        const sn = document.getElementById('sufi-notes');
+      if (sceneNum === 8) {
+        var sn = document.getElementById('sufi-notes');
         if (sn) sn.innerHTML = '';
       }
-      if (idx === 8) clearFountainCanvas();
-      if (idx === 9) {
-        el.classList.remove('revving');
-        const exh = document.getElementById('car-exhaust-host');
+      if (sceneNum === 9) clearFountainCanvas();
+      if (sceneNum === 11) {
+        var exh = document.getElementById('car-exhaust-host');
         if (exh) exh.innerHTML = '';
       }
     }
 
-    function updateNavUI() {
-      const btnPrev = document.getElementById('btn-prev');
-      const btnNext = document.getElementById('btn-next');
-      const counter = document.getElementById('scene-counter');
-      if (btnPrev) btnPrev.disabled = currentScene === 0;
-      if (btnNext) btnNext.disabled = currentScene === TOTAL_SCENES - 1;
-      if (counter) counter.textContent = (currentScene + 1) + ' / ' + TOTAL_SCENES;
+    function updateCountdownDisplay() {
+      var daysEl = document.getElementById('cd-days');
+      var hoursEl = document.getElementById('cd-hours');
+      var minsEl = document.getElementById('cd-mins');
+      var secsEl = document.getElementById('cd-secs');
+      var statusEl = document.getElementById('cd-status');
+      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
-      document.querySelectorAll('#dots-track .dot-btn').forEach(function (btn, i) {
-        btn.classList.toggle('active', i === currentScene);
-        btn.setAttribute('aria-current', i === currentScene ? 'step' : 'false');
+      var diff = WEDDING_TARGET_MS - Date.now();
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minsEl.textContent = '00';
+        secsEl.textContent = '00';
+        if (statusEl) statusEl.textContent = 'The Celebrations Have Begun!';
+        return;
+      }
+
+      var totalSeconds = Math.floor(diff / 1000);
+      var days = Math.floor(totalSeconds / 86400);
+      var hours = Math.floor((totalSeconds % 86400) / 3600);
+      var mins = Math.floor((totalSeconds % 3600) / 60);
+      var secs = totalSeconds % 60;
+
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minsEl.textContent = String(mins).padStart(2, '0');
+      secsEl.textContent = String(secs).padStart(2, '0');
+    }
+
+    function updateNavUI() {
+      var btnPrev = document.getElementById('prev-btn');
+      var btnNext = document.getElementById('next-btn');
+      var counter = document.getElementById('scene-counter');
+      if (btnPrev) btnPrev.disabled = currentScene === 1;
+      if (btnNext) btnNext.disabled = currentScene === TOTAL_SCENES;
+      if (counter) counter.textContent = currentScene + ' / ' + TOTAL_SCENES;
+
+      document.querySelectorAll('#dots-track .dot').forEach(function (btn) {
+        var dotNum = Number(btn.getAttribute('data-dot'));
+        btn.classList.toggle('active', dotNum === currentScene);
+        btn.setAttribute('aria-current', dotNum === currentScene ? 'step' : 'false');
       });
     }
 
-    function goToScene(targetIdx, manual, forceReset) {
-      if (targetIdx < 0 || targetIdx >= TOTAL_SCENES) return;
-      if (targetIdx === currentScene && !forceReset) return;
+    function goToScene(targetScene, manual, forceReset, e) {
+      stopEvent(e);
+      if (targetScene < 1 || targetScene > TOTAL_SCENES) return;
+      if (targetScene === currentScene && !forceReset) return;
 
       closeMapSheet();
       clearTimers();
       isAnimating = false;
-      if (targetIdx !== 2) {
+      if (targetScene !== 3) {
         stopRiverFlow(true);
       }
 
-      const prevIdx = currentScene;
-      const prevEl = document.getElementById('scene-' + prevIdx);
-      const nextEl = document.getElementById('scene-' + targetIdx);
+      var prevScene = currentScene;
+      var prevEl = document.getElementById('scene-' + prevScene);
+      var nextEl = document.getElementById('scene-' + targetScene);
 
       document.querySelectorAll('.scene').forEach(function (sc) {
         if (sc !== nextEl) sc.classList.remove('under-reveal', 'focus-in');
       });
 
-      const wasUnderReveal = Boolean(nextEl && nextEl.classList.contains('under-reveal'));
+      var wasUnderReveal = Boolean(nextEl && nextEl.classList.contains('under-reveal'));
       if (!wasUnderReveal) {
-        resetScene(targetIdx);
+        resetScene(targetScene);
       }
 
       if (prevEl && prevEl !== nextEl) {
@@ -2378,43 +2598,68 @@
         prevEl.classList.add('leaving');
         setTimeout(function () {
           prevEl.classList.remove('leaving');
-          resetScene(prevIdx);
-        }, 620);
+          resetScene(prevScene);
+        }, 580);
       }
 
       if (nextEl) {
         nextEl.classList.remove('leaving', 'under-reveal', 'focus-in');
         nextEl.classList.add('active');
       }
-      currentScene = targetIdx;
+      currentScene = targetScene;
       updateNavUI();
 
       if (manual) ensureAudio();
 
-      if (targetIdx === 2) {
+      if (targetScene === 3) {
         startRiverFlow(false);
-      } else if (targetIdx === 9) {
+      } else if (targetScene === 10) {
+        updateCountdownDisplay();
+      } else if (targetScene === 11) {
         later(function () {
-          if (currentScene === 9) triggerCarRevEffect();
+          if (currentScene === 11) triggerCarRevEffect();
         }, 280);
       }
     }
 
-    function triggerActiveSceneAction(clickEvent) {
-      if (isAnimating) return;
-      const idx = currentScene;
+    function navPrev(e) {
+      stopEvent(e);
+      goToScene(currentScene - 1, true, false);
+    }
 
-      /* Scene 10: Venue Card / OPEN IN MAPS opens Map Preview; lower car caricature revs engine */
-      if (idx === 9) {
-        const stageEl = document.getElementById('stage');
-        if (stageEl && clickEvent && typeof clickEvent.clientY === 'number') {
-          const rect = stageEl.getBoundingClientRect();
-          const relY = (clickEvent.clientY - rect.top) / rect.height;
-          if (relY >= 0.20 && relY <= 0.43) {
-            openMapSheet();
-            return;
-          }
-        }
+    function navNext(e) {
+      stopEvent(e);
+      goToScene(currentScene + 1, true, false);
+    }
+
+    function replayInvitation(e) {
+      stopEvent(e);
+      goToScene(1, true, true);
+    }
+
+    function toggleSound(e) {
+      stopEvent(e);
+      soundEnabled = !soundEnabled;
+      var onIcon = document.getElementById('icon-sound-on');
+      var offIcon = document.getElementById('icon-sound-off');
+      if (onIcon) onIcon.classList.toggle('hidden', !soundEnabled);
+      if (offIcon) offIcon.classList.toggle('hidden', soundEnabled);
+      if (soundEnabled) {
+        ensureAudio();
+        if (currentScene === 3) startRiverFlow(false);
+        showToast('Sound enabled');
+      } else {
+        stopRiverFlow(true);
+        showToast('Sound muted');
+      }
+    }
+
+    function handleSceneTap(sceneNum, e) {
+      if (sceneNum !== currentScene) return;
+      if (isAnimating) return;
+
+      /* Scene 11: Lower vintage car area revs engine; upper #venue-card-btn opens Map Preview */
+      if (sceneNum === 11) {
         ensureAudio();
         triggerCarRevEffect();
         return;
@@ -2423,39 +2668,35 @@
       isAnimating = true;
       ensureAudio();
 
-      if (idx === 0) {
-        const el = document.getElementById('scene-0');
-        const scene2El = document.getElementById('scene-1');
-        resetScene(1);
-        if (scene2El) {
-          scene2El.classList.add('under-reveal');
-        }
-        if (el) {
-          el.classList.add('bell-ringing', 'opening');
-        }
+      if (sceneNum === 1) {
+        var el1 = document.getElementById('scene-1');
+        var scene2El = document.getElementById('scene-2');
+        resetScene(2);
+        if (scene2El) scene2El.classList.add('under-reveal');
+        if (el1) el1.classList.add('bell-ringing', 'opening');
         playTempleBell();
         later(function () {
           if (scene2El) scene2El.classList.add('focus-in');
         }, 120);
         later(function () {
-          goToScene(1, false, false);
+          goToScene(2, false, false);
         }, 1450);
-      } else if (idx === 1) {
-        const el = document.getElementById('scene-1');
-        if (el) {
-          el.classList.add('ignited');
-          el.querySelectorAll('.diya-node').forEach(function (diya, i) {
+      } else if (sceneNum === 2) {
+        var el2 = document.getElementById('scene-2');
+        if (el2) {
+          el2.classList.add('ignited');
+          el2.querySelectorAll('.diya-node').forEach(function (diya, i) {
             later(function () { diya.classList.add('lit'); }, i * 115);
           });
         }
         playChime([523.25, 659.25, 783.99, 1046.5], 0.11, 0.06);
-        later(function () { goToScene(2, false, false); }, 1900);
-      } else if (idx === 2) {
-        const el = document.getElementById('scene-2');
-        const host = document.getElementById('ganga-ripples');
-        if (el) el.classList.add('rippling');
+        later(function () { goToScene(3, false, false); }, 1900);
+      } else if (sceneNum === 3) {
+        var el3 = document.getElementById('scene-3');
+        var host3 = document.getElementById('ganga-ripples');
+        if (el3) el3.classList.add('rippling');
         startRiverFlow(true);
-        if (host) {
+        if (host3) {
           [
             { x: 45, y: 71, size: 125, delay: 0 },
             { x: 45, y: 71, size: 185, delay: 200 },
@@ -2463,60 +2704,60 @@
             { x: 30, y: 74, size: 110, delay: 280 }
           ].forEach(function (pt) {
             later(function () {
-              const r = document.createElement('div');
+              var r = document.createElement('div');
               r.className = 'water-ripple';
               r.style.left = pt.x + '%';
               r.style.top = pt.y + '%';
               r.style.width = pt.size + 'px';
               r.style.height = pt.size + 'px';
-              host.appendChild(r);
+              host3.appendChild(r);
             }, pt.delay);
           });
         }
         later(function () {
           stopRiverFlow(false);
-          goToScene(3, false, false);
+          goToScene(4, false, false);
         }, 2500);
-      } else if (idx === 3) {
-        const el = document.getElementById('scene-3');
-        const host = document.getElementById('tilak-sparkles');
-        if (el) el.classList.add('tilak-on');
+      } else if (sceneNum === 4) {
+        var el4 = document.getElementById('scene-4');
+        var host4 = document.getElementById('tilak-sparkles');
+        if (el4) el4.classList.add('tilak-on');
         playChime([587.33, 739.99, 880.0], 0.08, 0.055);
         later(function () {
-          if (!host) return;
-          for (let i = 0; i < 16; i++) {
-            const sp = document.createElement('div');
+          if (!host4) return;
+          for (var i = 0; i < 16; i++) {
+            var sp = document.createElement('div');
             sp.className = 'sparkle-dot';
-            const angle = (Math.PI * 2 * i) / 16 + (Math.random() * 0.3 - 0.15);
-            const dist = 10 + Math.random() * 20;
+            var angle = (Math.PI * 2 * i) / 16 + (Math.random() * 0.3 - 0.15);
+            var dist = 10 + Math.random() * 20;
             sp.style.left = '47.8%';
             sp.style.top = '60.8%';
             sp.style.setProperty('--bx', Math.cos(angle) * dist + 'px');
             sp.style.setProperty('--by', Math.sin(angle) * dist + 'px');
             sp.style.animationDelay = (Math.random() * 0.14) + 's';
-            host.appendChild(sp);
+            host4.appendChild(sp);
           }
         }, 180);
-        later(function () { if (el) el.classList.add('zooming'); }, 950);
-        later(function () { goToScene(4, false, false); }, 1780);
-      } else if (idx === 4) {
-        const el = document.getElementById('scene-4');
-        const host = document.getElementById('haldi-particles');
-        if (el) el.classList.add('haldi-on');
+        later(function () { if (el4) el4.classList.add('zooming'); }, 950);
+        later(function () { goToScene(5, false, false); }, 1780);
+      } else if (sceneNum === 5) {
+        var el5 = document.getElementById('scene-5');
+        var host5 = document.getElementById('haldi-particles');
+        if (el5) el5.classList.add('haldi-on');
         playChime([523.25, 659.25, 783.99, 987.77], 0.085, 0.055);
-        if (host) {
-          const origins = [
+        if (host5) {
+          var origins = [
             { x: 44.3, y: 83.2 },
             { x: 76.8, y: 83.2 }
           ];
-          const palette = ['#f4b400', '#ffca28', '#ff9800', '#ffe066', '#f97316'];
+          var palette = ['#f4b400', '#ffca28', '#ff9800', '#ffe066', '#f97316'];
           origins.forEach(function (org) {
-            for (let i = 0; i < 15; i++) {
-              const p = document.createElement('div');
+            for (var i = 0; i < 15; i++) {
+              var p = document.createElement('div');
               p.className = 'haldi-speck';
-              const angle = (Math.PI * 2 * i) / 15 + (Math.random() * 0.35);
-              const dist = 18 + Math.random() * 38;
-              const isPetal = i % 3 === 0;
+              var angle = (Math.PI * 2 * i) / 15 + (Math.random() * 0.35);
+              var dist = 18 + Math.random() * 38;
+              var isPetal = i % 3 === 0;
               p.style.left = org.x + '%';
               p.style.top = org.y + '%';
               p.style.width = isPetal ? '8px' : '4.5px';
@@ -2527,27 +2768,27 @@
               p.style.setProperty('--hx', Math.cos(angle) * dist + 'px');
               p.style.setProperty('--hy', (Math.sin(angle) * dist - 14) + 'px');
               p.style.animationDelay = (Math.random() * 0.25) + 's';
-              host.appendChild(p);
+              host5.appendChild(p);
             }
           });
         }
-        later(function () { goToScene(5, false, false); }, 1900);
-      } else if (idx === 5) {
-        const el = document.getElementById('scene-5');
-        const glitterHost = document.getElementById('mirror-glitter');
-        const dustHost = document.getElementById('mirror-stardust');
-        if (el) el.classList.add('glittering');
+        later(function () { goToScene(6, false, false); }, 1900);
+      } else if (sceneNum === 6) {
+        var el6 = document.getElementById('scene-6');
+        var glitterHost = document.getElementById('mirror-glitter');
+        var dustHost = document.getElementById('mirror-stardust');
+        if (el6) el6.classList.add('glittering');
         playChime([659.25, 783.99, 987.77, 1174.66, 1318.51], 0.085, 0.048);
 
         if (glitterHost) {
-          const starColors = ['#fffdf5', '#ffe999', '#ffd166', '#e2e8f0', '#fde68a'];
-          for (let i = 0; i < 40; i++) {
-            const star = document.createElement('div');
+          var starColors = ['#fffdf5', '#ffe999', '#ffd166', '#e2e8f0', '#fde68a'];
+          for (var i = 0; i < 40; i++) {
+            var star = document.createElement('div');
             star.className = 'mirror-glitter-star';
-            const gx = 6.2 + Math.random() * 18.6;
-            const gy = 66.2 + Math.random() * 20.6;
-            const size = 6 + Math.random() * 10;
-            const color = starColors[i % starColors.length];
+            var gx = 6.2 + Math.random() * 18.6;
+            var gy = 66.2 + Math.random() * 20.6;
+            var size = 6 + Math.random() * 10;
+            var color = starColors[i % starColors.length];
             star.style.left = gx + '%';
             star.style.top = gy + '%';
             star.style.width = size + 'px';
@@ -2560,10 +2801,10 @@
         }
 
         if (dustHost) {
-          for (let i = 0; i < 24; i++) {
-            const m = document.createElement('div');
+          for (var j = 0; j < 24; j++) {
+            var m = document.createElement('div');
             m.className = 'stardust-mote';
-            const angle = (Math.PI * 2 * i) / 24;
+            var angle = (Math.PI * 2 * j) / 24;
             m.style.left = (15.5 + (Math.random() - 0.5) * 14) + '%';
             m.style.top = (76.5 + (Math.random() - 0.5) * 16) + '%';
             m.style.setProperty('--sx', Math.cos(angle) * (16 + Math.random() * 28) + 'px');
@@ -2573,23 +2814,23 @@
           }
         }
 
-        later(function () { if (el) el.classList.add('zooming'); }, 1250);
-        later(function () { goToScene(6, false, false); }, 2120);
-      } else if (idx === 6) {
-        const host = document.getElementById('petals-host');
+        later(function () { if (el6) el6.classList.add('zooming'); }, 1250);
+        later(function () { goToScene(7, false, false); }, 2120);
+      } else if (sceneNum === 7) {
+        var host7 = document.getElementById('petals-host');
         playChime([523.25, 659.25, 783.99, 1046.5, 1318.51], 0.095, 0.05);
-        if (host) {
-          const petalColors = ['#e11d48', '#f43f5e', '#fb7185', '#fda4af', '#be123c', '#f9a8d4'];
-          for (let i = 0; i < 60; i++) {
-            const wrap = document.createElement('div');
+        if (host7) {
+          var petalColors = ['#e11d48', '#f43f5e', '#fb7185', '#fda4af', '#be123c', '#f9a8d4'];
+          for (var i = 0; i < 60; i++) {
+            var wrap = document.createElement('div');
             wrap.className = 'rose-petal';
-            const leftPct = 10 + Math.random() * 76;
-            const size = 11 + Math.random() * 11;
-            const color = petalColors[i % petalColors.length];
-            const sway1 = (Math.random() - 0.5) * 76;
-            const sway2 = (Math.random() - 0.5) * 86;
-            const dur = 1.85 + Math.random() * 1.05;
-            const delay = Math.random() * 0.8;
+            var leftPct = 10 + Math.random() * 76;
+            var size = 11 + Math.random() * 11;
+            var color = petalColors[i % petalColors.length];
+            var sway1 = (Math.random() - 0.5) * 76;
+            var sway2 = (Math.random() - 0.5) * 86;
+            var dur = 1.85 + Math.random() * 1.05;
+            var delay = Math.random() * 0.8;
 
             wrap.style.left = leftPct + '%';
             wrap.style.width = size + 'px';
@@ -2599,132 +2840,55 @@
             wrap.style.setProperty('--dur', dur + 's');
             wrap.style.setProperty('--delay', delay + 's');
             wrap.innerHTML = '<svg viewBox="0 0 24 24" class="w-full h-full drop-shadow"><path d="M12 2 C18 4, 22 11, 18 18 C15 22, 9 22, 6 18 C2 11, 6 4, 12 2 Z" fill="' + color + '" /></svg>';
-            host.appendChild(wrap);
+            host7.appendChild(wrap);
           }
 
-          for (let j = 0; j < 20; j++) {
-            const mote = document.createElement('div');
+          for (var j = 0; j < 20; j++) {
+            var mote = document.createElement('div');
             mote.className = 'blessing-mote';
             mote.style.left = (16 + Math.random() * 68) + '%';
             mote.style.setProperty('--dur', (1.7 + Math.random() * 0.9) + 's');
             mote.style.setProperty('--delay', (Math.random() * 0.75) + 's');
-            host.appendChild(mote);
+            host7.appendChild(mote);
           }
         }
-        later(function () { goToScene(7, false, false); }, 2200);
-      } else if (idx === 7) {
-        const el = document.getElementById('scene-7');
-        const host = document.getElementById('sufi-notes');
-        if (el) el.classList.add('playing');
-        playHarmoniumSufi();
-        const glyphs = ['♪', '♫', '♩'];
-        for (let i = 0; i < 12; i++) {
-          later(function () {
-            if (!host) return;
-            const note = document.createElement('div');
-            note.className = 'sufi-note';
-            note.textContent = glyphs[i % glyphs.length];
-            note.style.left = (38 + Math.random() * 14) + '%';
-            note.style.top = (45 + Math.random() * 5) + '%';
-            note.style.fontSize = (16 + Math.random() * 8) + 'px';
-            note.style.setProperty('--nx', ((Math.random() - 0.5) * 52) + 'px');
-            host.appendChild(note);
-          }, i * 155);
-        }
         later(function () { goToScene(8, false, false); }, 2200);
-      } else if (idx === 8) {
+      } else if (sceneNum === 8) {
+        var el8 = document.getElementById('scene-8');
+        var host8 = document.getElementById('sufi-notes');
+        if (el8) el8.classList.add('playing');
+        playHarmoniumSufi();
+        var glyphs = ['♪', '♫', '♩'];
+        for (var k = 0; k < 12; k++) {
+          (function (idx) {
+            later(function () {
+              if (!host8) return;
+              var note = document.createElement('div');
+              note.className = 'sufi-note';
+              note.textContent = glyphs[idx % glyphs.length];
+              note.style.left = (38 + Math.random() * 14) + '%';
+              note.style.top = (45 + Math.random() * 5) + '%';
+              note.style.fontSize = (16 + Math.random() * 8) + 'px';
+              note.style.setProperty('--nx', ((Math.random() - 0.5) * 52) + 'px');
+              host8.appendChild(note);
+            }, idx * 155);
+          })(k);
+        }
+        later(function () { goToScene(9, false, false); }, 2200);
+      } else if (sceneNum === 9) {
         playWaterShimmer();
         startFountainCanvas();
-        later(function () { goToScene(9, false, false); }, 2200);
+        later(function () { goToScene(10, false, false); }, 2200);
+      } else if (sceneNum === 10) {
+        playChime([523.25, 659.25, 783.99, 1046.5], 0.08, 0.05);
+        later(function () { goToScene(11, false, false); }, 420);
       }
     }
 
-    /* Unified Single-Delegation Click Handler & Initialization */
-    (function initInvitation() {
-      const dotsTrack = document.getElementById('dots-track');
-      if (dotsTrack) {
-        for (let i = 0; i < TOTAL_SCENES; i++) {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'dot-btn' + (i === 0 ? ' active' : '');
-          btn.setAttribute('data-dot-idx', String(i));
-          btn.setAttribute('aria-label', 'Go to scene ' + (i + 1));
-          btn.innerHTML = '<span class="dot-pip"></span>';
-          dotsTrack.appendChild(btn);
-        }
-      }
-
+    function bootstrapInvitation() {
       document.querySelectorAll('img[data-filename]').forEach(function (img) {
-        const fname = img.getAttribute('data-filename');
-        img.addEventListener('load', function () {
-          if (img.naturalWidth > 0) markFileLoaded(fname);
-        });
-        img.addEventListener('error', function () {
-          img.classList.remove('is-loaded');
-        });
         if (img.complete && img.naturalWidth > 0) {
-          markFileLoaded(fname);
-        }
-      });
-
-      document.addEventListener('click', function (e) {
-        const target = e.target;
-        if (!target) return;
-
-        // 1. Top Navigation Controls
-        if (target.closest('#btn-prev')) {
-          goToScene(currentScene - 1, true, false);
-          return;
-        }
-        if (target.closest('#btn-next')) {
-          goToScene(currentScene + 1, true, false);
-          return;
-        }
-        if (target.closest('#btn-sound')) {
-          soundEnabled = !soundEnabled;
-          const onIcon = document.getElementById('icon-sound-on');
-          const offIcon = document.getElementById('icon-sound-off');
-          if (onIcon) onIcon.classList.toggle('hidden', !soundEnabled);
-          if (offIcon) offIcon.classList.toggle('hidden', soundEnabled);
-          if (soundEnabled) {
-            ensureAudio();
-            if (currentScene === 2) startRiverFlow(false);
-            showToast('Sound enabled');
-          } else {
-            stopRiverFlow(true);
-            showToast('Sound muted');
-          }
-          return;
-        }
-        const dotBtn = target.closest('.dot-btn');
-        if (dotBtn) {
-          const idx = Number(dotBtn.getAttribute('data-dot-idx'));
-          if (!Number.isNaN(idx)) goToScene(idx, true, idx === currentScene);
-          return;
-        }
-
-        // 2. Scene 10 Replay Button
-        if (target.closest('#replay-btn')) {
-          goToScene(0, true, true);
-          return;
-        }
-
-        // 3. Map Sheet Controls
-        if (target.closest('#btn-close-map') || target.closest('#map-sheet-backdrop')) {
-          closeMapSheet();
-          return;
-        }
-        if (target.closest('#btn-copy-address')) {
-          copyTextSafe(VENUE_FULL_ADDRESS, 'Venue address copied!');
-          return;
-        }
-        if (target.closest('#btn-get-directions') || target.closest('#btn-open-gmaps-app') || target.closest('#map-sheet') || target.closest('#toast')) {
-          return;
-        }
-
-        // 4. Tap anywhere on #stage triggers the active scene's animation
-        if (target.closest('#stage')) {
-          triggerActiveSceneAction(e);
+          onImgLoad(img);
         }
       });
 
@@ -2734,8 +2898,16 @@
         else if (ev.key === 'Escape') closeMapSheet();
       });
 
+      updateCountdownDisplay();
+      setInterval(updateCountdownDisplay, 1000);
       updateNavUI();
-    })();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootstrapInvitation);
+    } else {
+      bootstrapInvitation();
+    }
   </script>
 </body>
 </html>
