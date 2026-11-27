@@ -4,98 +4,92 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Shubham &amp; Pooja — #PoojaKaShubhAarambh</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
   <style>
-    * {
+    /* ==========================================================================
+       1. BASE RESET & CENTERED 9:16 PORTRAIT STAGE (ZERO EXTERNAL DEPENDENCIES)
+       ========================================================================== */
+    *, *::before, *::after {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
     html, body {
-      margin: 0;
-      padding: 0;
       width: 100%;
       height: 100%;
-      background-color: #160e0a;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #160e0a;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       touch-action: manipulation;
     }
 
-    /* Centered 9:16 Mobile Portrait Stage */
     #stage {
-      position: relative;
-      width: 100%;
-      max-width: 430px;
-      height: 100dvh;
-      max-height: 100vh;
+      height: 100%;
       aspect-ratio: 9 / 16;
+      max-width: 100vw;
+      max-height: 100vh;
+      position: relative;
       overflow: hidden;
-      background-color: #f7e8cc;
+      background: #f7e8cc;
       box-shadow: 0 22px 64px rgba(0, 0, 0, 0.85);
       user-select: none;
       -webkit-user-select: none;
       touch-action: manipulation;
     }
 
-    @media (min-width: 520px) {
+    @media (min-width: 540px) {
       #stage {
-        height: min(100dvh, 880px);
-        width: auto;
+        height: min(100%, 880px);
         border-radius: 24px;
-        border: 1px solid rgba(245, 210, 122, 0.32);
+        border: 1px solid rgba(245, 210, 122, 0.34);
       }
     }
 
     .serif {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: Georgia, "Times New Roman", "Palatino Linotype", serif;
     }
 
-    /* Strict Pointer Isolation for Scenes */
+    /* ==========================================================================
+       2. STRICT CLICK & POINTER ARCHITECTURE
+       ========================================================================== */
     .scene {
+      display: none;
+      pointer-events: none;
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: none !important;
-      opacity: 0;
-      pointer-events: none !important;
-      z-index: -1;
       overflow: hidden;
+      opacity: 0;
       transition: opacity 0.55s ease;
     }
 
     .scene.active {
-      display: block !important;
-      opacity: 1;
-      pointer-events: auto !important;
+      display: block;
+      pointer-events: auto;
       z-index: 10;
+      opacity: 1;
       cursor: pointer;
       touch-action: manipulation;
     }
 
     .scene.leaving {
-      display: block !important;
-      opacity: 0;
-      pointer-events: none !important;
+      display: block;
+      pointer-events: none;
       z-index: 12;
+      opacity: 0;
     }
 
     /* Scene 2 mounted directly behind Scene 1's parting doors */
     .scene.under-reveal {
-      display: block !important;
-      opacity: 1;
-      pointer-events: none !important;
+      display: block;
+      pointer-events: none;
       z-index: 5;
+      opacity: 1;
       filter: blur(10px) brightness(0.9);
       transform: scale(1.06);
       transition: filter 1.3s cubic-bezier(0.22, 1, 0.36, 1), transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -107,9 +101,10 @@
       transform: scale(1);
     }
 
-    /* Non-interactive layers never intercept taps */
-    .scene-img,
-    .fallback-card,
+    /* Every image, fallback card, fx-layer, and decorative element never intercepts taps */
+    .scene img,
+    .fb-card,
+    .fb-card *,
     .fx-layer,
     .fx-layer *,
     .scene1-camera,
@@ -124,10 +119,9 @@
     }
 
     #scene-1 {
-      background-color: transparent !important;
+      background: transparent;
     }
 
-    /* Full-bleed Untouched Original Illustrations */
     .scene-img {
       position: absolute;
       inset: 0;
@@ -135,18 +129,16 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      -webkit-user-drag: none;
       z-index: 3;
       opacity: 0;
       transition: opacity 0.35s ease;
+      -webkit-user-drag: none;
     }
 
-    .scene-img.is-loaded {
-      opacity: 1;
-    }
-
-    /* Warm Royal Ivory / Parchment / Gold Fallback Preview Cards */
-    .fallback-card {
+    /* ==========================================================================
+       3. ROYAL IVORY / PARCHMENT / GOLD FALLBACK PREVIEW CARDS
+       ========================================================================== */
+    .fb-card {
       position: absolute;
       inset: 0;
       z-index: 1;
@@ -154,45 +146,70 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 76px 22px 30px;
+      padding: 72px 22px 28px;
       text-align: center;
       color: #4a1c17;
-      background: radial-gradient(circle at 50% 18%, rgba(255, 250, 238, 0.98) 0%, rgba(247, 232, 204, 0.95) 56%, rgba(231, 203, 158, 0.98) 100%);
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      background: radial-gradient(circle at 50% 18%, rgba(255, 251, 240, 0.98) 0%, rgba(247, 232, 204, 0.96) 56%, rgba(231, 203, 158, 0.98) 100%);
     }
 
-    .fallback-card.hidden-by-img {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .fallback-card::before {
-      content: '';
+    .fb-card::before {
+      content: "";
       position: absolute;
       inset: 10px;
       border-radius: 16px;
-      border: 1.5px solid rgba(182, 132, 42, 0.44);
-      box-shadow: inset 0 0 0 3px rgba(255, 250, 240, 0.48);
+      border: 1.5px solid rgba(182, 132, 42, 0.46);
+      box-shadow: inset 0 0 0 3px rgba(255, 250, 240, 0.52);
     }
 
-    .fallback-card.theme-night {
+    .fb-card.theme-night {
       color: #fdf2da;
       background: radial-gradient(circle at 50% 24%, #26365e 0%, #16203d 55%, #0d1326 100%);
     }
 
-    .fallback-card.theme-night::before {
+    .fb-card.theme-night::before {
       border-color: rgba(245, 210, 122, 0.42);
       box-shadow: inset 0 0 0 3px rgba(245, 210, 122, 0.12);
     }
 
-    .fallback-card.theme-sufi {
+    .fb-card.theme-sufi {
       color: #4e1712;
       background: radial-gradient(circle at 50% 22%, #f9dec0 0%, #ecc094 55%, #d69866 100%);
     }
 
-    .fallback-card.theme-haldi {
+    .fb-card.theme-haldi {
       color: #3d3416;
       background: radial-gradient(circle at 50% 24%, #eef6fb 0%, #dcecf5 55%, #c7e0b4 100%);
+    }
+
+    .fb-kicker {
+      margin: 0 0 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8a5522;
+    }
+
+    .fb-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #6b1929;
+    }
+
+    .fb-sub {
+      margin: 4px 0 0;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .fb-divider {
+      width: 64px;
+      height: 1px;
+      margin: 10px auto;
+      background: linear-gradient(90deg, transparent, rgba(168, 121, 34, 0.65), transparent);
     }
 
     .fb-pill {
@@ -208,10 +225,12 @@
       font-weight: 600;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      box-shadow: 0 6px 18px rgba(58, 22, 14, 0.25);
+      box-shadow: 0 6px 18px rgba(58, 22, 14, 0.24);
     }
 
-    /* TOP HUD NAVIGATION BAR */
+    /* ==========================================================================
+       4. TOP HUD NAVIGATION BAR
+       ========================================================================== */
     #top-hud {
       position: absolute;
       top: 0;
@@ -230,18 +249,18 @@
       display: inline-flex;
       align-items: center;
       gap: 2px;
-      background: rgba(34, 18, 14, 0.78);
+      background: rgba(34, 18, 14, 0.8);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
       padding: 2px 5px;
-      pointer-events: auto !important;
+      pointer-events: auto;
       z-index: 100;
     }
 
     #top-hud button {
-      pointer-events: auto !important;
+      pointer-events: auto;
       z-index: 100;
       cursor: pointer;
       touch-action: manipulation;
@@ -257,6 +276,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
     }
 
     .nav-icon-btn:disabled {
@@ -277,14 +297,14 @@
     .dots-track {
       display: flex;
       align-items: center;
-      gap: 1.5px;
+      gap: 1px;
       padding: 3px 6px;
-      background: rgba(34, 18, 14, 0.78);
+      background: rgba(34, 18, 14, 0.8);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(245, 210, 122, 0.42);
       border-radius: 9999px;
-      pointer-events: auto !important;
+      pointer-events: auto;
       z-index: 100;
     }
 
@@ -313,12 +333,14 @@
       box-shadow: 0 0 8px rgba(245, 210, 122, 0.85);
     }
 
-    /* SCENE 1: Full-Bleed Temple Illustration (1000258538.jpg -> ./temple.jpg) + Subtle Bell + Clean 3D Door Opening */
+    /* ==========================================================================
+       5. SCENE 1: TEMPLE DOORS (./temple.jpg) — SUBTLE BELL + CLEAN 3D DOORS
+       ========================================================================== */
     .scene1-camera {
       position: absolute;
       inset: 0;
       z-index: 3;
-      background: transparent !important;
+      background: transparent;
       transform-origin: 50% 54%;
       transition: transform 1.35s cubic-bezier(0.32, 0, 0.2, 1);
       will-change: transform;
@@ -333,7 +355,6 @@
       transform: scale(1.08);
     }
 
-    /* Full-bleed 100% x 100% alignment matching 1000258538.jpg (no screenshot crop offset) */
     .temple-full-img {
       position: absolute;
       left: 0;
@@ -343,16 +364,15 @@
       object-fit: cover;
       max-width: none;
       display: block;
-      background: transparent !important;
-      -webkit-user-drag: none;
+      background: transparent;
     }
 
-    /* Stone Archway with clean doorway cutout (30.5%..69.5%, 31.8%..76.6%) revealing Scene 2 directly */
+    /* Archway with doorway cutout (30.5%..69.5%, 31.8%..76.6%) revealing Scene 2 cleanly */
     .temple-archway {
       position: absolute;
       inset: 0;
       z-index: 3;
-      background: transparent !important;
+      background: transparent;
       clip-path: polygon(
         evenodd,
         0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%,
@@ -365,7 +385,7 @@
       );
     }
 
-    /* Hanging Brass Temple Bell Overlay (left: 43.8%, top: 15.6%, width: 11%, height: 9.2%) */
+    /* Hanging Brass Bell Overlay (left: 43.8%; top: 15.6%; width: 11%; height: 9.2%) */
     .temple-bell-swing {
       position: absolute;
       left: 43.8%;
@@ -388,14 +408,13 @@
       object-fit: cover;
       max-width: none;
       display: block;
-      -webkit-user-drag: none;
     }
 
     .bell-shimmer-wave {
       position: absolute;
       inset: -10%;
       border-radius: 9999px;
-      background: radial-gradient(circle at 50% 58%, rgba(255, 244, 185, 0.42) 0%, rgba(255, 198, 72, 0.14) 44%, transparent 72%);
+      background: radial-gradient(circle at 50% 58%, rgba(255, 244, 185, 0.36) 0%, rgba(255, 198, 72, 0.12) 44%, transparent 72%);
       mix-blend-mode: screen;
       opacity: 0;
     }
@@ -420,11 +439,11 @@
 
     @keyframes bellGlowWave {
       0% { transform: scale(0.85); opacity: 0; }
-      25% { transform: scale(1.04); opacity: 0.65; }
+      25% { transform: scale(1.04); opacity: 0.6; }
       100% { transform: scale(1.22); opacity: 0; }
     }
 
-    /* 3D Wooden Doors Stage (left: 30.5%, width: 39%, top: 31.8%, height: 44.8%) — Zero yellow/gold fill */
+    /* 3D Parting Wooden Doors (Zero yellow/gold fill) */
     .doors-3d-stage {
       position: absolute;
       left: 30.5%;
@@ -432,7 +451,7 @@
       width: 39%;
       height: 44.8%;
       z-index: 4;
-      background: transparent !important;
+      background: transparent;
       perspective: 1200px;
     }
 
@@ -442,7 +461,7 @@
       width: 50%;
       height: 100%;
       overflow: hidden;
-      background: transparent !important;
+      background: transparent;
       transform-style: preserve-3d;
       transition: transform 1.25s cubic-bezier(0.36, 0.04, 0.2, 1), filter 1.05s ease;
       will-change: transform;
@@ -458,14 +477,13 @@
       transform-origin: right center;
     }
 
-    /* Exact mapping of full-bleed 100% x 100% image into each 19.5% x 44.8% door leaf */
     .door-map-left {
       position: absolute;
       width: 512.821%;
       height: 223.214%;
       left: -156.410%;
       top: -70.982%;
-      background: transparent !important;
+      background: transparent;
     }
 
     .door-map-right {
@@ -474,7 +492,7 @@
       height: 223.214%;
       left: -256.410%;
       top: -70.982%;
-      background: transparent !important;
+      background: transparent;
     }
 
     #scene-1.opening .door-left {
@@ -487,19 +505,16 @@
       filter: brightness(0.82);
     }
 
-    /* Fallback Card Doors (transparent interior so no yellow rectangle appears when parting) */
+    /* Fallback Card Doors (transparent interior so no yellow rectangle appears) */
     .fb-doors-box {
       position: relative;
-      width: 66%;
-      height: 48%;
+      width: 64%;
+      height: 46%;
       border-radius: 90px 90px 8px 8px;
-      border: 3px solid #9e6b24;
-      background: transparent !important;
+      border: 2.5px solid #9e6b24;
+      background: transparent;
       overflow: hidden;
       perspective: 1000px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .fb-door-leaf {
@@ -508,7 +523,7 @@
       width: 50%;
       height: 100%;
       background: linear-gradient(180deg, #754221 0%, #522b12 100%);
-      border: 1px solid rgba(245, 210, 122, 0.35);
+      border: 1px solid rgba(245, 210, 122, 0.32);
       transition: transform 1.25s cubic-bezier(0.36, 0.04, 0.2, 1);
       display: flex;
       align-items: center;
@@ -525,6 +540,13 @@
       transform-origin: right center;
     }
 
+    .fb-ring-handle {
+      width: 16px;
+      height: 16px;
+      border-radius: 9999px;
+      border: 2px solid rgba(245, 210, 122, 0.82);
+    }
+
     #scene-1.opening .fb-door-leaf.left {
       transform: rotateY(-102deg);
     }
@@ -533,7 +555,9 @@
       transform: rotateY(102deg);
     }
 
-    /* SCENE 2: Light the Diyas & Shivling Glow */
+    /* ==========================================================================
+       6. SCENE 2: LIGHT THE DIYAS (./diyas.png)
+       ========================================================================== */
     .shivling-aura {
       position: absolute;
       left: 50%;
@@ -632,65 +656,69 @@
       100% { transform: translate(var(--dx, 6px), -36px) scale(0.2); opacity: 0; }
     }
 
-    /* SCENE 3: Ganga Shimmer & Ripples */
-    .ganga-shimmer {
-      position: absolute;
-      left: 3%;
-      top: 62%;
-      width: 94%;
-      height: 24%;
-      z-index: 12;
-      background:
-        radial-gradient(ellipse 32% 18% at 29% 16%, rgba(255, 250, 224, 0.32), transparent 72%),
-        linear-gradient(90deg, transparent 0%, rgba(255, 242, 204, 0.22) 45%, rgba(165, 218, 255, 0.28) 56%, transparent 100%);
-      background-size: 100% 100%, 210% 100%;
-      animation: riverDrift 4.6s ease-in-out infinite;
-    }
-
-    @keyframes riverDrift {
-      0%, 100% { background-position: 0 0, 140% 0; opacity: 0.65; }
-      50% { background-position: 0 0, -40% 0; opacity: 1; }
-    }
-
+    /* ==========================================================================
+       7. SCENE 3: GANGA GLOW & DELICATE WATER RIPPLES (./ganga.png)
+       ========================================================================== */
     .river-diya-glow {
       position: absolute;
-      width: 34px;
-      height: 34px;
+      width: 28px;
+      height: 28px;
       border-radius: 9999px;
       transform: translate(-50%, -50%) scale(0.6);
-      background: radial-gradient(circle, rgba(255, 236, 158, 0.9) 0%, rgba(255, 174, 52, 0.45) 45%, transparent 75%);
-      opacity: 0.25;
+      background: radial-gradient(circle, rgba(255, 236, 158, 0.85) 0%, rgba(255, 174, 52, 0.4) 45%, transparent 75%);
+      opacity: 0.22;
       z-index: 14;
       transition: opacity 0.6s ease, transform 0.65s ease;
     }
 
     #scene-3.rippling .river-diya-glow {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.35);
+      opacity: 0.95;
+      transform: translate(-50%, -50%) scale(1.2);
     }
 
+    /* Small, delicate foreshortened ripples confined strictly to open river water (64%..78%) */
     .water-ripple {
       position: absolute;
       border-radius: 50%;
-      border: 2px solid rgba(255, 244, 206, 0.92);
-      box-shadow: 0 0 12px rgba(140, 208, 255, 0.78), inset 0 0 8px rgba(255, 232, 170, 0.5);
-      transform: translate(-50%, -50%) scale(0.12, 0.05);
+      border: 1px solid rgba(255, 248, 224, 0.78);
+      box-shadow: 0 0 6px rgba(175, 222, 255, 0.55);
+      transform: translate(-50%, -50%) scale(0.2, 0.06);
       opacity: 0;
       z-index: 18;
-      animation: rippleOut 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: rippleOut 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     @keyframes rippleOut {
-      0% { transform: translate(-50%, -50%) scale(0.12, 0.05); opacity: 0.95; }
-      65% { opacity: 0.55; }
-      100% { transform: translate(-50%, -50%) scale(2.8, 1.05); opacity: 0; }
+      0% { transform: translate(-50%, -50%) scale(0.2, 0.06); opacity: 0.85; }
+      55% { opacity: 0.45; }
+      100% { transform: translate(-50%, -50%) scale(1.25, 0.32); opacity: 0; }
     }
 
-    /* SCENE 4: Small Vertical Kumkum Tilak (3px x 4.5px at 47.8%, 60.8%) + Forehead Zoom */
+    .water-glint {
+      position: absolute;
+      height: 1.5px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 250, 228, 0.92) 50%, transparent 100%);
+      box-shadow: 0 0 6px rgba(255, 244, 196, 0.65);
+      transform: translate(-50%, -50%) scaleX(0.35);
+      opacity: 0;
+      z-index: 19;
+      animation: glintWave 1.35s ease-in-out forwards;
+    }
+
+    @keyframes glintWave {
+      0% { transform: translate(-50%, -50%) scaleX(0.35); opacity: 0; }
+      35% { transform: translate(calc(-50% + 6px), -50%) scaleX(1.15); opacity: 0.9; }
+      100% { transform: translate(calc(-50% + 14px), -50%) scaleX(0.45); opacity: 0; }
+    }
+
+    /* ==========================================================================
+       8. SCENE 4: SAATH & TELBUKHI TILAK + ZOOM (./saath.png)
+       ========================================================================== */
     .scene4-zoom {
       position: absolute;
       inset: 0;
-      transform-origin: 47.8% 60.8%;
+      transform-origin: 47.35% 60.8%;
       transition: transform 0.95s cubic-bezier(0.45, 0.02, 0.24, 1);
       will-change: transform;
     }
@@ -701,7 +729,7 @@
 
     .tilak-mark {
       position: absolute;
-      left: 47.8%;
+      left: 47.35%;
       top: 60.8%;
       width: 3px;
       height: 4.5px;
@@ -722,7 +750,7 @@
 
     .tilak-akshata {
       position: absolute;
-      left: 47.8%;
+      left: 47.35%;
       top: calc(60.8% + 1px);
       width: 1.4px;
       height: 1.4px;
@@ -757,7 +785,9 @@
       100% { transform: translate(calc(-50% + var(--bx)), calc(-50% + var(--by))) scale(0.25); opacity: 0; }
     }
 
-    /* SCENE 5: Haldi Smears & Marigold Petals */
+    /* ==========================================================================
+       9. SCENE 5: HALDI SMEARS & MARIGOLD PETALS (./haldi.png)
+       ========================================================================== */
     .haldi-smear {
       position: absolute;
       transform: translate(-50%, -50%);
@@ -811,7 +841,9 @@
       100% { transform: translate(calc(-50% + var(--hx)), calc(-50% + var(--hy))) scale(0.95) rotate(180deg); opacity: 0; }
     }
 
-    /* SCENE 6: Frameless Mirror Sparkles & Zoom (No rectangular frame, border, or glow box) */
+    /* ==========================================================================
+       10. SCENE 6: FRAMELESS MIRROR SPARKLES & ZOOM (./sangeet.png)
+       ========================================================================== */
     .scene6-zoom {
       position: absolute;
       inset: 0;
@@ -827,9 +859,9 @@
     .mirror-glitter-star {
       position: absolute;
       transform: translate(-50%, -50%) scale(0);
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       animation: glitterTwinkle var(--gdur, 1.15s) ease-in-out var(--gdelay, 0s) forwards;
     }
 
@@ -840,7 +872,9 @@
       100% { transform: translate(-50%, -50%) scale(0) rotate(135deg); opacity: 0; }
     }
 
-    /* SCENE 7: Rose Petal Shower & Golden Sparkles */
+    /* ==========================================================================
+       11. SCENE 7: ROSE PETAL SHOWER & GOLDEN MOTES (./phere.png)
+       ========================================================================== */
     .petals-host {
       position: absolute;
       inset: 0;
@@ -880,7 +914,9 @@
       100% { transform: translateY(96vh) scale(0.9); opacity: 0; }
     }
 
-    /* SCENE 8: Sufi Night Harmonium & Rising Musical Notes */
+    /* ==========================================================================
+       12. SCENE 8: SUFI NIGHT HARMONIUM & NOTES (./sufi.png)
+       ========================================================================== */
     .lantern-glow {
       position: absolute;
       border-radius: 9999px;
@@ -929,7 +965,9 @@
       100% { transform: translate(calc(-50% + var(--nx, 14px)), -118px) scale(1.15) rotate(12deg); opacity: 0; }
     }
 
-    /* SCENE 9: Canvas Fountain */
+    /* ==========================================================================
+       13. SCENE 9: CANVAS FOUNTAIN (./rsvp.png)
+       ========================================================================== */
     .fountain-canvas {
       position: absolute;
       inset: 0;
@@ -938,7 +976,9 @@
       z-index: 18;
     }
 
-    /* SCENE 10: Live Countdown Overlay in Upper Open Cream Area (top: 6.2%) */
+    /* ==========================================================================
+       14. SCENE 10: LIVE COUNTDOWN IN UPPER CREAM SKY (./countdown.jpg)
+       ========================================================================== */
     .countdown-overlay {
       position: absolute;
       left: 8.5%;
@@ -954,27 +994,46 @@
       padding: 2px 6px;
     }
 
+    .cd-kicker {
+      margin: 0 0 2px;
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8b6914;
+    }
+
+    .cd-heading {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: 17.5px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #7d2138;
+    }
+
     .cd-tiles-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 5px;
       width: 100%;
       max-width: 280px;
-      margin: 4px auto 4px;
+      margin: 5px auto 4px;
     }
 
     .cd-tile {
       position: relative;
       padding: 5px 2px 4px;
       border-radius: 9px;
-      background: linear-gradient(180deg, rgba(255, 252, 244, 0.9) 0%, rgba(248, 236, 210, 0.86) 100%);
-      border: 1px solid rgba(168, 121, 34, 0.55);
+      background: linear-gradient(180deg, rgba(255, 252, 244, 0.92) 0%, rgba(248, 236, 210, 0.88) 100%);
+      border: 1px solid rgba(168, 121, 34, 0.56);
       box-shadow: 0 4px 12px rgba(102, 64, 20, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
       overflow: hidden;
     }
 
     .cd-tile::after {
-      content: '';
+      content: "";
       position: absolute;
       inset: 0;
       background: linear-gradient(115deg, transparent 30%, rgba(255, 246, 206, 0.65) 50%, transparent 70%);
@@ -992,7 +1051,7 @@
     }
 
     .cd-num {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: Georgia, "Times New Roman", serif;
       font-size: 20px;
       font-weight: 700;
       line-height: 1;
@@ -1010,6 +1069,15 @@
       color: #8b6914;
     }
 
+    .cd-status {
+      margin: 0;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: #6e4c12;
+    }
+
     .cd-tap-cue {
       display: inline-flex;
       align-items: center;
@@ -1025,7 +1093,9 @@
       text-transform: uppercase;
     }
 
-    /* SCENE 11: Venue Card Button, Vintage Convertible Rev FX & Replay Button */
+    /* ==========================================================================
+       15. SCENE 11: THE VENUE, CONVERTIBLE REV & SLIDE-UP MAP PREVIEW SHEET
+       ========================================================================== */
     #venue-card-btn {
       position: absolute;
       left: 14%;
@@ -1033,7 +1103,7 @@
       width: 72%;
       height: 23%;
       z-index: 40;
-      pointer-events: auto !important;
+      pointer-events: auto;
       background: transparent;
       border: none;
       border-radius: 18px;
@@ -1086,16 +1156,16 @@
       right: 12px;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
       z-index: 60;
-      pointer-events: auto !important;
+      pointer-events: auto;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 7px 14px;
       border-radius: 9999px;
-      background: rgba(34, 18, 14, 0.84);
+      background: rgba(34, 18, 14, 0.86);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(245, 210, 122, 0.45);
+      border: 1px solid rgba(245, 210, 122, 0.46);
       color: #fff6e0;
       font-size: 11.5px;
       font-weight: 500;
@@ -1119,7 +1189,7 @@
 
     #map-sheet-backdrop.open {
       opacity: 1;
-      pointer-events: auto !important;
+      pointer-events: auto;
       cursor: pointer;
     }
 
@@ -1144,7 +1214,144 @@
 
     #map-sheet.open {
       transform: translateY(0);
-      pointer-events: auto !important;
+      pointer-events: auto;
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 9999px;
+      background: rgba(253, 230, 138, 0.36);
+      margin: 0 auto 10px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .sheet-kicker {
+      margin: 0;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(252, 211, 77, 0.92);
+    }
+
+    .sheet-title {
+      margin: 2px 0 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fffbeb;
+    }
+
+    .sheet-addr {
+      margin: 3px 0 0;
+      font-size: 11px;
+      line-height: 1.4;
+      color: rgba(254, 243, 199, 0.82);
+    }
+
+    #close-map-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(253, 230, 138, 0.28);
+      color: #fef3c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .map-embed-wrap {
+      position: relative;
+      width: 100%;
+      height: 176px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(252, 211, 77, 0.32);
+      background: #1c1917;
+      margin-bottom: 12px;
+    }
+
+    .map-offline-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 16px;
+      background: linear-gradient(135deg, #2a1812 0%, #1f130f 55%, #140c09 100%);
+    }
+
+    .map-pin-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 9999px;
+      background: rgba(158, 25, 70, 0.32);
+      border: 1px solid rgba(252, 211, 77, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    #venue-map-iframe {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .sheet-btn {
+      padding: 10px 6px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #copy-addr-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(253, 230, 138, 0.35);
+      color: #fef3c7;
+    }
+
+    #directions-link {
+      background: rgba(251, 191, 36, 0.22);
+      border: 1px solid rgba(252, 211, 77, 0.45);
+      color: #fef3c7;
+    }
+
+    #open-gmaps-link {
+      background: #9e1946;
+      border: 1px solid rgba(253, 230, 138, 0.4);
+      color: #ffffff;
     }
 
     .toast {
@@ -1218,7 +1425,7 @@
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
           </svg>
-          <svg id="icon-sound-off" class="hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
+          <svg id="icon-sound-off" style="display:none; pointer-events:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <line x1="23" y1="9" x2="17" y2="15"></line>
             <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -1227,38 +1434,46 @@
       </div>
     </header>
 
-    <!-- SCENE 1: TEMPLE DOORS (./temple.jpg) -->
+    <!-- ========================================================================
+         SCENE 1: TEMPLE DOORS (./temple.jpg)
+         ======================================================================== -->
     <section id="scene-1" class="scene active" onclick="handleSceneTap(1, event)" aria-label="Scene 1: Temple Doors">
-      <div class="fallback-card" data-fallback-for="1">
+      <div class="fb-card">
         <div>
-          <p class="text-[10px] uppercase tracking-[0.26em] text-[#8a5522] mb-1">॥ श्री गणेशाय नमः ॥</p>
-          <h1 class="serif text-2xl font-semibold text-[#5a1e16]">Shubham &amp; Pooja</h1>
-          <p class="text-[11px] tracking-[0.16em] uppercase text-[#7c3f1d]">#PoojaKaShubhAarambh</p>
+          <p class="fb-kicker">॥ श्री गणेशाय नमः ॥</p>
+          <h1 class="fb-title">Shubham &amp; Pooja</h1>
+          <p class="fb-sub" style="letter-spacing:0.15em; text-transform:uppercase; color:#7c3f1d; font-weight:600;">#PoojaKaShubhAarambh</p>
         </div>
 
         <div class="fb-doors-box" aria-hidden="true">
           <div class="fb-door-leaf left">
-            <span class="w-4 h-4 rounded-full border-2 border-amber-300/80 mr-1.5"></span>
+            <span class="fb-ring-handle" style="margin-right:6px;"></span>
           </div>
           <div class="fb-door-leaf right">
-            <span class="w-4 h-4 rounded-full border-2 border-amber-300/80 ml-1.5"></span>
+            <span class="fb-ring-handle" style="margin-left:6px;"></span>
           </div>
         </div>
 
         <div>
-          <p class="serif italic text-base text-[#5e2a17] mb-2">Enter the Sacred Sanctum</p>
+          <p class="serif" style="margin:0 0 8px; font-style:italic; font-size:16px; color:#5e2a17;">Enter the Sacred Sanctum</p>
           <span class="fb-pill">Tap to Open</span>
         </div>
       </div>
 
-      <div class="scene1-camera" data-cam-for="1">
+      <div class="scene1-camera" id="scene1-camera">
         <div class="temple-archway">
-          <img data-filename="temple.jpg" data-primary="1" src="./temple.jpg" alt="Carved Temple Archway" class="temple-full-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+          <img
+            src="./temple.jpg"
+            alt="Carved Temple Archway"
+            class="temple-full-img"
+            onerror="this.style.opacity='0'"
+            onload="this.style.opacity='1'; var c=document.getElementById('scene1-camera'); if(c) c.classList.add('has-image'); var fb=this.closest('.scene').querySelector('.fb-card'); if(fb) fb.style.display='none';"
+          />
         </div>
 
         <!-- Subtle Swinging Hanging Brass Bell Overlay -->
         <div class="temple-bell-swing">
-          <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="bell-crop-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+          <img src="./temple.jpg" alt="" class="bell-crop-img" onerror="this.style.opacity='0'" onload="this.style.opacity='1'" />
           <div class="bell-shimmer-wave"></div>
         </div>
 
@@ -1266,37 +1481,40 @@
         <div class="doors-3d-stage">
           <div class="door-panel door-left">
             <div class="door-map-left">
-              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-full-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+              <img src="./temple.jpg" alt="" class="temple-full-img" onerror="this.style.opacity='0'" onload="this.style.opacity='1'" />
             </div>
           </div>
           <div class="door-panel door-right">
             <div class="door-map-right">
-              <img data-filename="temple.jpg" src="./temple.jpg" alt="" class="temple-full-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+              <img src="./temple.jpg" alt="" class="temple-full-img" onerror="this.style.opacity='0'" onload="this.style.opacity='1'" />
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 2: SHIVA & PARVATI HANDS OVER SHIVLING (./diyas.png) -->
+    <!-- ========================================================================
+         SCENE 2: LIGHT THE DIYAS (./diyas.png)
+         ======================================================================== -->
     <section id="scene-2" class="scene" onclick="handleSceneTap(2, event)" aria-label="Scene 2: Light the Diyas">
-      <div class="fallback-card" data-fallback-for="2">
+      <div class="fb-card">
         <div>
-          <p class="text-[11px] font-semibold tracking-[0.18em] text-[#7c1932] mb-1">ॐ श्री गणेशाय नमः</p>
-          <p class="text-xs italic text-[#6d4225] mb-3">With the divine blessings of Lord Shiva &amp; Goddess Parvati</p>
-          <h2 class="serif text-3xl font-bold tracking-wide text-[#5c1623]">SHUBHAM &amp; POOJA</h2>
-          <p class="serif text-base font-semibold text-[#7c1932] mt-0.5">#PoojaKaShubhAarambh</p>
-          <div class="mt-3 pt-2.5 border-t border-amber-700/25">
-            <p class="text-xs font-semibold tracking-[0.14em] uppercase text-[#4a1c17]">4th January, 2027</p>
-            <p class="serif text-base text-[#5e2a17]">The Crescent by Fern, Budhni</p>
+          <p class="fb-kicker" style="color:#7c1932;">ॐ श्री गणेशाय नमः</p>
+          <p class="fb-sub" style="font-style:italic; color:#6d4225;">With the divine blessings of Lord Shiva &amp; Goddess Parvati</p>
+          <div class="fb-divider"></div>
+          <h2 class="fb-title" style="font-size:30px;">SHUBHAM &amp; POOJA</h2>
+          <p class="serif" style="margin:2px 0 0; font-size:15px; font-weight:700; color:#7c1932;">#PoojaKaShubhAarambh</p>
+          <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(182,132,42,0.28);">
+            <p style="margin:0; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;">4th January, 2027</p>
+            <p class="serif" style="margin:2px 0 0; font-size:16px; color:#5e2a17;">The Crescent by Fern, Budhni</p>
           </div>
         </div>
 
-        <div class="my-auto">
-          <div class="w-16 h-20 mx-auto rounded-t-full bg-gradient-to-b from-stone-700 to-stone-900 border-2 border-amber-400/70 shadow-md flex flex-col items-center justify-center">
-            <span class="w-3 h-3 rounded-full bg-amber-100 shadow-[0_0_10px_#fff]"></span>
-            <span class="w-6 h-0.5 bg-white/80 mt-1"></span>
-            <span class="w-6 h-0.5 bg-white/80 mt-0.5"></span>
+        <div style="margin:auto 0;">
+          <div style="width:62px; height:76px; margin:0 auto; border-radius:9999px 9999px 10px 10px; background:linear-gradient(180deg,#44403c,#1c1917); border:2px solid rgba(245,210,122,0.72); display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.22);">
+            <span style="width:11px; height:11px; border-radius:9999px; background:#fef3c7; box-shadow:0 0 10px #fff;"></span>
+            <span style="width:24px; height:2px; background:rgba(255,255,255,0.82); margin-top:4px;"></span>
+            <span style="width:24px; height:2px; background:rgba(255,255,255,0.82); margin-top:2px;"></span>
           </div>
         </div>
 
@@ -1305,7 +1523,14 @@
         </div>
       </div>
 
-      <img data-filename="diyas.png" data-primary="2" src="./diyas.png" alt="Shiva and Parvati hands blessing the Shivling" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./diyas.png"
+        alt="Shiva and Parvati hands blessing the Shivling"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
+
       <div class="fx-layer">
         <div class="shivling-aura"></div>
 
@@ -1352,24 +1577,26 @@
       </div>
     </section>
 
-    <!-- SCENE 3: SHIVA & PARVATI LOOKING OVER GANGA (./ganga.png) -->
+    <!-- ========================================================================
+         SCENE 3: TAP THE GANGA (./ganga.png)
+         ======================================================================== -->
     <section id="scene-3" class="scene" onclick="handleSceneTap(3, event)" aria-label="Scene 3: Tap the Ganga">
-      <div class="fallback-card" data-fallback-for="3">
-        <div class="px-2">
-          <p class="text-[10px] tracking-[0.18em] uppercase text-[#7c3f1d] mb-2">॥ श्री गणेशाय नमः ॥ भोलेनाथ की असीम अनुकम्पा से</p>
-          <p class="serif italic text-sm text-[#5c2c16] mb-2">We request the honour of your presence to celebrate the wedding of</p>
+      <div class="fb-card">
+        <div style="padding:0 6px;">
+          <p class="fb-kicker" style="color:#7c3f1d;">॥ श्री गणेशाय नमः ॥ भोलेनाथ की असीम अनुकम्पा से</p>
+          <p class="serif" style="margin:6px 0 8px; font-style:italic; font-size:13.5px; color:#5c2c16;">We request the honour of your presence to celebrate the wedding of</p>
 
-          <h2 class="serif text-3xl font-bold text-[#7c1932]">Shubham</h2>
-          <p class="text-[11px] text-[#5e2a17]">Son of <strong>Mrs. Jiya Basantwani &amp; Mr. Harish Basantwani</strong></p>
+          <h2 class="fb-title" style="font-size:30px; color:#7c1932;">Shubham</h2>
+          <p class="fb-sub">Son of <strong>Mrs. Jiya Basantwani &amp; Mr. Harish Basantwani</strong></p>
 
-          <p class="serif italic text-base text-[#8a5522] my-1.5">&amp;</p>
+          <p class="serif" style="margin:6px 0; font-style:italic; font-size:17px; color:#8a5522;">&amp;</p>
 
-          <h2 class="serif text-3xl font-bold text-[#7c1932]">Pooja</h2>
-          <p class="text-[11px] text-[#5e2a17]">Daughter of <strong>Mrs. Anita Mandhan &amp; Mr. Omprakash Mandhan</strong></p>
+          <h2 class="fb-title" style="font-size:30px; color:#7c1932;">Pooja</h2>
+          <p class="fb-sub">Daughter of <strong>Mrs. Anita Mandhan &amp; Mr. Omprakash Mandhan</strong></p>
         </div>
 
-        <div class="w-full h-16 rounded-2xl bg-gradient-to-b from-sky-200/60 to-blue-300/70 border border-amber-700/20 flex items-center justify-center">
-          <span class="serif italic text-sm text-sky-950">Sacred Ghats of the Ganga</span>
+        <div style="width:100%; height:56px; border-radius:16px; background:linear-gradient(180deg, rgba(186,230,253,0.62), rgba(125,211,252,0.75)); border:1px solid rgba(180,83,9,0.22); display:flex; align-items:center; justify-content:center;">
+          <span class="serif" style="font-style:italic; font-size:14px; color:#0c4a6e;">Sacred Ghats of the Ganga</span>
         </div>
 
         <div>
@@ -1377,35 +1604,42 @@
         </div>
       </div>
 
-      <img data-filename="ganga.png" data-primary="3" src="./ganga.png" alt="Shiva and Parvati overlooking the sacred Ganga" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
-      <div class="fx-layer">
-        <div class="ganga-shimmer"></div>
+      <img
+        src="./ganga.png"
+        alt="Shiva and Parvati overlooking the sacred Ganga"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
 
+      <div class="fx-layer">
         <div class="river-diya-glow" style="left: 17.8%; top: 69.8%;"></div>
         <div class="river-diya-glow" style="left: 34.8%; top: 72.5%;"></div>
         <div class="river-diya-glow" style="left: 77.5%; top: 72.6%;"></div>
         <div class="river-diya-glow" style="left: 94.2%; top: 72.8%;"></div>
 
-        <div id="ganga-ripples" class="absolute inset-0 z-20"></div>
+        <div id="ganga-ripples" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
     </section>
 
-    <!-- SCENE 4: SAATH & TELBUKHI (./saath.png) -->
+    <!-- ========================================================================
+         SCENE 4: SAATH & TELBUKHI (./saath.png)
+         ======================================================================== -->
     <section id="scene-4" class="scene" onclick="handleSceneTap(4, event)" aria-label="Scene 4: Saath and Telbukhi">
       <div class="scene4-zoom">
-        <div class="fallback-card" data-fallback-for="4">
+        <div class="fb-card">
           <div>
-            <p class="serif text-2xl font-bold text-[#4a1c17]">3<sup>rd</sup> January, 2027</p>
-            <h2 class="serif italic text-3xl font-semibold text-[#7c1932] mt-1">Saath &amp; Telbukhi</h2>
-            <p class="text-xs font-semibold tracking-[0.14em] uppercase text-[#5e2a17] mt-2">1:00 PM Onwards</p>
-            <p class="serif text-base text-[#4a1c17] mt-0.5">Venue: <strong>Banquet Hall</strong></p>
+            <p class="serif" style="margin:0; font-size:22px; font-weight:700;">3<sup>rd</sup> January, 2027</p>
+            <h2 class="fb-title" style="font-style:italic; font-size:30px; color:#7c1932; margin-top:4px;">Saath &amp; Telbukhi</h2>
+            <p style="margin:8px 0 0; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#5e2a17;">1:00 PM Onwards</p>
+            <p class="serif" style="margin:3px 0 0; font-size:16px;">Venue: <strong>Banquet Hall</strong></p>
           </div>
 
-          <div class="my-auto flex flex-col items-center">
-            <div class="w-16 h-20 rounded-full bg-[#f4d3b2] border-2 border-amber-700/35 shadow-inner flex items-center justify-center">
-              <span class="text-[10px] uppercase tracking-widest text-amber-900/60 mt-4">Groom</span>
+          <div style="margin:auto 0; display:flex; flex-direction:column; align-items:center;">
+            <div style="width:62px; height:76px; border-radius:9999px; background:#f4d3b2; border:2px solid rgba(180,83,9,0.35); display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(120,53,15,0.65); margin-top:16px;">Groom</span>
             </div>
-            <p class="text-[11px] text-[#6d4225] mt-2">Auspicious Kumkum Tilak Ceremony</p>
+            <p style="margin:8px 0 0; font-size:11px; color:#6d4225;">Auspicious Kumkum Tilak Ceremony</p>
           </div>
 
           <div>
@@ -1413,34 +1647,42 @@
           </div>
         </div>
 
-        <img data-filename="saath.png" data-primary="4" src="./saath.png" alt="Saath and Telbukhi Ceremony" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+        <img
+          src="./saath.png"
+          alt="Saath and Telbukhi Ceremony"
+          class="scene-img"
+          onerror="this.style.opacity='0'"
+          onload="this.style.opacity='1'; this.closest('.scene').querySelector('.fb-card').style.display='none';"
+        />
 
         <div class="fx-layer">
           <div class="tilak-mark"></div>
           <div class="tilak-akshata"></div>
-          <div id="tilak-sparkles" class="absolute inset-0 z-20"></div>
+          <div id="tilak-sparkles" style="position:absolute; inset:0; z-index:20;"></div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 5: HALDI / KESARI RANG (./haldi.png) -->
+    <!-- ========================================================================
+         SCENE 5: HALDI / KESARI RANG (./haldi.png)
+         ======================================================================== -->
     <section id="scene-5" class="scene" onclick="handleSceneTap(5, event)" aria-label="Scene 5: Kesari Rang Haldi">
-      <div class="fallback-card theme-haldi" data-fallback-for="5">
+      <div class="fb-card theme-haldi">
         <div>
-          <p class="serif text-2xl font-bold text-[#2b4325]">3<sup>rd</sup> January, 2027</p>
-          <h2 class="serif italic text-3xl font-semibold text-[#c04838] mt-1">Kesari Rang Haldi</h2>
-          <p class="text-xs font-semibold tracking-[0.14em] uppercase text-[#2b4325] mt-2">3:00 PM Onwards</p>
-          <p class="serif text-base text-[#2b4325] mt-0.5">Venue: <strong>By the Pool</strong></p>
-          <div class="mt-3 text-xs text-[#2b4325]">
-            <p class="font-semibold text-[#9a1f5c] uppercase tracking-wider mb-0.5">Dress Code</p>
-            <p>Team Groom — Shades of Blue</p>
-            <p>Team Bride — Shades of Pink</p>
+          <p class="serif" style="margin:0; font-size:22px; font-weight:700; color:#2b4325;">3<sup>rd</sup> January, 2027</p>
+          <h2 class="fb-title" style="font-style:italic; font-size:30px; color:#c04838; margin-top:4px;">Kesari Rang Haldi</h2>
+          <p style="margin:8px 0 0; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#2b4325;">3:00 PM Onwards</p>
+          <p class="serif" style="margin:3px 0 0; font-size:16px; color:#2b4325;">Venue: <strong>By the Pool</strong></p>
+          <div style="margin-top:12px; font-size:12px; color:#2b4325; line-height:1.45;">
+            <p style="margin:0 0 2px; font-weight:700; color:#9a1f5c; text-transform:uppercase; letter-spacing:0.1em;">Dress Code</p>
+            <p style="margin:0;">Team Groom — Shades of Blue</p>
+            <p style="margin:0;">Team Bride — Shades of Pink</p>
           </div>
         </div>
 
-        <div class="flex items-center justify-center gap-10 my-auto">
-          <div class="w-12 h-14 rounded-full bg-[#f4d3b2] border border-amber-700/30 flex items-center justify-center text-[10px] text-amber-950">Bride</div>
-          <div class="w-12 h-14 rounded-full bg-[#f4d3b2] border border-amber-700/30 flex items-center justify-center text-[10px] text-amber-950">Groom</div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:36px; margin:auto 0;">
+          <div style="width:48px; height:58px; border-radius:9999px; background:#f4d3b2; border:1px solid rgba(180,83,9,0.3); display:flex; align-items:center; justify-content:center; font-size:10px; color:#78350f;">Bride</div>
+          <div style="width:48px; height:58px; border-radius:9999px; background:#f4d3b2; border:1px solid rgba(180,83,9,0.3); display:flex; align-items:center; justify-content:center; font-size:10px; color:#78350f;">Groom</div>
         </div>
 
         <div>
@@ -1448,14 +1690,20 @@
         </div>
       </div>
 
-      <img data-filename="haldi.png" data-primary="5" src="./haldi.png" alt="Kesari Rang Haldi Ceremony" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./haldi.png"
+        alt="Kesari Rang Haldi Ceremony"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
 
       <div class="fx-layer">
         <div class="haldi-aura" style="left: 44.3%; top: 83.2%;"></div>
         <div class="haldi-aura" style="left: 76.8%; top: 83.2%;"></div>
 
         <div class="haldi-smear" style="left: 44.3%; top: 83.2%; width: 4.8%; height: 2.8%;">
-          <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
+          <svg viewBox="0 0 60 36" style="width:100%; height:100%; overflow:visible;">
             <defs>
               <filter id="haldiSoft" x="-30%" y="-30%" width="160%" height="160%">
                 <feGaussianBlur stdDeviation="1.3" />
@@ -1470,7 +1718,7 @@
         </div>
 
         <div class="haldi-smear" style="left: 76.8%; top: 83.2%; width: 4.8%; height: 2.8%;">
-          <svg viewBox="0 0 60 36" class="w-full h-full overflow-visible">
+          <svg viewBox="0 0 60 36" style="width:100%; height:100%; overflow:visible;">
             <g filter="url(#haldiSoft)">
               <path class="haldi-path" style="animation-delay:0.1s;" d="M9 18 Q17 12, 24 19" stroke="#f4b400" stroke-width="6.8" stroke-linecap="round" fill="none" />
               <path class="haldi-path" style="animation-delay:0.22s;" d="M36 18 Q44 12, 51 19" stroke="#ffca28" stroke-width="6.5" stroke-linecap="round" fill="none" />
@@ -1479,23 +1727,25 @@
           </svg>
         </div>
 
-        <div id="haldi-particles" class="absolute inset-0 z-20"></div>
+        <div id="haldi-particles" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
     </section>
 
-    <!-- SCENE 6: SANGEET / SHAAM & SHINE (./sangeet.png) -->
+    <!-- ========================================================================
+         SCENE 6: SANGEET / SHAAM & SHINE (./sangeet.png)
+         ======================================================================== -->
     <section id="scene-6" class="scene" onclick="handleSceneTap(6, event)" aria-label="Scene 6: Shaam and Shine Sangeet">
       <div class="scene6-zoom">
-        <div class="fallback-card theme-night" data-fallback-for="6">
+        <div class="fb-card theme-night">
           <div>
-            <p class="serif text-2xl font-bold text-amber-200">3<sup>rd</sup> January, 2027</p>
-            <h2 class="serif italic text-3xl font-semibold text-amber-300 mt-1">Shaam &amp; Shine</h2>
-            <p class="text-xs font-semibold tracking-[0.14em] uppercase text-amber-100/90 mt-2">9:00 PM Onwards</p>
-            <p class="serif text-base text-amber-100 mt-0.5">Venue: <strong>Banquet Hall</strong></p>
+            <p class="serif" style="margin:0; font-size:22px; font-weight:700; color:#fde68a;">3<sup>rd</sup> January, 2027</p>
+            <h2 class="fb-title" style="font-style:italic; font-size:32px; color:#fcd34d; margin-top:4px;">Shaam &amp; Shine</h2>
+            <p style="margin:8px 0 0; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(254,243,199,0.9);">9:00 PM Onwards</p>
+            <p class="serif" style="margin:3px 0 0; font-size:16px; color:#fef3c7;">Venue: <strong>Banquet Hall</strong></p>
           </div>
 
-          <div class="w-24 h-36 rounded-t-full border-2 border-amber-300/80 bg-gradient-to-b from-slate-700/70 to-slate-900/90 shadow-[0_0_24px_rgba(245,210,122,0.3)] flex items-center justify-center my-auto">
-            <span class="serif italic text-xs text-amber-200/90">Ornate Mirror</span>
+          <div style="width:94px; height:140px; border-radius:9999px 9999px 8px 8px; border:2px solid rgba(252,211,77,0.78); background:linear-gradient(180deg, rgba(51,65,85,0.72), rgba(15,23,42,0.92)); display:flex; align-items:center; justify-content:center; margin:auto 0;">
+            <span class="serif" style="font-style:italic; font-size:12px; color:rgba(253,230,138,0.9);">Ornate Mirror</span>
           </div>
 
           <div>
@@ -1503,35 +1753,43 @@
           </div>
         </div>
 
-        <img data-filename="sangeet.png" data-primary="6" src="./sangeet.png" alt="Shaam and Shine Sangeet" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+        <img
+          src="./sangeet.png"
+          alt="Shaam and Shine Sangeet"
+          class="scene-img"
+          onerror="this.style.opacity='0'"
+          onload="this.style.opacity='1'; this.closest('.scene').querySelector('.fb-card').style.display='none';"
+        />
 
-        <!-- Pure frameless 4-point golden-champagne star sparkles sampled inside the mirror oval -->
-        <div id="mirror-glitter" class="fx-layer absolute inset-0 z-20"></div>
+        <!-- Frameless 4-point golden-champagne star sparkles inside the mirror oval -->
+        <div id="mirror-glitter" class="fx-layer" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
     </section>
 
-    <!-- SCENE 7: PHERE / SAATH VACHAN (./phere.png) -->
+    <!-- ========================================================================
+         SCENE 7: PHERE / SAATH VACHAN (./phere.png)
+         ======================================================================== -->
     <section id="scene-7" class="scene" onclick="handleSceneTap(7, event)" aria-label="Scene 7: Mukut Bandhan, Baraat and Saath Vachan">
-      <div class="fallback-card" data-fallback-for="7">
-        <div class="space-y-2">
-          <p class="serif text-2xl font-bold text-[#6e5218]">4<sup>th</sup> January, 2027</p>
+      <div class="fb-card">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <p class="serif" style="margin:0; font-size:22px; font-weight:700; color:#6e5218;">4<sup>th</sup> January, 2027</p>
 
           <div>
-            <h3 class="serif italic text-2xl font-semibold text-[#6e5218]">Mukut Bandhan</h3>
-            <p class="text-[11px] text-[#4a3918]">10:00 AM Onwards | Venue: Banquet Hall</p>
+            <h3 class="serif" style="margin:0; font-style:italic; font-size:23px; font-weight:600; color:#6e5218;">Mukut Bandhan</h3>
+            <p style="margin:2px 0 0; font-size:11px; color:#4a3918;">10:00 AM Onwards | Venue: Banquet Hall</p>
           </div>
 
           <div>
-            <h3 class="serif italic text-2xl font-semibold text-[#6e5218]">Baraat</h3>
-            <p class="text-[11px] text-[#4a3918]">12:00 PM Onwards | Venue: Front Gate</p>
+            <h3 class="serif" style="margin:0; font-style:italic; font-size:23px; font-weight:600; color:#6e5218;">Baraat</h3>
+            <p style="margin:2px 0 0; font-size:11px; color:#4a3918;">12:00 PM Onwards | Venue: Front Gate</p>
           </div>
 
           <div>
-            <h3 class="serif italic text-2xl font-semibold text-[#b8285a]">Saath Vachan</h3>
-            <p class="text-[11px] text-[#4a3918]">3:00 PM Onwards | Venue: Lawn</p>
+            <h3 class="serif" style="margin:0; font-style:italic; font-size:24px; font-weight:600; color:#b8285a;">Saath Vachan</h3>
+            <p style="margin:2px 0 0; font-size:11px; color:#4a3918;">3:00 PM Onwards | Venue: Lawn</p>
           </div>
 
-          <p class="text-xs font-semibold text-[#5a3b22] pt-1">Dress Code — Pretty Pastel</p>
+          <p style="margin:4px 0 0; font-size:12px; font-weight:700; color:#5a3b22;">Dress Code — Pretty Pastel</p>
         </div>
 
         <div>
@@ -1539,22 +1797,31 @@
         </div>
       </div>
 
-      <img data-filename="phere.png" data-primary="7" src="./phere.png" alt="Mukut Bandhan, Baraat and Saath Vachan" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./phere.png"
+        alt="Mukut Bandhan, Baraat and Saath Vachan"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
+
       <div id="petals-host" class="petals-host fx-layer"></div>
     </section>
 
-    <!-- SCENE 8: SUFI NIGHT (./sufi.png) -->
+    <!-- ========================================================================
+         SCENE 8: SUFI NIGHT (./sufi.png)
+         ======================================================================== -->
     <section id="scene-8" class="scene" onclick="handleSceneTap(8, event)" aria-label="Scene 8: Sufi Night">
-      <div class="fallback-card theme-sufi" data-fallback-for="8">
+      <div class="fb-card theme-sufi">
         <div>
-          <p class="serif text-2xl font-bold text-[#6e1812]">4<sup>th</sup> January, 2027</p>
-          <h2 class="serif italic text-4xl font-semibold text-[#7a1612] mt-1">Sufi Night</h2>
-          <p class="text-xs font-semibold tracking-[0.14em] uppercase text-[#5c1a14] mt-2">9:00 PM Onwards</p>
-          <p class="serif text-base text-[#5c1a14] mt-0.5">Venue: <strong>Lawn</strong></p>
+          <p class="serif" style="margin:0; font-size:22px; font-weight:700; color:#6e1812;">4<sup>th</sup> January, 2027</p>
+          <h2 class="fb-title" style="font-style:italic; font-size:36px; color:#7a1612; margin-top:4px;">Sufi Night</h2>
+          <p style="margin:8px 0 0; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#5c1a14;">9:00 PM Onwards</p>
+          <p class="serif" style="margin:3px 0 0; font-size:16px; color:#5c1a14;">Venue: <strong>Lawn</strong></p>
         </div>
 
-        <div class="my-auto px-4 py-3 rounded-2xl bg-amber-950/10 border border-amber-900/20">
-          <p class="serif italic text-base text-[#5c1a14]">Qawwali, Harmonium &amp; Starlit Mehfil</p>
+        <div style="margin:auto 0; padding:12px 18px; border-radius:16px; background:rgba(120,53,15,0.1); border:1px solid rgba(120,53,15,0.22);">
+          <p class="serif" style="margin:0; font-style:italic; font-size:16px; color:#5c1a14;">Qawwali, Harmonium &amp; Starlit Mehfil</p>
         </div>
 
         <div>
@@ -1562,7 +1829,13 @@
         </div>
       </div>
 
-      <img data-filename="sufi.png" data-primary="8" src="./sufi.png" alt="Sufi Night" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./sufi.png"
+        alt="Sufi Night"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
 
       <div class="fx-layer">
         <div class="lantern-glow" style="left: 8.2%; top: 12.2%; width: 11%; aspect-ratio: 1;"></div>
@@ -1571,25 +1844,27 @@
         <div class="lantern-glow" style="left: 10.8%; top: 59.0%; width: 14%; aspect-ratio: 1; animation-delay: 0.3s;"></div>
 
         <div class="harmonium-aura"></div>
-        <div id="sufi-notes" class="absolute inset-0 z-20"></div>
+        <div id="sufi-notes" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
     </section>
 
-    <!-- SCENE 9: AWAITING YOUR PRESENCE / RSVP (./rsvp.png) -->
+    <!-- ========================================================================
+         SCENE 9: AWAITING YOUR PRESENCE / RSVP (./rsvp.png)
+         ======================================================================== -->
     <section id="scene-9" class="scene" onclick="handleSceneTap(9, event)" aria-label="Scene 9: Awaiting Your Presence">
-      <div class="fallback-card" data-fallback-for="9">
+      <div class="fb-card">
         <div>
-          <p class="serif text-xl text-[#4e5928]">Awaiting Your Presence</p>
-          <p class="text-[11px] tracking-[0.22em] uppercase text-[#5c682e] mt-1 mb-3">RSVP</p>
-          <h2 class="serif text-2xl font-bold tracking-wider text-[#4e5928] leading-tight">
+          <p class="serif" style="margin:0; font-size:20px; color:#4e5928;">Awaiting Your Presence</p>
+          <p style="margin:4px 0 12px; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#5c682e; font-weight:600;">RSVP</p>
+          <h2 class="serif" style="margin:0; font-size:25px; font-weight:700; letter-spacing:0.06em; color:#4e5928; line-height:1.22;">
             BASANTWANI<br />FAMILY<br />
-            <span class="italic font-normal text-xl">&amp;</span><br />
+            <span style="font-style:italic; font-weight:400; font-size:20px;">&amp;</span><br />
             MANDHAN<br />FAMILY
           </h2>
         </div>
 
-        <div class="my-auto w-28 h-14 rounded-2xl bg-sky-100/80 border border-amber-700/25 flex items-center justify-center">
-          <span class="serif italic text-xs text-sky-900">Palace Courtyard Fountain</span>
+        <div style="margin:auto 0; width:136px; height:54px; border-radius:16px; background:rgba(224,242,254,0.85); border:1px solid rgba(180,83,9,0.25); display:flex; align-items:center; justify-content:center;">
+          <span class="serif" style="font-style:italic; font-size:12px; color:#0c4a6e;">Courtyard Fountain</span>
         </div>
 
         <div>
@@ -1597,27 +1872,44 @@
         </div>
       </div>
 
-      <img data-filename="rsvp.png" data-primary="9" src="./rsvp.png" alt="Awaiting Your Presence — Basantwani Family and Mandhan Family" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./rsvp.png"
+        alt="Awaiting Your Presence — Basantwani Family and Mandhan Family"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
+
       <canvas id="fountain-canvas" class="fountain-canvas fx-layer"></canvas>
     </section>
 
-    <!-- SCENE 10: COUNTDOWN TO 3RD JANUARY 2027 (./countdown.jpg) -->
+    <!-- ========================================================================
+         SCENE 10: COUNTDOWN TO 3RD JANUARY 2027 (./countdown.jpg)
+         (NO mention of Shubham or Pooja on this countdown page)
+         ======================================================================== -->
     <section id="scene-10" class="scene" onclick="handleSceneTap(10, event)" aria-label="Scene 10: Countdown to 3rd January 2027">
-      <div class="fallback-card" data-fallback-for="10">
-        <div class="h-44"></div>
-        <div class="my-auto px-3 py-3 rounded-2xl border border-amber-700/25 bg-[#fffaf0]/80">
-          <p class="serif italic text-lg text-[#7d2138]">Countdown to 3rd January 2027</p>
-          <p class="text-[11px] tracking-[0.16em] uppercase text-[#8b6914] mt-0.5">3rd January 2027 · 1:00 PM IST</p>
+      <div class="fb-card">
+        <div style="height:175px;"></div>
+        <div style="margin:auto 0; padding:14px 16px; border-radius:16px; border:1px solid rgba(180,83,9,0.25); background:rgba(255,250,240,0.85);">
+          <p class="serif" style="margin:0; font-style:italic; font-size:18px; color:#7d2138;">3rd January 2027</p>
+          <p style="margin:4px 0 0; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#8b6914;">1:00 PM IST · Budhni</p>
         </div>
-        <div class="h-4"></div>
+        <div style="height:12px;"></div>
       </div>
 
-      <img data-filename="countdown.jpg" data-primary="10" src="./countdown.jpg" alt="Countdown to 3rd January 2027" class="scene-img" style="object-fit: 100% 100%;" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./countdown.jpg"
+        alt="Countdown to 3rd January 2027"
+        class="scene-img"
+        style="object-fit: 100% 100%;"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
 
       <!-- Live Countdown Typography & 4 Time Tiles in Upper Open Cream Sky Area (top: 6.2%) -->
       <div id="countdown-box" class="countdown-overlay">
-        <p class="text-[8.5px] font-semibold uppercase tracking-[0.2em] text-[#8b6914]">Counting Down To The Celebrations</p>
-        <h2 class="serif italic text-[18px] font-bold text-[#7d2138] leading-tight">Countdown to 3rd January 2027</h2>
+        <p class="cd-kicker">Counting Down To The Celebrations</p>
+        <h2 class="cd-heading">Countdown to 3rd January 2027</h2>
 
         <div class="cd-tiles-grid" aria-live="polite">
           <div class="cd-tile">
@@ -1638,32 +1930,40 @@
           </div>
         </div>
 
-        <p id="cd-status" class="text-[9px] font-semibold tracking-[0.11em] uppercase text-[#6e4c12]">3rd January 2027 · 1:00 PM IST</p>
+        <p id="cd-status" class="cd-status">3rd January 2027 · 1:00 PM IST</p>
         <span class="cd-tap-cue">Tap anywhere to continue</span>
       </div>
     </section>
 
-    <!-- SCENE 11: THE VENUE (./venue.png) -->
+    <!-- ========================================================================
+         SCENE 11: THE VENUE (./venue.png)
+         ======================================================================== -->
     <section id="scene-11" class="scene" onclick="handleSceneTap(11, event)" aria-label="Scene 11: The Venue">
-      <div class="fallback-card" data-fallback-for="11">
+      <div class="fb-card">
         <div>
-          <h2 class="serif italic text-3xl font-semibold text-[#9e1946]">The Venue</h2>
-          <p class="text-[10px] tracking-[0.2em] uppercase text-[#4a3918] mt-1">Find Your Way to the Celebrations</p>
+          <h2 class="fb-title" style="font-style:italic; font-size:32px; color:#9e1946;">The Venue</h2>
+          <p style="margin:4px 0 0; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#4a3918; font-weight:600;">Find Your Way to the Celebrations</p>
         </div>
 
-        <div class="w-full rounded-2xl bg-[#fffaf0] border border-amber-700/30 p-4 shadow-md my-auto">
-          <p class="text-[10px] tracking-[0.2em] uppercase text-[#9e1946] font-semibold mb-1">All Ceremonies</p>
-          <h3 class="serif text-2xl font-bold text-[#2b4325]">Crescent The Fern</h3>
-          <p class="serif text-base text-[#3b2c1a] mb-3">Budhni, Madhya Pradesh</p>
-          <span class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#9e1946] text-white text-[11px] font-semibold tracking-wider uppercase">
+        <div style="width:100%; border-radius:18px; background:#fffaf0; border:1px solid rgba(180,83,9,0.32); padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.08); margin:auto 0;">
+          <p style="margin:0 0 4px; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#9e1946; font-weight:700;">All Ceremonies</p>
+          <h3 class="serif" style="margin:0; font-size:25px; font-weight:700; color:#2b4325;">Crescent The Fern</h3>
+          <p class="serif" style="margin:2px 0 12px; font-size:16px; color:#3b2c1a;">Budhni, Madhya Pradesh</p>
+          <span style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:9999px; background:#9e1946; color:#ffffff; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase;">
             Open in Maps
           </span>
         </div>
 
-        <div class="h-8"></div>
+        <div style="height:28px;"></div>
       </div>
 
-      <img data-filename="venue.png" data-primary="11" src="./venue.png" alt="The Venue — Crescent The Fern, Budhni" class="scene-img" onload="onImgLoad(this)" onerror="onImgError(this)" />
+      <img
+        src="./venue.png"
+        alt="The Venue — Crescent The Fern, Budhni"
+        class="scene-img"
+        onerror="this.style.opacity='0'"
+        onload="this.style.opacity='1'; this.parentElement.querySelector('.fb-card').style.display='none';"
+      />
 
       <!-- Direct Interactive Venue Card / OPEN IN MAPS Trigger -->
       <button id="venue-card-btn" type="button" onclick="openMapSheet(event)" aria-label="Open Crescent The Fern Budhni Map Preview"></button>
@@ -1673,7 +1973,7 @@
         <div class="car-headlight-glint" style="left: 17.5%; top: 76.2%;"></div>
         <div class="car-headlight-glint" style="left: 69.2%; top: 76.8%; animation-delay: 0.08s;"></div>
         <div class="car-headlight-glint" style="left: 74.8%; top: 77.2%; animation-delay: 0.14s;"></div>
-        <div id="car-exhaust-host" class="absolute inset-0 z-20"></div>
+        <div id="car-exhaust-host" style="position:absolute; inset:0; z-index:20;"></div>
       </div>
 
       <button id="replay-btn" type="button" onclick="replayInvitation(event)" aria-label="Replay invitation">
@@ -1688,20 +1988,14 @@
     <!-- Slide-Up Glassmorphism Map Preview Sheet -->
     <div id="map-sheet-backdrop" onclick="closeMapSheet(event)"></div>
     <aside id="map-sheet" role="dialog" aria-modal="true" aria-labelledby="map-sheet-title" onclick="event.stopPropagation()">
-      <div class="w-10 h-1 rounded-full bg-amber-200/35 mx-auto mb-3"></div>
-      <div class="flex items-start justify-between gap-2 mb-2.5">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
         <div>
-          <p class="text-[10px] uppercase tracking-[0.2em] text-amber-300/90 font-semibold">All Ceremonies</p>
-          <h3 id="map-sheet-title" class="serif text-xl font-bold text-amber-50 leading-tight">Crescent The Fern, Budhni</h3>
-          <p class="text-[11px] text-amber-100/80 mt-0.5">Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445</p>
+          <p class="sheet-kicker">All Ceremonies</p>
+          <h3 id="map-sheet-title" class="sheet-title">Crescent The Fern, Budhni</h3>
+          <p class="sheet-addr">Bhopal–Hoshangabad Highway, Budhni, Sehore District, Madhya Pradesh 466445</p>
         </div>
-        <button
-          id="close-map-btn"
-          type="button"
-          onclick="closeMapSheet(event)"
-          class="w-7 h-7 rounded-full bg-white/10 border border-amber-200/25 text-amber-100 flex items-center justify-center shrink-0 cursor-pointer"
-          aria-label="Close map preview"
-        >
+        <button id="close-map-btn" type="button" onclick="closeMapSheet(event)" aria-label="Close map preview">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1709,36 +2003,29 @@
         </button>
       </div>
 
-      <div class="relative w-full h-44 rounded-xl overflow-hidden border border-amber-300/30 bg-stone-900 mb-3">
-        <!-- Offline / Blocked Iframe Fallback Pin Card -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 bg-gradient-to-br from-[#2a1812] via-[#1f130f] to-[#140c09]">
-          <div class="w-9 h-9 rounded-full bg-[#9e1946]/30 border border-amber-300/50 flex items-center justify-center mb-1.5">
+      <div class="map-embed-wrap">
+        <div class="map-offline-fallback">
+          <div class="map-pin-badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
           </div>
-          <p class="serif text-base font-semibold text-amber-100">Crescent The Fern, Budhni</p>
-          <p class="text-[10.5px] text-amber-200/75">Bhopal–Hoshangabad Highway, Budhni, Sehore Dist., MP</p>
+          <p class="serif" style="margin:0; font-size:16px; font-weight:600; color:#fef3c7;">Crescent The Fern, Budhni</p>
+          <p style="margin:2px 0 0; font-size:10.5px; color:rgba(253,230,138,0.75);">Bhopal–Hoshangabad Highway, Budhni, Sehore Dist., MP</p>
         </div>
 
         <iframe
           id="venue-map-iframe"
           title="Google Maps — Crescent The Fern, Budhni, Madhya Pradesh"
           src="https://maps.google.com/maps?q=Crescent+The+Fern,+Budhni,+Madhya+Pradesh&t=&z=15&ie=UTF8&iwloc=&output=embed"
-          class="relative z-10 w-full h-full border-0"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
 
-      <div class="grid grid-cols-3 gap-1.5">
-        <button
-          id="copy-addr-btn"
-          type="button"
-          onclick="copyVenueAddress(event)"
-          class="py-2.5 px-2 rounded-xl bg-white/10 hover:bg-white/15 border border-amber-200/35 text-amber-100 text-[11px] font-medium flex items-center justify-center gap-1 cursor-pointer"
-        >
+      <div class="sheet-actions">
+        <button id="copy-addr-btn" class="sheet-btn" type="button" onclick="copyVenueAddress(event)">
           <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -1748,10 +2035,10 @@
 
         <a
           id="directions-link"
+          class="sheet-btn"
           href="https://www.google.com/maps/dir/?api=1&destination=Crescent+The+Fern+Budhni+Madhya+Pradesh"
           target="_blank"
           rel="noopener noreferrer"
-          class="py-2.5 px-2 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 border border-amber-300/45 text-amber-100 text-[11px] font-semibold flex items-center justify-center gap-1 no-underline"
         >
           <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -1761,10 +2048,10 @@
 
         <a
           id="open-gmaps-link"
+          class="sheet-btn"
           href="https://www.google.com/maps/search/?api=1&query=Crescent+The+Fern+Budhni+Madhya+Pradesh"
           target="_blank"
           rel="noopener noreferrer"
-          class="py-2.5 px-2 rounded-xl bg-[#9e1946] hover:bg-[#b21d50] border border-amber-200/40 text-white text-[11px] font-semibold flex items-center justify-center gap-1 no-underline"
         >
           <svg width="12.5" height="12.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -1845,26 +2132,9 @@
       if (sheet) sheet.classList.remove('open');
     }
 
-    function onImgLoad(img) {
-      if (!img) return;
-      img.classList.add('is-loaded');
-      if (img.hasAttribute('data-primary')) {
-        var sceneNum = img.getAttribute('data-primary');
-        var fb = document.querySelector('[data-fallback-for="' + sceneNum + '"]');
-        if (fb) fb.classList.add('hidden-by-img');
-        if (sceneNum === '1') {
-          var cam = document.querySelector('[data-cam-for="1"]');
-          if (cam) cam.classList.add('has-image');
-        }
-      }
-    }
-
-    function onImgError(img) {
-      if (!img) return;
-      img.classList.remove('is-loaded');
-    }
-
-    /* Procedural Web Audio API Synthesis */
+    /* ==========================================================================
+       PROCEDURAL WEB AUDIO API SOUNDSCAPES
+       ========================================================================== */
     function ensureAudio() {
       if (!soundEnabled) return null;
       try {
@@ -2269,7 +2539,9 @@
       });
     }
 
-    /* Timers & Scene Resets */
+    /* ==========================================================================
+       TIMERS, FOUNTAIN CANVAS & SCENE RESETS
+       ========================================================================== */
     function clearTimers() {
       pendingTimers.forEach(function (id) { clearTimeout(id); });
       pendingTimers = [];
@@ -2556,8 +2828,8 @@
       soundEnabled = !soundEnabled;
       var onIcon = document.getElementById('icon-sound-on');
       var offIcon = document.getElementById('icon-sound-off');
-      if (onIcon) onIcon.classList.toggle('hidden', !soundEnabled);
-      if (offIcon) offIcon.classList.toggle('hidden', soundEnabled);
+      if (onIcon) onIcon.style.display = soundEnabled ? 'block' : 'none';
+      if (offIcon) offIcon.style.display = soundEnabled ? 'none' : 'block';
       if (soundEnabled) {
         ensureAudio();
         if (currentScene === 3) startRiverFlow(false);
@@ -2572,7 +2844,7 @@
       if (sceneNum !== currentScene) return;
       if (isAnimating) return;
 
-      /* Scene 11: Lower vintage car area revs engine; upper #venue-card-btn opens Map Preview */
+      /* Scene 11: Lower vintage car area revs engine; #venue-card-btn opens Map Preview */
       if (sceneNum === 11) {
         ensureAudio();
         triggerCarRevEffect();
@@ -2611,11 +2883,15 @@
         if (el3) el3.classList.add('rippling');
         startRiverFlow(true);
         if (host3) {
+          /* Delicate foreshortened ripples & horizontal moonlit glints confined strictly to open river water (64%..78%) */
           [
-            { x: 45, y: 71, size: 125, delay: 0 },
-            { x: 45, y: 71, size: 185, delay: 200 },
-            { x: 64, y: 75, size: 115, delay: 140 },
-            { x: 30, y: 74, size: 110, delay: 280 }
+            { x: 24, y: 66.2, size: 34, delay: 0 },
+            { x: 31, y: 68.4, size: 42, delay: 160 },
+            { x: 20, y: 71.2, size: 38, delay: 320 },
+            { x: 36, y: 72.8, size: 44, delay: 460 },
+            { x: 75, y: 71.5, size: 36, delay: 220 },
+            { x: 83, y: 75.4, size: 42, delay: 420 },
+            { x: 78, y: 77.8, size: 38, delay: 620 }
           ].forEach(function (pt) {
             later(function () {
               var r = document.createElement('div');
@@ -2626,6 +2902,24 @@
               r.style.height = pt.size + 'px';
               host3.appendChild(r);
             }, pt.delay);
+          });
+
+          [
+            { x: 26, y: 67.2, w: 26, delay: 80 },
+            { x: 32, y: 69.8, w: 32, delay: 240 },
+            { x: 22, y: 72.5, w: 28, delay: 400 },
+            { x: 37, y: 74.0, w: 30, delay: 560 },
+            { x: 76, y: 73.2, w: 28, delay: 300 },
+            { x: 82, y: 76.8, w: 32, delay: 520 }
+          ].forEach(function (gl) {
+            later(function () {
+              var g = document.createElement('div');
+              g.className = 'water-glint';
+              g.style.left = gl.x + '%';
+              g.style.top = gl.y + '%';
+              g.style.width = gl.w + 'px';
+              host3.appendChild(g);
+            }, gl.delay);
           });
         }
         later(function () {
@@ -2644,7 +2938,7 @@
             sp.className = 'sparkle-dot';
             var angle = (Math.PI * 2 * i) / 16 + (Math.random() * 0.3 - 0.15);
             var dist = 10 + Math.random() * 20;
-            sp.style.left = '47.8%';
+            sp.style.left = '47.35%';
             sp.style.top = '60.8%';
             sp.style.setProperty('--bx', Math.cos(angle) * dist + 'px');
             sp.style.setProperty('--by', Math.sin(angle) * dist + 'px');
@@ -2697,11 +2991,11 @@
           for (var i = 0; i < 40; i++) {
             var star = document.createElement('div');
             star.className = 'mirror-glitter-star';
-            /* Pure 4-point star sparkles sampled organically inside the mirror oval (left: 5%..25%, top: 66%..87%) */
+            /* Frameless 4-point star sparkles sampled inside mirror oval (x: 8%..23%, y: 66%..86%) */
             var theta = Math.random() * Math.PI * 2;
             var rad = Math.sqrt(Math.random());
-            var gx = 15.0 + Math.cos(theta) * rad * 8.2;
-            var gy = 76.5 + Math.sin(theta) * rad * 9.0;
+            var gx = 15.5 + Math.cos(theta) * rad * 7.5;
+            var gy = 76.0 + Math.sin(theta) * rad * 10.0;
             var size = 5 + Math.random() * 9;
             var color = starColors[i % starColors.length];
             star.style.left = gx + '%';
@@ -2710,7 +3004,7 @@
             star.style.height = size + 'px';
             star.style.setProperty('--gdur', (0.85 + Math.random() * 0.75) + 's');
             star.style.setProperty('--gdelay', (Math.random() * 0.72) + 's');
-            star.innerHTML = '<svg viewBox="0 0 24 24" class="w-full h-full" style="filter:drop-shadow(0 0 4px ' + color + ');"><path d="M12 0 L14.4 9.6 L24 12 L14.4 14.4 L12 24 L9.6 14.4 L0 12 L9.6 9.6 Z" fill="' + color + '"/></svg>';
+            star.innerHTML = '<svg viewBox="0 0 24 24" style="width:100%; height:100%; display:block; filter:drop-shadow(0 0 4px ' + color + ');"><path d="M12 0 L14.4 9.6 L24 12 L14.4 14.4 L12 24 L9.6 14.4 L0 12 L9.6 9.6 Z" fill="' + color + '"/></svg>';
             glitterHost.appendChild(star);
           }
         }
@@ -2740,7 +3034,7 @@
             wrap.style.setProperty('--sway2', sway2 + 'px');
             wrap.style.setProperty('--dur', dur + 's');
             wrap.style.setProperty('--delay', delay + 's');
-            wrap.innerHTML = '<svg viewBox="0 0 24 24" class="w-full h-full drop-shadow"><path d="M12 2 C18 4, 22 11, 18 18 C15 22, 9 22, 6 18 C2 11, 6 4, 12 2 Z" fill="' + color + '" /></svg>';
+            wrap.innerHTML = '<svg viewBox="0 0 24 24" style="width:100%; height:100%; display:block;"><path d="M12 2 C18 4, 22 11, 18 18 C15 22, 9 22, 6 18 C2 11, 6 4, 12 2 Z" fill="' + color + '" /></svg>';
             host7.appendChild(wrap);
           }
 
@@ -2787,12 +3081,6 @@
     }
 
     function bootstrapInvitation() {
-      document.querySelectorAll('img[data-filename]').forEach(function (img) {
-        if (img.complete && img.naturalWidth > 0) {
-          onImgLoad(img);
-        }
-      });
-
       window.addEventListener('keydown', function (ev) {
         if (ev.key === 'ArrowRight') goToScene(currentScene + 1, true, false);
         else if (ev.key === 'ArrowLeft') goToScene(currentScene - 1, true, false);
