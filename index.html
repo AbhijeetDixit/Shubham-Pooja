@@ -293,60 +293,6 @@
       box-shadow: 0 0 8px rgba(245, 210, 122, 0.85);
     }
 
-    /* Compact Top-Center File Loader Label */
-    #loader-pill {
-      position: absolute;
-      top: calc(env(safe-area-inset-top, 0px) + 42px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 70;
-      padding: 6px 12px;
-      border-radius: 9999px;
-      background: rgba(58, 17, 29, 0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1.5px solid rgba(245, 210, 122, 0.75);
-      color: #fff8e7;
-      font-size: 11px;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      box-shadow: 0 8px 24px rgba(34, 10, 16, 0.45);
-      cursor: pointer;
-      pointer-events: auto;
-      white-space: nowrap;
-      transition: opacity 0.35s ease, visibility 0.35s ease;
-    }
-
-    #loader-pill.all-loaded {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .drop-overlay {
-      position: absolute;
-      inset: 12px;
-      z-index: 95;
-      border-radius: 20px;
-      background: rgba(46, 16, 25, 0.9);
-      backdrop-filter: blur(8px);
-      border: 2px dashed #f5d27a;
-      color: #fff6e0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      pointer-events: none;
-    }
-
-    .stage.is-dragging .drop-overlay {
-      display: flex;
-    }
-
     /* Scene 1: Cropped Temple Doors (10.6%–93.8% vertical span) + 3D Center Opening */
     .scene1-camera {
       position: absolute;
@@ -1194,26 +1140,12 @@
 </head>
 <body>
 
-  <input
-    id="file-picker"
-    type="file"
-    multiple
-    accept="image/*"
-    class="hidden"
-  />
-
   <div
     id="stage"
     class="stage"
     role="application"
     aria-label="Shubham and Pooja Interactive Wedding Invitation"
   >
-    <!-- Drag & Drop Overlay -->
-    <div class="drop-overlay">
-      <p class="serif text-2xl font-semibold text-amber-200 mb-1">Drop Your 10 Illustration Files</p>
-      <p class="text-xs text-amber-100/80">Auto-matched by filename (1000258273.jpg – 1000258409.png)</p>
-    </div>
-
     <!-- Top Navigation Bar (z-index: 70) -->
     <header id="top-bar">
       <div class="nav-pill">
@@ -1248,18 +1180,7 @@
       </div>
     </header>
 
-    <!-- Compact Top-Center Image Loader Label -->
-    <label id="loader-pill" for="file-picker" aria-label="Load 10 Images">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f5d27a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-        <polyline points="21 15 16 10 5 21"></polyline>
-      </svg>
-      <span id="loader-pill-text">Load 10 Images</span>
-      <span id="loader-count-badge" class="px-1.5 py-0.5 rounded-full bg-amber-300/20 text-amber-200 text-[10px] font-semibold">0/10</span>
-    </label>
-
-    <!-- SCENE 1: TEMPLE DOORS (1000258273.jpg) -->
+    <!-- SCENE 1: TEMPLE DOORS (./1000258273.jpg) -->
     <section id="scene-0" class="scene active" data-scene="0" aria-label="Scene 1: Temple Doors">
       <div class="fallback-card" data-fallback-for="0">
         <div>
@@ -1285,24 +1206,24 @@
 
       <div class="scene1-camera" data-cam-for="0">
         <div class="temple-archway">
-          <img data-filename="1000258273.jpg" data-primary="0" src="1000258273.jpg" alt="Carved Temple Archway" class="temple-crop-img" />
+          <img data-filename="1000258273.jpg" data-primary="0" src="./1000258273.jpg" alt="Carved Temple Archway" class="temple-crop-img" />
         </div>
 
         <!-- Swinging Hanging Brass Bell Overlay -->
         <div class="temple-bell-swing">
-          <img data-filename="1000258273.jpg" src="1000258273.jpg" alt="" class="bell-crop-img" />
+          <img data-filename="1000258273.jpg" src="./1000258273.jpg" alt="" class="bell-crop-img" />
           <div class="bell-shimmer-wave"></div>
         </div>
 
         <div class="doors-3d-stage">
           <div class="door-panel door-left">
             <div class="door-map-left">
-              <img data-filename="1000258273.jpg" src="1000258273.jpg" alt="" class="temple-crop-img" />
+              <img data-filename="1000258273.jpg" src="./1000258273.jpg" alt="" class="temple-crop-img" />
             </div>
           </div>
           <div class="door-panel door-right">
             <div class="door-map-right">
-              <img data-filename="1000258273.jpg" src="1000258273.jpg" alt="" class="temple-crop-img" />
+              <img data-filename="1000258273.jpg" src="./1000258273.jpg" alt="" class="temple-crop-img" />
             </div>
           </div>
         </div>
@@ -1311,7 +1232,7 @@
       </div>
     </section>
 
-    <!-- SCENE 2: SHIVA & PARVATI HANDS OVER SHIVLING (1000258382.png) -->
+    <!-- SCENE 2: SHIVA & PARVATI HANDS OVER SHIVLING (./1000258382.png) -->
     <section id="scene-1" class="scene" data-scene="1" aria-label="Scene 2: Light the Diyas">
       <div class="fallback-card" data-fallback-for="1">
         <div>
@@ -1338,7 +1259,7 @@
         </div>
       </div>
 
-      <img data-filename="1000258382.png" data-primary="1" src="1000258382.png" alt="Shiva and Parvati hands blessing the Shivling" class="scene-img" />
+      <img data-filename="1000258382.png" data-primary="1" src="./1000258382.png" alt="Shiva and Parvati hands blessing the Shivling" class="scene-img" />
       <div class="shivling-aura"></div>
 
       <div class="diya-node" style="left: 23%; top: 84%;">
@@ -1368,7 +1289,7 @@
       </div>
     </section>
 
-    <!-- SCENE 3: SHIVA & PARVATI LOOKING OVER GANGA (1000258360.png) -->
+    <!-- SCENE 3: SHIVA & PARVATI LOOKING OVER GANGA (./1000258360.png) -->
     <section id="scene-2" class="scene" data-scene="2" aria-label="Scene 3: Tap the Ganga">
       <div class="fallback-card" data-fallback-for="2">
         <div class="px-2">
@@ -1393,7 +1314,7 @@
         </div>
       </div>
 
-      <img data-filename="1000258360.png" data-primary="2" src="1000258360.png" alt="Shiva and Parvati overlooking the sacred Ganga" class="scene-img" />
+      <img data-filename="1000258360.png" data-primary="2" src="./1000258360.png" alt="Shiva and Parvati overlooking the sacred Ganga" class="scene-img" />
       <div class="ganga-shimmer"></div>
 
       <div class="river-diya-glow" style="left: 17.8%; top: 69.8%;"></div>
@@ -1404,7 +1325,7 @@
       <div id="ganga-ripples" class="absolute inset-0 z-20"></div>
     </section>
 
-    <!-- SCENE 4: SAATH & TELBUKHI (1000258385.png) -->
+    <!-- SCENE 4: SAATH & TELBUKHI (./1000258385.png) -->
     <section id="scene-3" class="scene" data-scene="3" aria-label="Scene 4: Saath and Telbukhi">
       <div class="scene4-zoom">
         <div class="fallback-card" data-fallback-for="3">
@@ -1427,7 +1348,7 @@
           </div>
         </div>
 
-        <img data-filename="1000258385.png" data-primary="3" src="1000258385.png" alt="Saath and Telbukhi Ceremony" class="scene-img" />
+        <img data-filename="1000258385.png" data-primary="3" src="./1000258385.png" alt="Saath and Telbukhi Ceremony" class="scene-img" />
 
         <!-- Very small, short vertical vermilion tilak on purple-kurta groom's forehead -->
         <div class="tilak-mark"></div>
@@ -1437,7 +1358,7 @@
       </div>
     </section>
 
-    <!-- SCENE 5: HALDI / KESARI RANG (1000258359.png) -->
+    <!-- SCENE 5: HALDI / KESARI RANG (./1000258359.png) -->
     <section id="scene-4" class="scene" data-scene="4" aria-label="Scene 5: Kesari Rang Haldi">
       <div class="fallback-card theme-haldi" data-fallback-for="4">
         <div>
@@ -1462,7 +1383,7 @@
         </div>
       </div>
 
-      <img data-filename="1000258359.png" data-primary="4" src="1000258359.png" alt="Kesari Rang Haldi Ceremony" class="scene-img" />
+      <img data-filename="1000258359.png" data-primary="4" src="./1000258359.png" alt="Kesari Rang Haldi Ceremony" class="scene-img" />
 
       <div class="haldi-aura" style="left: 44.3%; top: 83.2%;"></div>
       <div class="haldi-aura" style="left: 76.8%; top: 83.2%;"></div>
@@ -1495,7 +1416,7 @@
       <div id="haldi-particles" class="absolute inset-0 z-20"></div>
     </section>
 
-    <!-- SCENE 6: SANGEET / SHAAM & SHINE (1000258358.png) -->
+    <!-- SCENE 6: SANGEET / SHAAM & SHINE (./1000258358.png) -->
     <section id="scene-5" class="scene" data-scene="5" aria-label="Scene 6: Shaam and Shine Sangeet">
       <div class="scene6-zoom">
         <div class="fallback-card theme-night" data-fallback-for="5">
@@ -1515,7 +1436,7 @@
           </div>
         </div>
 
-        <img data-filename="1000258358.png" data-primary="5" src="1000258358.png" alt="Shaam and Shine Sangeet" class="scene-img" />
+        <img data-filename="1000258358.png" data-primary="5" src="./1000258358.png" alt="Shaam and Shine Sangeet" class="scene-img" />
 
         <div class="mirror-glitter-region">
           <div class="mirror-shimmer-wash"></div>
@@ -1528,7 +1449,7 @@
       </div>
     </section>
 
-    <!-- SCENE 7: PHERE / SAATH VACHAN (1000258357.png) -->
+    <!-- SCENE 7: PHERE / SAATH VACHAN (./1000258357.png) -->
     <section id="scene-6" class="scene" data-scene="6" aria-label="Scene 7: Mukut Bandhan, Baraat and Saath Vachan">
       <div class="fallback-card" data-fallback-for="6">
         <div class="space-y-2">
@@ -1557,11 +1478,11 @@
         </div>
       </div>
 
-      <img data-filename="1000258357.png" data-primary="6" src="1000258357.png" alt="Mukut Bandhan, Baraat and Saath Vachan" class="scene-img" />
+      <img data-filename="1000258357.png" data-primary="6" src="./1000258357.png" alt="Mukut Bandhan, Baraat and Saath Vachan" class="scene-img" />
       <div id="petals-host" class="petals-host"></div>
     </section>
 
-    <!-- SCENE 8: SUFI NIGHT (1000258395.png) -->
+    <!-- SCENE 8: SUFI NIGHT (./1000258395.png) -->
     <section id="scene-7" class="scene" data-scene="7" aria-label="Scene 8: Sufi Night">
       <div class="fallback-card theme-sufi" data-fallback-for="7">
         <div>
@@ -1580,7 +1501,7 @@
         </div>
       </div>
 
-      <img data-filename="1000258395.png" data-primary="7" src="1000258395.png" alt="Sufi Night" class="scene-img" />
+      <img data-filename="1000258395.png" data-primary="7" src="./1000258395.png" alt="Sufi Night" class="scene-img" />
 
       <div class="lantern-glow" style="left: 8.2%; top: 12.2%; width: 11%; aspect-ratio: 1;"></div>
       <div class="lantern-glow" style="left: 18.4%; top: 12.8%; width: 10%; aspect-ratio: 1; animation-delay: 0.55s;"></div>
@@ -1591,7 +1512,7 @@
       <div id="sufi-notes" class="absolute inset-0 z-20"></div>
     </section>
 
-    <!-- SCENE 9: AWAITING YOUR PRESENCE / RSVP (1000258407.png) -->
+    <!-- SCENE 9: AWAITING YOUR PRESENCE / RSVP (./1000258407.png) -->
     <section id="scene-8" class="scene" data-scene="8" aria-label="Scene 9: Awaiting Your Presence">
       <div class="fallback-card" data-fallback-for="8">
         <div>
@@ -1613,11 +1534,11 @@
         </div>
       </div>
 
-      <img data-filename="1000258407.png" data-primary="8" src="1000258407.png" alt="Awaiting Your Presence — Basantwani Family and Mandhan Family" class="scene-img" />
+      <img data-filename="1000258407.png" data-primary="8" src="./1000258407.png" alt="Awaiting Your Presence — Basantwani Family and Mandhan Family" class="scene-img" />
       <canvas id="fountain-canvas" class="fountain-canvas"></canvas>
     </section>
 
-    <!-- SCENE 10: THE VENUE (1000258409.png) -->
+    <!-- SCENE 10: THE VENUE (./1000258409.png) -->
     <section id="scene-9" class="scene" data-scene="9" aria-label="Scene 10: The Venue">
       <div class="fallback-card" data-fallback-for="9">
         <div>
@@ -1637,7 +1558,7 @@
         <div class="h-8"></div>
       </div>
 
-      <img data-filename="1000258409.png" data-primary="9" src="1000258409.png" alt="The Venue — Crescent The Fern, Budhni" class="scene-img" />
+      <img data-filename="1000258409.png" data-primary="9" src="./1000258409.png" alt="The Venue — Crescent The Fern, Budhni" class="scene-img" />
 
       <!-- Subtle Vintage Car Headlight Glints & Exhaust Puff Host during Rev -->
       <div class="car-headlight-glint" style="left: 17.5%; top: 76.2%;"></div>
@@ -1777,7 +1698,6 @@
     let fountainRaf = null;
     let toastTimer = null;
     let riverAmbientCtrl = null;
-    const loadedMap = new Map();
 
     function showToast(msg, actionText, actionFn, durationMs) {
       const toast = document.getElementById('toast');
@@ -1839,15 +1759,11 @@
       if (sheet) sheet.classList.remove('open');
     }
 
-    /* Image Attachment & Drag-and-Drop */
-    function markFileLoaded(filename, objectUrl) {
+    /* Root Image Load Reveal */
+    function markFileLoaded(filename) {
       if (!EXPECTED_FILES.includes(filename)) return;
-      loadedMap.set(filename, objectUrl || filename);
 
       document.querySelectorAll('img[data-filename="' + filename + '"]').forEach(function (img) {
-        if (objectUrl && img.src !== objectUrl) {
-          img.src = objectUrl;
-        }
         img.classList.add('is-loaded');
 
         if (img.hasAttribute('data-primary')) {
@@ -1860,54 +1776,6 @@
           }
         }
       });
-
-      const count = loadedMap.size;
-      const badge = document.getElementById('loader-count-badge');
-      const pill = document.getElementById('loader-pill');
-      const pillText = document.getElementById('loader-pill-text');
-      if (badge) badge.textContent = count + '/10';
-      if (pill) {
-        if (count >= TOTAL_SCENES) {
-          pill.classList.add('all-loaded');
-        } else if (count > 0 && pillText) {
-          pillText.textContent = 'Load Remaining ' + (TOTAL_SCENES - count);
-        }
-      }
-    }
-
-    function handleFiles(fileList) {
-      const files = Array.from(fileList || []).filter(function (f) {
-        return f.type && f.type.startsWith('image/');
-      });
-      if (!files.length) return;
-
-      let matched = 0;
-      const unmatched = [];
-
-      files.forEach(function (file) {
-        const cleanName = file.name.trim();
-        if (EXPECTED_FILES.includes(cleanName)) {
-          markFileLoaded(cleanName, URL.createObjectURL(file));
-          matched++;
-        } else {
-          unmatched.push(file);
-        }
-      });
-
-      if (unmatched.length > 0) {
-        const missing = EXPECTED_FILES.filter(function (f) { return !loadedMap.has(f); });
-        unmatched.sort(function (a, b) { return a.name.localeCompare(b.name); });
-        unmatched.forEach(function (file, i) {
-          if (i < missing.length) {
-            markFileLoaded(missing[i], URL.createObjectURL(file));
-            matched++;
-          }
-        });
-      }
-
-      if (matched > 0) {
-        showToast('Loaded ' + loadedMap.size + '/10 illustrations');
-      }
     }
 
     /* Web Audio Synthesis */
@@ -2794,44 +2662,16 @@
         }
       }
 
-      const filePicker = document.getElementById('file-picker');
-      if (filePicker) {
-        filePicker.addEventListener('change', function () {
-          if (filePicker.files) {
-            handleFiles(filePicker.files);
-            filePicker.value = '';
-          }
-        });
-      }
-
-      const stage = document.getElementById('stage');
-      window.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        if (stage) stage.classList.add('is-dragging');
-      });
-      window.addEventListener('dragleave', function (e) {
-        if (stage && (!e.relatedTarget || !stage.contains(e.relatedTarget))) {
-          stage.classList.remove('is-dragging');
-        }
-      });
-      window.addEventListener('drop', function (e) {
-        e.preventDefault();
-        if (stage) stage.classList.remove('is-dragging');
-        if (e.dataTransfer && e.dataTransfer.files) {
-          handleFiles(e.dataTransfer.files);
-        }
-      });
-
       document.querySelectorAll('img[data-filename]').forEach(function (img) {
         const fname = img.getAttribute('data-filename');
         img.addEventListener('load', function () {
-          if (img.naturalWidth > 0) markFileLoaded(fname, null);
+          if (img.naturalWidth > 0) markFileLoaded(fname);
         });
         img.addEventListener('error', function () {
           img.classList.remove('is-loaded');
         });
         if (img.complete && img.naturalWidth > 0) {
-          markFileLoaded(fname, null);
+          markFileLoaded(fname);
         }
       });
 
@@ -2872,12 +2712,7 @@
           return;
         }
 
-        // 2. File Loader Label / Input
-        if (target.closest('#loader-pill') || target.closest('#file-picker')) {
-          return;
-        }
-
-        // 3. Scene 10 Venue Card Trigger & Replay Button
+        // 2. Scene 10 Venue Card Trigger & Replay Button
         if (target.closest('#venue-map-trigger')) {
           openMapSheet();
           return;
@@ -2887,7 +2722,7 @@
           return;
         }
 
-        // 4. Map Sheet Controls
+        // 3. Map Sheet Controls
         if (target.closest('#btn-close-map') || target.closest('#map-sheet-backdrop')) {
           closeMapSheet();
           return;
@@ -2900,7 +2735,7 @@
           return;
         }
 
-        // 5. Any click/tap anywhere on #stage triggers the active scene's animation
+        // 4. Any click/tap anywhere on #stage triggers the active scene's animation
         if (target.closest('#stage')) {
           triggerActiveSceneAction();
         }
