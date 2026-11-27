@@ -422,6 +422,47 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 #saat-vachan .marigold-shower{background:none!important}
 #saat-vachan .music-notes{display:none!important}
 #sham .music-notes span{animation:noteRise 2.65s ease-out infinite!important}
+
+/* V12: stronger, clearly visible function effects and no placeholder curtain */
+#rang .turmeric-burst{
+  display:block!important; opacity:0!important; z-index:14!important;
+  overflow:visible!important; pointer-events:none!important;
+}
+#rang.activated .turmeric-burst{opacity:1!important}
+#rang .effect-particle.turmeric{
+  display:block!important; z-index:15!important; opacity:0;
+  box-shadow:0 0 9px rgba(255,202,45,.8),0 0 18px rgba(255,177,0,.45)!important;
+  filter:saturate(1.35) brightness(1.12);
+}
+#rang.activated .turmeric-burst:after{
+  content:""; position:absolute; left:12%; right:12%; top:25%; height:48%;
+  background:radial-gradient(ellipse at 50% 45%,rgba(255,203,42,.42),rgba(255,184,0,.18) 38%,transparent 72%);
+  animation:haldiCloud 2.8s ease-out forwards; pointer-events:none;
+}
+@keyframes haldiCloud{
+  0%{opacity:0;transform:scale(.35)}
+  18%{opacity:1;transform:scale(.8)}
+  70%{opacity:.75;transform:scale(1.18)}
+  100%{opacity:0;transform:scale(1.5)}
+}
+#saat-vachan .marigold-shower{
+  display:block!important; position:absolute!important; inset:0!important;
+  z-index:14!important; opacity:0!important; overflow:visible!important;
+  pointer-events:none!important; background:none!important;
+}
+#saat-vachan.activated .marigold-shower{opacity:1!important}
+#saat-vachan .marigold-shower:before,
+#saat-vachan .marigold-shower:after{display:none!important;content:none!important}
+#saat-vachan .effect-particle.petal{
+  display:block!important; position:absolute!important; z-index:15!important;
+  top:-8%!important; opacity:0; width:var(--size)!important;height:calc(var(--size)*1.35)!important;
+  border-radius:78% 12% 72% 18%!important;
+  box-shadow:0 1px 4px rgba(85,35,45,.16)!important;
+  filter:drop-shadow(0 1px 1px rgba(80,30,40,.14));
+}
+#saat-vachan .effect-particle.petal:nth-child(3n){border-radius:15% 78% 18% 72%!important}
+#saat-vachan .effect-particle.petal:nth-child(4n){filter:blur(.25px) drop-shadow(0 1px 1px rgba(80,30,40,.12))}
+#transition{display:none!important}
 </style>
 </head>
 <body>
@@ -542,7 +583,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  </div>
 </section>
 
-<div id="transition"></div>
+
 
 </main>
 <script>
@@ -553,33 +594,43 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
  async function go(id,style='gold'){
   if(transitioning)return; const old=$(current),next=$(id); if(!old||!next||old===next)return;
-  transitioning=true; const veil=$('transition');
-  if(veil){veil.className='';veil.classList.add(style,'play');}
-  await wait(420); old.classList.remove('active'); next.classList.add('active','enter'); current=id;
-  await wait(900); next.classList.remove('enter'); if(veil)veil.className=''; transitioning=false;
+  transitioning=true;
+  // No generic colored curtain: let the destination scene's own entrance animation carry the transition.
+  await wait(180);
+  old.classList.remove('active','enter','leaving');
+  next.classList.add('active','enter');
+  current=id;
+  await wait(950);
+  next.classList.remove('enter');
+  transitioning=false;
  }
  function shower(sceneId,type,count=90){
   const scene=$(sceneId); if(!scene)return;
   const layer=scene.querySelector(type==='turmeric'?'.turmeric-burst':type==='petal'?(sceneId==='baraat'?'.baraat-petals':sceneId==='saath'?'.flower-burst':'.marigold-shower'):'.flower-burst');
   if(!layer)return;
   layer.replaceChildren(); layer.classList.add('show-effect');
-  const palette=type==='turmeric'?['#f8cf32','#ffd94f','#e8a91c','#fff0a6','#d58d12']:sceneId==='saat-vachan'?['#f6c7cf','#f8e6df','#e9a9b4','#fff0e6']:['#f7c3cc','#f0b94d','#fff0d0','#e98e83','#d98b32'];
+  const palette=type==='turmeric'?['#f8cf32','#ffd94f','#e8a91c','#fff0a6','#d58d12']:sceneId==='saat-vachan'?['#f3aebb','#f8d8df','#fff0e6','#df8e9e','#f5c6a8']:['#f7c3cc','#f0b94d','#fff0d0','#e98e83','#d98b32'];
   for(let i=0;i<count;i++){
    const p=document.createElement('i'); p.className='effect-particle '+(type==='turmeric'?'turmeric':'petal');
    p.style.setProperty('--x',Math.random()*100+'%');
-   p.style.setProperty('--size',(type==='turmeric'?5+Math.random()*13:sceneId==='saat-vachan'?7+Math.random()*5:8+Math.random()*12)+'px');
-   p.style.setProperty('--dur',(sceneId==='saat-vachan'?3.8+Math.random()*1.5:2.2+Math.random()*1.2)+'s');
+   p.style.setProperty('--size',(type==='turmeric'?9+Math.random()*17:sceneId==='saat-vachan'?9+Math.random()*7:8+Math.random()*12)+'px');
+   p.style.setProperty('--dur',(sceneId==='saat-vachan'?3.8+Math.random()*1.5:type==='turmeric'?2.8+Math.random()*1.7:2.2+Math.random()*1.2)+'s');
    p.style.setProperty('--delay',(sceneId==='saat-vachan'?Math.random()*1.1:Math.random()*.45)+'s');
    p.style.setProperty('--drift',(sceneId==='saat-vachan'?-28+Math.random()*56:-55+Math.random()*110)+'px');
    p.style.setProperty('--rot',Math.random()*220+'deg');
-   p.style.setProperty('--particle',palette[i%palette.length]); layer.appendChild(p);
+   p.style.setProperty('--particle',palette[i%palette.length]);
+   if(type==='turmeric'){
+    p.style.setProperty('--size',(10+Math.random()*18)+'px');
+    p.style.setProperty('--drift',(-85+Math.random()*170)+'px');
+   }
+   layer.appendChild(p);
   }
  }
  async function activate(sceneId,target,style,duration,type){
   if(transitioning)return; const scene=$(sceneId); if(!scene||scene.dataset.played==='1')return;
   scene.dataset.played='1'; scene.classList.add('activated');
   const button=scene.querySelector('.scene-hotspot'); if(button)button.disabled=true;
-  if(type)shower(sceneId,type,type==='turmeric'?115:(sceneId==='saat-vachan'?34:85));
+  if(type)shower(sceneId,type,type==='turmeric'?190:(sceneId==='saat-vachan'?72:85));
   if(sceneId==='saath')scene.classList.add('diyas-lit');
   if(sceneId==='sham')scene.classList.add('notes-on');
   if(sceneId==='sufi')scene.classList.add('bling-on');
