@@ -462,6 +462,35 @@
       100% { transform: scale(1.22); opacity: 0; }
     }
 
+
+    .door-sanctuary-reveal {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      background: #f5dfb4;
+      pointer-events: none !important;
+    }
+
+    .door-sanctuary-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 62%;
+      transform: scale(1.04);
+      filter: blur(5px) brightness(0.95);
+      transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1), filter 1.25s cubic-bezier(0.22, 1, 0.36, 1);
+      display: block;
+      -webkit-user-drag: none;
+    }
+
+    #scene-1.opening .door-sanctuary-img {
+      transform: scale(1);
+      filter: blur(0px) brightness(1.02);
+    }
+
     /* 3D Parting Wooden Doors (Zero yellow/gold background fill) */
     .doors-3d-stage {
       position: absolute;
@@ -479,6 +508,7 @@
       top: 0;
       width: 50%;
       height: 100%;
+      z-index: 3;
       overflow: hidden;
       background: transparent;
       transform-style: preserve-3d;
@@ -1581,8 +1611,17 @@
           <div class="bell-shimmer-wave"></div>
         </div>
 
-        <!-- 3D Parting Wooden Doors (Cleanly reveals Scene 2 behind with zero yellow rectangle) -->
+        <!-- 3D Parting Wooden Doors with full Shivling sanctuary visible inside doorway -->
         <div class="doors-3d-stage">
+          <div class="door-sanctuary-reveal" aria-hidden="true">
+            <img
+              src="./door-open.jpg"
+              alt="Sacred Shivling Sanctuary"
+              class="door-sanctuary-img"
+              onerror="this.style.opacity='0'"
+              onload="this.style.opacity='1'"
+            />
+          </div>
           <div class="door-panel door-left">
             <div class="door-map-left">
               <img src="./temple.jpg" alt="" class="temple-full-img" onerror="this.style.opacity='0'" onload="this.style.opacity='1'" />
@@ -2266,6 +2305,7 @@
 
     var BG_MUSIC_BASE_VOL = 0.42;
     var BG_MUSIC_DUCK_VOL = 0.13;
+    var BG_MUSIC_HARMONIUM_VOL = 0.03;
 
     var currentScene = 1;
     var isAnimating = false;
@@ -2747,7 +2787,14 @@
     function playHarmoniumSufi() {
       var ctx = ensureAudio();
       if (!ctx) return;
-      duckBgMusic(2150);
+      if (soundEnabled) {
+        ensureBgMusicPlaying();
+        clearTimeout(bgDuckTimer);
+        animateBgMusicVolume(BG_MUSIC_HARMONIUM_VOL, 220);
+        bgDuckTimer = setTimeout(function () {
+          restoreBgMusic();
+        }, 2150);
+      }
       var now = ctx.currentTime;
 
       var masterFilter = ctx.createBiquadFilter();
