@@ -152,6 +152,76 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 @media(max-height:720px){.content{padding-top:27px;padding-bottom:88px}.blessing-art{height:110px}.family-panel{padding:18px 14px}.family-unit{padding:10px 5px}.event-plaque{padding:17px 15px}.event-plaque .event-title{font-size:37px}.event-copy{min-height:calc(100svh - 105px)}}
 @media(min-width:481px){#app{height:min(900px,100svh);margin:auto;border-radius:18px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* V5: event artwork is now the actual illustration, not a blurred poster containing a tiny duplicate. */
+.event{background:#30241f;display:none;flex-direction:column;justify-content:flex-start}
+.event.active{display:flex}
+.event-art{position:absolute;top:0;left:0;right:0;width:100%;height:49%;object-fit:cover;object-position:center 48%;transform:scale(1.015);filter:saturate(1.02)}
+.event:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 25%,#1c17121a 40%,#261b18 58%,#261b18 100%);z-index:1}
+.event .content.event-copy{position:absolute;top:0;left:0;right:0;height:100%;max-height:none;overflow:visible;padding:calc(30px + env(safe-area-inset-top)) 24px calc(110px + env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:space-between}
+.event-top{align-self:center;background:#754047e8;border:1px solid #f5dba7;color:#fff0d8}
+.event-plaque{margin-top:auto;margin-bottom:2px;padding:25px 19px 23px;background:linear-gradient(145deg,#fff8e9f5,#f1dfc5f5);border:1px solid #d3ad70;box-shadow:0 12px 38px #160e0b66;backdrop-filter:blur(5px)}
+.event-plaque:before{inset:6px;border:1px solid #c39b6570}
+.event-plaque .event-title{font-size:clamp(38px,10vw,48px);margin:8px 0 7px}
+.event-plaque .event-sub{font-size:9px;letter-spacing:.14em}
+.event .scene-footer{bottom:calc(17px + env(safe-area-inset-bottom));gap:6px}
+.event .scene-footer .continue{background:#fff4e5;color:#69452f}
+.event .hint{color:#f8ead7}
+.event.active .event-art{animation:eventImageReveal 7.5s cubic-bezier(.2,.65,.2,1) both}
+@keyframes eventImageReveal{0%{transform:scale(1.13) translateY(10px);filter:saturate(.82) brightness(.9)}100%{transform:scale(1.015) translateY(0);filter:saturate(1.04) brightness(1)}}
+#saath{background:linear-gradient(#e9c99e,#8d6048)}
+#haldi{background:linear-gradient(#f3d47d,#95652d)}
+#sangeet{background:linear-gradient(#46335e,#1b203a)}
+#baraat{background:linear-gradient(#e9c69a,#7c4c3b)}
+#phere{background:linear-gradient(#f2c79e,#744c48)}
+#sufi{background:linear-gradient(#26324e,#171c35)}
+#saath .event:after{background:linear-gradient(180deg,#2b1d0b00 18%,#2b1d0b18 40%,#261b18 60%)}
+#haldi .event-plaque{border-color:#d7ad55}
+#sangeet .event-plaque,#sufi .event-plaque{background:linear-gradient(145deg,#fff6e8f4,#ead9d0f5)}
+#phere .event-art{object-position:center 42%}
+#baraat .event-art{object-position:center 42%}
+/* Different transition language per chapter: light bloom, falling petals, dusk and lantern glow. */
+#transition{position:absolute;inset:0;z-index:30;pointer-events:none;opacity:0;visibility:hidden;transform:scale(1.035)}
+#transition.play{visibility:visible;animation:v5Curtain 1.12s cubic-bezier(.72,0,.2,1) forwards}
+#transition.gold{background:radial-gradient(ellipse at 50% 45%,#fff7dc 0%,#e9c77e 42%,#a96b4a 100%)}
+#transition.petals{background:linear-gradient(145deg,#f7e8d4,#d99491 52%,#79464d)}
+#transition.sunset{background:linear-gradient(180deg,#a9d8e4 0%,#f5d4a5 55%,#a76c65 100%)}
+#transition.night{background:radial-gradient(ellipse at 50% 42%,#e6b96e 0%,#67517d 46%,#17203b 100%)}
+#transition.fire{background:radial-gradient(ellipse at 50% 76%,#ffe6a0 0%,#df8150 34%,#442a36 80%)}
+#transition.lantern{background:radial-gradient(ellipse at 50% 30%,#ffe3a5 0%,#8c6680 42%,#142039 100%)}
+@keyframes v5Curtain{0%{opacity:0;transform:scale(1.035)}30%{opacity:1;transform:scale(1)}72%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.99)}}
+#transition:after{content:"";position:absolute;inset:-30%;background:linear-gradient(110deg,transparent 37%,#fff6d477 50%,transparent 63%);transform:translateX(-70%);animation:v5Shimmer 1.1s ease-in-out}
+@keyframes v5Shimmer{to{transform:translateX(70%)}}
+.map-link{margin-top:17px;text-decoration:none;justify-content:center}
+#finale{background:#ead7b9}
+.finale-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%;opacity:.34;filter:saturate(.78)}
+#finale:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#f7e9d6b8,#f3dfc4e6 52%,#e8cda8e8);z-index:1;pointer-events:none}
+#finale .content{z-index:3;width:calc(100% - 50px);padding:25px 18px 28px;background:#fff9eef2;border:1px solid #b88e54;box-shadow:0 16px 48px #54372133}
+#finale .content:before{content:"";position:absolute;inset:6px;border:1px solid #c9a16b88;pointer-events:none}
+.monogram{width:116px;height:116px;margin:0 auto 17px;border:1px solid #a9793f;border-radius:50%;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;overflow:hidden;font:500 48px/1 "Cormorant Garamond",Georgia,serif;color:#713d43;background:radial-gradient(circle,#fffdf6,#f5e5c9);box-shadow:inset 0 0 0 5px #fff9ed,inset 0 0 0 6px #c6a16c}
+.monogram span{display:inline-block;line-height:1}.monogram span:nth-child(2){font:30px "Great Vibes",cursive;color:#a87942}
+#finale .script{font-size:clamp(34px,8vw,43px);color:#713d43}
+#finale .small{color:#684b3c;font-size:9px;font-weight:600;letter-spacing:.09em}
+#finale .names{color:#713d43}
+#rsvp{background:linear-gradient(150deg,#f8e8d2,#e5c9a5 58%,#b98869)}
+.rsvp-backdrop{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,#fff9e6aa,transparent 58%),linear-gradient(180deg,#f7e9d5aa,#e4c6a1aa)}
+.rsvp-card{position:relative;z-index:3;width:calc(100% - 48px);max-height:calc(100% - 58px);overflow:auto;padding:25px 21px;background:#fffaf0f2;border:1px solid #b88e54;box-shadow:0 16px 48px #54372133;text-align:left}
+.rsvp-card:before{content:"";position:absolute;inset:6px;border:1px solid #c9a16b77;pointer-events:none}
+.rsvp-card>*{position:relative}
+.rsvp-card .eyebrow{text-align:center}
+.rsvp-heading{text-align:center;font-size:45px;margin:9px 0 3px}
+.rsvp-copy{text-align:center;font:14px/1.55 "Cormorant Garamond",Georgia,serif;color:#694c3d;margin:0 auto 18px;max-width:250px}
+.rsvp-card form{display:flex;flex-direction:column;gap:8px}
+.rsvp-card label,.rsvp-card legend{font:600 9px Inter,Arial;letter-spacing:.1em;text-transform:uppercase;color:#7a5943}
+.rsvp-card input[type=text],.rsvp-card select{width:100%;padding:12px 11px;border:1px solid #c8aa7b;background:#fffdf7;color:#573b30;font:13px Inter,Arial;border-radius:2px;outline:none}
+.rsvp-card fieldset{border:1px solid #d2b78e;padding:12px 11px 10px;margin:6px 0 3px;display:flex;flex-direction:column;gap:11px}
+.rsvp-card legend{padding:0 5px}
+.rsvp-card .choice{display:flex;align-items:center;gap:9px;font:12px "Cormorant Garamond",Georgia,serif;letter-spacing:0;text-transform:none;color:#573b30}
+.rsvp-card input[type=radio]{accent-color:#81454a;width:15px;height:15px}
+.rsvp-submit{align-self:center;margin-top:8px}
+.rsvp-note{text-align:center;font:10px/1.5 Inter,Arial;color:#8a6b50;margin:13px 0 4px}
+.text-link{display:block;margin:12px auto 0;border:0;background:none;color:#825b42;text-decoration:underline;font:10px Inter,Arial;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -226,39 +296,39 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
 </section>
 
 <section class="scene event" id="saath" data-transition="gold">
- <img class="event-art" src="saath-scene.webp" alt="Traditional Saath and Tel Mukhi ceremony setting">
+ <img class="event-art" src="saath-art.webp" alt="Traditional Saath and Tel Mukhi ceremony setting">
  <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">An auspicious beginning</div><div class="event-title">Saath &amp; Tel Mukhi</div><div class="event-time">1:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Next celebration <span class="arrow">→</span></button><span class="hint">Day one · 1 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>Let the colours unfold <span class="arrow">→</span></button><span class="hint">Day one · 1 of 3</span></div>
 </section>
 
 <section class="scene event" id="haldi" data-transition="sunset">
- <img class="event-art" src="haldi-scene.webp" alt="Haldi ceremony with brass turmeric bowls and marigolds">
+ <img class="event-art" src="haldi-art.webp" alt="Haldi ceremony with brass turmeric bowls and marigolds">
  <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">A little sunshine &amp; turmeric</div><div class="event-title">Haldi</div><div class="event-time">4:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Next celebration <span class="arrow">→</span></button><span class="hint">Day one · 2 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>Bring on the music <span class="arrow">→</span></button><span class="hint">Day one · 2 of 3</span></div>
 </section>
 
 <section class="scene event" id="sangeet" data-transition="night">
- <img class="event-art" src="sangeet-scene.webp" alt="Sangeet night with dhol, palace lights and cushions">
+ <img class="event-art" src="sangeet-art.webp" alt="Sangeet night with dhol, palace lights and cushions">
  <div class="content event-copy"><div class="event-top">SUNDAY · 3 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">Music, dance &amp; celebration</div><div class="event-title">Sangeet</div><div class="event-time">8:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Welcome to day two <span class="arrow">→</span></button><span class="hint">Day one · 3 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>The wedding day awaits <span class="arrow">→</span></button><span class="hint">Day one · 3 of 3</span></div>
 </section>
 
 <section class="scene event" id="baraat" data-transition="petals">
- <img class="event-art" src="baraat-scene.webp" alt="Decorated white horse and baraat procession">
+ <img class="event-art" src="baraat-art.webp" alt="Decorated white horse and baraat procession">
  <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">The grand arrival</div><div class="event-title">Baraat</div><div class="event-time">12:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Next celebration <span class="arrow">→</span></button><span class="hint">Day two · 1 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>On to the sacred vows <span class="arrow">→</span></button><span class="hint">Day two · 1 of 3</span></div>
 </section>
 
 <section class="scene event" id="phere" data-transition="fire">
- <img class="event-art" src="phere-scene.webp" alt="Floral wedding mandap with sacred fire at sunset">
+ <img class="event-art" src="phere-art.webp" alt="Floral wedding mandap with sacred fire at sunset">
  <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">Seven vows · One lifetime</div><div class="event-title">Phere</div><div class="event-time">3:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>Next celebration <span class="arrow">→</span></button><span class="hint">Day two · 2 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>As the evening begins <span class="arrow">→</span></button><span class="hint">Day two · 2 of 3</span></div>
 </section>
 
 <section class="scene event" id="sufi" data-transition="lantern">
- <img class="event-art" src="sufi-scene.webp" alt="Sufi night courtyard with lanterns and traditional instruments">
+ <img class="event-art" src="sufi-art.webp" alt="Sufi night courtyard with lanterns and traditional instruments">
  <div class="content event-copy"><div class="event-top">MONDAY · 4 JANUARY 2027</div><div class="event-plaque"><div class="eyebrow">An evening of soulful music</div><div class="event-title">Sufi Night</div><div class="event-time">9:00 PM</div><div class="event-sub">Crescent The Fern · Budhni</div></div></div>
- <div class="scene-footer"><button class="continue" data-next>One last detail <span class="arrow">→</span></button><span class="hint">Day two · 3 of 3</span></div>
+ <div class="scene-footer"><button class="continue" data-next>A little more magic <span class="arrow">→</span></button><span class="hint">Day two · 3 of 3</span></div>
 </section>
 
 <section class="scene" id="countdown" data-transition="gold">
@@ -287,6 +357,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   <p class="small" style="margin-top:3px">Series by Marriott</p>
   <div class="rule"></div>
   <p class="small">3 — 4 JANUARY 2027</p>
+  <a class="continue map-link" href="https://www.google.com/maps/search/?api=1&query=Crescent+The+Fern+Budhni+Madhya+Pradesh" target="_blank" rel="noopener">Open in Google Maps ↗</a>
  </div>
  <div class="scene-footer"><button class="continue" data-next>With love <span class="arrow">→</span></button><span class="hint">We hope to see you there</span></div>
 </section>
@@ -302,7 +373,29 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   <p class="small">OMPRAKASH &amp; ANITA MANDHAN</p>
   <div class="names" style="font-size:38px;margin-top:17px">Shubham &amp; Pooja</div>
   <p class="small gold" style="margin-top:12px">3 — 4 JANUARY 2027</p>
-  <button class="continue" style="margin-top:22px" id="replay">Replay invitation ↺</button>
+  <button class="continue" style="margin-top:22px" data-next>Kindly respond <span class="arrow">→</span></button>
+ </div>
+</section>
+
+<section class="scene" id="rsvp" data-transition="petals">
+ <div class="rsvp-backdrop"></div>
+ <div class="rsvp-card">
+  <div class="eyebrow">A little note for the hosts</div>
+  <div class="script rsvp-heading">Will you join us?</div>
+  <p class="rsvp-copy">Your presence will make our celebration even more special.</p>
+  <form id="rsvpForm">
+   <label for="guestName">Your name</label>
+   <input id="guestName" name="guestName" type="text" placeholder="Enter your name" required>
+   <label for="guestCount">Number of guests</label>
+   <select id="guestCount" name="guestCount"><option>1 guest</option><option selected>2 guests</option><option>3 guests</option><option>4 guests</option><option>5 or more</option></select>
+   <fieldset><legend>Will you be able to join us?</legend>
+    <label class="choice"><input type="radio" name="attendance" value="Joyfully accepting" checked> Joyfully accepting</label>
+    <label class="choice"><input type="radio" name="attendance" value="Regretfully declining"> Regretfully declining</label>
+   </fieldset>
+   <button class="continue rsvp-submit" type="submit">Send RSVP <span class="arrow">♡</span></button>
+  </form>
+  <p class="rsvp-note" id="rsvpNote">Preview only — responses are not stored or sent.</p>
+  <button class="text-link" id="replay">Replay invitation ↺</button>
  </div>
 </section>
 
@@ -325,9 +418,9 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   const old=scenes[current],next=scenes[n],effect=next.dataset.transition||'gold';
   overlay.className='';overlay.classList.add(effect,'play');
   if(effect==='petals'||effect==='gold')petals();
-  old.classList.remove('active');
-  setTimeout(()=>{current=n;next.classList.add('active','enter');update();},330);
-  setTimeout(()=>{next.classList.remove('enter');overlay.className='';overlay.innerHTML='';busy=false;},1120);
+  // Keep the outgoing scene visible until the transition curtain has covered it.
+  setTimeout(()=>{old.classList.remove('active');current=n;next.classList.add('active','enter');update();},365);
+  setTimeout(()=>{next.classList.remove('enter');overlay.className='';overlay.innerHTML='';busy=false;},1140);
  }
  function next(){go(current+1)}function prev(){go(current-1)}
  window.addEventListener('keydown',e=>{if(e.key==='ArrowRight')next();if(e.key==='ArrowLeft')prev()});
@@ -338,6 +431,14 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#201b1a;col
   setTimeout(()=>{busy=false;go(1)},1780);
  });
  document.getElementById('replay').addEventListener('click',()=>{document.getElementById('cover').classList.remove('open');document.getElementById('openDoor').disabled=false;go(0)});
+ const rsvpForm=document.getElementById('rsvpForm');
+ if(rsvpForm)rsvpForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const note=document.getElementById('rsvpNote');
+  note.textContent='Thank you! This is a preview only; your response has not been sent or stored.';
+  const btn=rsvpForm.querySelector('button[type="submit"]');
+  btn.textContent='Thank you ♡';btn.disabled=true;
+ });
  app.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY},{passive:true});
  app.addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
